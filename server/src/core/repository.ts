@@ -1,148 +1,137 @@
+import { Knex } from 'knex'
 import { db } from './db'
+import { caseTransform } from '../utils/case-transform'
 
-type Entity = Record<string, string | number | boolean>
+interface User {
+  id: number
+  name: string
+  realName: string
+  passHash: string
+  roleId: number
+  isActive: number
+}
 
-type Fields = Record<string, string>
+type Entity = Record<string, Knex.Value>
+type Columns<E = Entity> = Record<keyof E, string>
+type Filters<E = Entity> = Partial<Record<keyof E, Knex.Value>>
+type Sort<E = Entity> = Partial<Record<keyof E, 'desc' | 'asc'>>
+type Exclude<E = Entity> = Array<keyof E>
 
-type Filters<F extends Fields> = Partial<Record<keyof F, string | number | boolean>>
-
-type Sort<F extends Fields> = Partial<Record<keyof F, 'desc' | 'asc'>>
-
-type Exclude<F extends Fields> = Array<keyof F>
-
-interface RepositoryConstructor<F extends Fields> {
+interface RepositoryConstructor<E = Entity> {
   table: string
-  fields: F
+  columns: Array<keyof E>
 }
 
-interface RepositorySearchParams<F extends Fields> {
-  filters?: Filters<F>
-  sort?: Sort<F>
-  exclude?: Exclude<F>
+interface RepositorySearchOneParams<E = Entity> {
+  exclude?: Exclude<E>
 }
 
-export class Repository<E = Entity, F extends Fields = Record<keyof E, string>> {
-  private table
-  private fields
+interface RepositorySearchParams<E = Entity> extends RepositorySearchOneParams<E> {
+  filters?: Filters<E>
+  sort?: Sort<E>
+}
 
-  constructor({ table, fields }: RepositoryConstructor<F>) {
+export class Repository<E = Entity> {
+  private table: string
+  private columns: Columns<E>
+
+  constructor({ table, columns }: RepositoryConstructor<E>) {
     this.table = table
-    this.fields = fields
+    this.columns = caseTransform.camelArrayToSnakeCaseObject(columns as string[])
   }
 
-  async getAll({ filters, sort, exclude }: RepositorySearchParams<F> = {}) {
-    const parsedFields = this.parseFields(exclude)
-    const parsedFilters = filters ? this.parseFilters(filters) : ''
-    const parsedSort = sort ? this.parseSort(sort) : ''
+  async getAll({ filters = {}, sort = {}, exclude = [] }: RepositorySearchParams<E> = {}) {
+    const order = this.getOrder(sort)
+    const where = this.getWhere(filters)
+    const select = this.getSelect(exclude)
 
-    const { rows } = await db.query<E>(`
-      SELECT ${parsedFields}
-      FROM ${this.table}
-      ${parsedFilters ? `WHERE ${parsedFilters}` : ''}
-      ${parsedSort ? `ORDER BY ${parsedSort}` : ''}
-    `, this.getValues(filters))
-    return rows
+    return await db.select<E[]>(select).from(this.table).orderBy(order).where(where)
   }
 
-  async getById(id: number, { exclude }: RepositorySearchParams<F> = {}) {
-    const parsedFields = this.parseFields(exclude)
+  async getById(id: number, { exclude = [] }: RepositorySearchOneParams<E> = {}) {
+    const select = this.getSelect(exclude)
 
-    const { rows } = await db.query<E>(`
-      SELECT ${parsedFields}
-      FROM ${this.table}
-      WHERE id = $1
-    `, [id])
-    return rows[0]
+    return await db.select<E>(select).from(this.table).where({ id }).first()
   }
 
-  async getOne(filters: Filters<F>, { exclude }: RepositorySearchParams<F> = {}) {
-    const parsedFields = this.parseFields(exclude)
-    const parsedFilters = filters ? this.parseFilters(filters) : ''
+  async getOne(filters: Filters<E> = {}, { exclude = [] }: RepositorySearchOneParams<E> = {}) {
+    const select = this.getSelect(exclude)
 
-    const { rows } = await db.query<E>(`
-      SELECT ${parsedFields}
-      FROM ${this.table}
-      ${parsedFilters ? `WHERE ${parsedFilters}` : ''}
-    `, this.getValues(filters))
-    return rows[0]
+    return await db.select<E>(select).from(this.table).where(filters).first()
   }
 
-  async create(data: Partial<Omit<E, 'id'>>, { exclude }: RepositorySearchParams<F> = {}) {
-    const parsedKeys = Object.keys(data).map(key => this.getKey(key)).join(', ')
-    const parsedIndexes = Object.keys(data).map((_, index) => `$${index + 1}`).join(', ')
-    const parsedFields = this.parseFields(exclude)
+  async create(data: Partial<Omit<E, 'id'>>, { exclude = [] }: RepositorySearchOneParams<E> = {}) {
+    const insert = this.getRawColumns(data)
+    const returning = this.getReturning(exclude)
 
-    const { rows } = await db.query<E>(`
-      INSERT INTO ${this.table} (${parsedKeys})
-      VALUES (${parsedIndexes})
-      RETURNING ${parsedFields}
-    `, this.getValues(data))
-    return rows[0]
+    const created = await db.insert(insert)
+      .into(this.table)
+      .returning(returning)
+    return created[0] as E
   }
 
-  async update(id: number, data: Partial<Omit<E, 'id'>>, { exclude }: RepositorySearchParams<F> = {}) {
-    const filteredData = this.filterObjectFromUndefined(data)
-    const parsedColumns = this.parseFieldsEqualsIndexes(filteredData, ', ')
-    const parsedFields = this.parseFields(exclude)
-    const values = this.getValues(filteredData)
+  async update(id: number, data: Partial<Omit<E, 'id'>>, { exclude = [] }: RepositorySearchOneParams<E> = {}) {
+    const update = this.getRawColumns(data)
+    const returning = this.getReturning(exclude)
 
-    const { rows } = await db.query<E>(`
-      UPDATE ${this.table}
-      SET ${parsedColumns}
-      WHERE id = $${values.length + 1}
-      RETURNING ${parsedFields}
-    `, [...values, id])
-    return rows[0]
+    const updated = await db.update(update)
+      .into(this.table)
+      .where({ id })
+      .returning(returning)
+    return updated[0] as E
   }
 
   async remove(id: number) {
-    await db.query(`
-      DELETE FROM ${this.table}
-      WHERE id = $1
-    `, [id])
+    const removed = await db(this.table).where({ id }).first().del()
+    return Boolean(removed)
   }
 
-  private getKey(key: string) {
-    return this.fields[key]
+  private getColumnKey(key: string) {
+    return this.columns[key as keyof E]
   }
 
-  private getValues(data: object = {}) {
-    return Object.values(data)
-  }
-
-  private parseFields(exclude: Exclude<F> = []) {
-    return Object.entries(this.fields).reduce<string[]>((acc, [key, value]) => {
-      const field = [...acc, `${value} AS "${key}"`]
-
-      if(!exclude.length) {
-        return field
-      }
-
-      return !exclude.includes(key) ? field : acc
-    }, []).join(', ')
-  }
-
-  private parseFieldsEqualsIndexes(obj: object, separator: string) {
-    return Object.keys(obj).map((key, index) => (
-      `${this.getKey(key)} = $${index + 1}`
-    )).join(separator)
-  }
-
-  private parseFilters(filters: Filters<F>) {
-    return this.parseFieldsEqualsIndexes(filters, ' AND ')
-  }
-
-  private parseSort(sort: Sort<F>) {
-    return Object.entries(sort).map(([key, value]) => (
-      `${this.getKey(key)} ${value?.toUpperCase()}`
-    )).join(', ')
-  }
-
-  private filterObjectFromUndefined(obj: object) {
-    return Object.entries(obj).reduce((acc, [key, value]) => (
-      value !== undefined
+  private getSelect(exclude: Exclude<E>) {
+    return Object.entries(this.columns).reduce((acc, [key, value]) => (
+      !exclude.includes(key as keyof E)
         ? { ...acc, [key]: value }
         : acc
     ), {})
+  }
+
+  private getWhere(filters: Filters<E>) {
+    return Object.entries(filters).reduce((acc, [key, value]) => ({
+      ...acc,
+      [this.getColumnKey(key)]: value as Knex.Value
+    }), {})
+  }
+
+  private getOrder(sort: Sort<E>) {
+    return Object.entries(sort).reduce<{
+      column: string,
+      order: 'desc' | 'asc'
+    }[]>((acc, [key, value]) => ([
+      ...acc,
+      {
+        column: key,
+        order: value as 'desc' | 'asc'
+      }
+    ]), [])
+  }
+
+  private getRawColumns(data: Partial<Omit<E, 'id'>>) {
+    return Object.entries(data).reduce((acc, [key, value]) => {
+      return {
+        ...acc,
+        [this.getColumnKey(key)]: value
+      }
+    }, {})
+  }
+
+  private getReturning(exclude: Exclude<E>) {
+    return Object.keys(this.columns).reduce<string[]>((acc, key) => (
+      !exclude.includes(key as keyof E)
+        ? [...acc, `${this.getColumnKey(key)} as ${key}`]
+        : acc
+    ), [])
   }
 }

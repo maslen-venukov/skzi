@@ -1,4 +1,3 @@
-import { Request } from 'express'
 import bcrypt from 'bcrypt'
 import { usersRepository } from '../users/users.repository'
 import { User } from '../users/user.interface'
@@ -8,7 +7,6 @@ import { userRolesService } from '../user-roles/user-roles.service'
 import { tokenService } from '../token/token.service'
 import { ApiError } from '../exceptions/api-error'
 import { usersTransform } from '../users/users.transform'
-import { logData } from '../utils/logData'
 
 class AuthService {
   async registration(dto: RegistrationDto) {
@@ -25,13 +23,14 @@ class AuthService {
     }
 
     const hash = await bcrypt.hash(dto.password, 5)
-    const { roleId, passHash, ...rest } = await usersRepository.create({
+    const user = await usersRepository.create({
       name,
       realName,
       passHash: hash,
       roleId: role.id
-    })
-    return { ...rest, role } as User
+    }, { exclude: ['passHash'] })
+
+    return { ...user, role } as User
   }
 
   async login(dto: LoginDto) {
@@ -42,12 +41,14 @@ class AuthService {
       throw ApiError.Unauthorized('Неверный логин или пароль')
     }
 
-    const payload = await usersTransform.expandUserWithRole(user)
-    if(!payload.isActive) {
+    const userWithRole = await usersTransform.expandWithRole(user)
+    if(!userWithRole.isActive) {
       throw ApiError.Forbidden()
     }
 
-    const isCompared = await bcrypt.compare(password, user.passHash)
+    const { passHash, ...payload } = userWithRole as User & { passHash: string }
+
+    const isCompared = await bcrypt.compare(password, passHash)
     if(!isCompared) {
       throw ApiError.Unauthorized('Неверный логин или пароль')
     }

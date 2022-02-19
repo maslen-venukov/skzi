@@ -1,12 +1,12 @@
 import { Request, Response, NextFunction } from 'express'
-import { logData } from '../utils/logData'
+import { logger } from '../utils/logger'
 
 export const logErrorMiddleware = (error: any, req: Request, res: Response, next: NextFunction) => {
   if(process.env.NODE_ENV === 'development') {
     return console.log(error)
   }
 
-  return logData({
+  return logger.log({
     fileName: 'errors',
     data: {
       error: {

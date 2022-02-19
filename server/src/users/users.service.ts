@@ -5,25 +5,28 @@ import { ApiError } from '../exceptions/api-error'
 
 class UsersService {
   async getAll() {
-    const users = await usersRepository.getAll({ sort: { id: 'desc' }})
-    return await Promise.all(users.map(user => usersTransform.expandUserWithRole(user)))
+    const users = await usersRepository.getAll({ sort: { id: 'desc' }, exclude: ['passHash'] })
+    return await Promise.all(users.map(user => usersTransform.expandWithRole(user)))
   }
 
   async getById(id: number) {
-    const user = await usersRepository.getById(id)
+    const user = await usersRepository.getById(id, { exclude: ['passHash'] })
     if(!user) {
       throw ApiError.NotFound('Пользователь не найден')
     }
-    return await usersTransform.expandUserWithRole(user)
+    return await usersTransform.expandWithRole(user)
   }
 
   async update(id: number, dto: UpdateUserDto) {
-    const user = await usersRepository.update(id, dto)
-    return await usersTransform.expandUserWithRole(user)
+    const user = await usersRepository.update(id, dto, { exclude: ['passHash'] })
+    return await usersTransform.expandWithRole(user)
   }
 
   async remove(id: number) {
-    await usersRepository.remove(id)
+    const isDeleted = await usersRepository.remove(id)
+    if(!isDeleted) {
+      throw ApiError.NotFound('Пользователь не найден')
+    }
   }
 }
 

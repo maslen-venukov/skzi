@@ -2,7 +2,7 @@ import { Response, NextFunction } from 'express'
 import { UserRoles } from '../enums/user-roles.enum'
 import { AuthRequest } from '../interfaces/auth-request.interface'
 import { ApiError } from '../exceptions/api-error'
-import { logData } from '../utils/logData'
+import { logger } from '../utils/logger'
 
 export const rolesMiddleware = (roles: UserRoles[]) => (req: AuthRequest, res: Response, next: NextFunction) => {
   if(!req.user) {
@@ -15,7 +15,7 @@ export const rolesMiddleware = (roles: UserRoles[]) => (req: AuthRequest, res: R
 
   if(!roles.includes(req.user.role.role)) {
     if(process.env.NODE_ENV === 'production') {
-      logData({ fileName: 'roles', data: { roles }, req })
+      logger.log({ fileName: 'roles', data: { roles }, req })
     }
     throw ApiError.Forbidden()
   }

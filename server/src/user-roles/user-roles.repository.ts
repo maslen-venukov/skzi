@@ -1,10 +1,16 @@
-import { UserRole } from './user-role.interface'
 import { Repository } from '../core/repository'
+import { UserRole } from './user-role.interface'
 
-export const userRolesRepository = new Repository<UserRole>({
-  table: 's_user_role',
-  fields: {
-    id: 'id',
-    role: 'role'
+class UserRolesRepository extends Repository<UserRole> {
+  constructor() {
+    super({
+      table: 's_user_role',
+      columns: [
+        'id',
+        'role'
+      ]
+    })
   }
-})
+}
+
+export const userRolesRepository = new UserRolesRepository()

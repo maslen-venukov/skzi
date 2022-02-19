@@ -1,14 +1,20 @@
-import { RawUser } from './user.interface'
 import { Repository } from '../core/repository'
+import { RawUser } from './user.interface'
 
-export const usersRepository = new Repository<RawUser>({
-  table: 'users',
-  fields: {
-    id: 'id',
-    name: 'name',
-    realName: 'real_name',
-    passHash: 'pass_hash',
-    roleId: 'role_id',
-    isActive: 'is_active'
+class UsersRepository extends Repository<RawUser> {
+  constructor() {
+    super({
+      table: 'users',
+      columns: [
+        'id',
+        'name',
+        'realName',
+        'passHash',
+        'roleId',
+        'isActive'
+      ]
+    })
   }
-})
+}
+
+export const usersRepository = new UsersRepository()

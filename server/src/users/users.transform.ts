@@ -2,22 +2,16 @@ import { userRolesService } from '../user-roles/user-roles.service'
 import { RawUser, User } from './user.interface'
 
 class UsersTransform {
-  async expandUserWithRole(
-    user: RawUser,
-    options: {
-      includePassHash?: boolean
-    } = {}
+  async expandWithRole(
+    user: RawUser
   ) {
-    const { roleId, passHash, ...rest } = user
+    const { roleId, ...rest } = user
     const role = await userRolesService.getById(roleId)
     return {
       ...rest,
-      ...options.includePassHash ? { passHash } : {},
       role
-    } as User & { passHash?: string }
+    } as User
   }
 }
 
 export const usersTransform = new UsersTransform()
-// TODO перенести includePassHash в сервис при вызове репозитория
-// TODO мб перейти на knex

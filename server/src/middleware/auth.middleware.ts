@@ -4,7 +4,6 @@ import { usersService } from '../users/users.service'
 import { ApiError } from '../exceptions/api-error'
 import { AuthRequest } from '../interfaces/auth-request.interface'
 import { User } from '../users/user.interface'
-import { logData } from '../utils/logData'
 
 export const authMiddleware = async (req: AuthRequest, res: Response, next: NextFunction) => {
   const unauthorizedError = () => next(ApiError.Unauthorized())
