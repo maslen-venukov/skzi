@@ -2,7 +2,7 @@ import fs from 'fs'
 import path from 'path'
 import { AuthRequest } from '../interfaces/auth-request.interface'
 
-const logData = ({ fileName, data, req }: {
+export const logData = ({ fileName, data, req }: {
   fileName: string
   data: object
   req: AuthRequest
@@ -29,5 +29,3 @@ const logData = ({ fileName, data, req }: {
     JSON.stringify({ ...info, ...data }, null, 2) + '\n'
   )
 }
-
-export default logData

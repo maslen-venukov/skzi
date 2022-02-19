@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express'
-import logData from '../utils/logData'
+import { logData } from '../utils/logData'
 
-const logErrorMiddleware = (error: any, req: Request, res: Response, next: NextFunction) => {
+export const logErrorMiddleware = (error: any, req: Request, res: Response, next: NextFunction) => {
   if(process.env.NODE_ENV === 'development') {
     return console.log(error)
   }
@@ -17,5 +17,3 @@ const logErrorMiddleware = (error: any, req: Request, res: Response, next: NextF
     req
   })
 }
-
-export default logErrorMiddleware

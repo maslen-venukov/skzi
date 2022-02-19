@@ -1,13 +1,15 @@
 import jwt from 'jsonwebtoken'
 
-export class TokenService {
-  private static secret = process.env.JWT_SECRET as string
+class TokenService {
+  private secret = process.env.JWT_SECRET as string
 
-  static generate(payload: any) {
+  generate(payload: any) {
     return jwt.sign(payload, this.secret, { expiresIn: '60m' })
   }
 
-  static validate(token: string) {
+  validate(token: string) {
     return jwt.verify(token, this.secret)
   }
 }
+
+export const tokenService = new TokenService()

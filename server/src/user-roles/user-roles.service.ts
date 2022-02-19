@@ -1,12 +1,14 @@
-import { UserRolesRepository } from './user-roles.repository'
+import { userRolesRepository } from './user-roles.repository'
 import { UserRoles } from '../enums/user-roles.enum'
 
-export class UserRolesService {
-  static async getById(id: number) {
-    return await UserRolesRepository.getById(id)
+class UserRolesService {
+  async getById(id: number) {
+    return await userRolesRepository.getById(id)
   }
 
-  static async getByRole(role: UserRoles) {
-    return await UserRolesRepository.getOne({ role })
+  async getByRole(role: UserRoles) {
+    return await userRolesRepository.getOne({ role })
   }
 }
+
+export const userRolesService = new UserRolesService()

@@ -1,9 +1,9 @@
 import express from 'express'
 import cors from 'cors'
 import dotenv from 'dotenv'
-import db from './core/db'
-import logErrorMiddleware from './middleware/log-error.middleware'
-import sendErrorMiddleware from './middleware/send-error.middleware'
+import { db } from './core/db'
+import { logErrorMiddleware } from './middleware/log-error.middleware'
+import { sendErrorMiddleware } from './middleware/send-error.middleware'
 import { usersRouter } from './users/users.router'
 import { authRouter } from './auth/auth.router'
 
@@ -24,8 +24,12 @@ app.use(sendErrorMiddleware)
 app.use(logErrorMiddleware)
 
 const start = async () => {
-  await db.connect()
-  app.listen(port, () => console.log(`server started on ${port}`))
+  try {
+    await db.connect()
+    app.listen(port, () => console.log(`server started on ${port}`))
+  } catch(e) {
+    console.log(e)
+  }
 }
 
 start()

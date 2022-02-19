@@ -1,16 +1,10 @@
-import db from '../core/db'
 import { UserRole } from './user-role.interface'
-import getOneEntity from '../utils/getOneEntity'
+import { Repository } from '../core/repository'
 
-export class UserRolesRepository {
-  private static selectQuery = 'SELECT * FROM s_user_role'
-
-  static async getById(id: number) {
-    const { rows } = await db.query<UserRole>(`${this.selectQuery} WHERE id = $1`, [id])
-    return rows[0]
+export const userRolesRepository = new Repository<UserRole>({
+  table: 's_user_role',
+  fields: {
+    id: 'id',
+    role: 'role'
   }
-
-  static async getOne(params: Partial<UserRole>) {
-    return await getOneEntity(params, this.selectQuery)
-  }
-}
+})

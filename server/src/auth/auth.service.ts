@@ -1,31 +1,31 @@
 import { Request } from 'express'
 import bcrypt from 'bcrypt'
-import { UsersRepository } from '../users/users.repository'
+import { usersRepository } from '../users/users.repository'
 import { User } from '../users/user.interface'
 import { RegistrationDto } from './dto/registration.dto'
 import { LoginDto } from './dto/login.dto'
-import { UserRolesService } from '../user-roles/user-roles.service'
-import { TokenService } from '../token/token.service'
+import { userRolesService } from '../user-roles/user-roles.service'
+import { tokenService } from '../token/token.service'
 import { ApiError } from '../exceptions/api-error'
-import { UsersTransform } from '../users/users.transform'
-import logData from '../utils/logData'
+import { usersTransform } from '../users/users.transform'
+import { logData } from '../utils/logData'
 
-export class AuthService {
-  static async registration(dto: RegistrationDto) {
+class AuthService {
+  async registration(dto: RegistrationDto) {
     const { name, realName } = dto
 
-    const candidate = await UsersRepository.getOne({ name })
+    const candidate = await usersRepository.getOne({ name })
     if(candidate) {
       throw ApiError.NotFound(`Пользователь с именем '${name}' уже существует`)
     }
 
-    const role = await UserRolesService.getById(dto.roleId)
+    const role = await userRolesService.getById(dto.roleId)
     if(!role) {
       throw ApiError.NotFound('Роль не найдена')
     }
 
     const hash = await bcrypt.hash(dto.password, 5)
-    const { roleId, passHash, ...rest } = await UsersRepository.create({
+    const { roleId, passHash, ...rest } = await usersRepository.create({
       name,
       realName,
       passHash: hash,
@@ -34,19 +34,16 @@ export class AuthService {
     return { ...rest, role } as User
   }
 
-  static async login(dto: LoginDto, req: Request) {
+  async login(dto: LoginDto) {
     const { name, password } = dto
 
-    const user = await UsersRepository.getOne({ name })
+    const user = await usersRepository.getOne({ name })
     if(!user) {
       throw ApiError.Unauthorized('Неверный логин или пароль')
     }
 
-    const payload = await UsersTransform.expandUserWithRole(user)
+    const payload = await usersTransform.expandUserWithRole(user)
     if(!payload.isActive) {
-      if(process.env.NODE_ENV === 'production') {
-        logData({ fileName: 'blocked', data: { user: payload }, req })
-      }
       throw ApiError.Forbidden()
     }
 
@@ -55,6 +52,8 @@ export class AuthService {
       throw ApiError.Unauthorized('Неверный логин или пароль')
     }
 
-    return { token: TokenService.generate(payload), user: payload }
+    return { token: tokenService.generate(payload), user: payload }
   }
 }
+
+export const authService = new AuthService()

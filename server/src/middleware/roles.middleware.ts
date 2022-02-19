@@ -2,9 +2,9 @@ import { Response, NextFunction } from 'express'
 import { UserRoles } from '../enums/user-roles.enum'
 import { AuthRequest } from '../interfaces/auth-request.interface'
 import { ApiError } from '../exceptions/api-error'
-import logData from '../utils/logData'
+import { logData } from '../utils/logData'
 
-const rolesMiddleware = (roles: UserRoles[]) => (req: AuthRequest, res: Response, next: NextFunction) => {
+export const rolesMiddleware = (roles: UserRoles[]) => (req: AuthRequest, res: Response, next: NextFunction) => {
   if(!req.user) {
     throw ApiError.Unauthorized()
   }
@@ -22,5 +22,3 @@ const rolesMiddleware = (roles: UserRoles[]) => (req: AuthRequest, res: Response
 
   next()
 }
-
-export default rolesMiddleware
