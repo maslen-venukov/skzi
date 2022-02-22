@@ -14,7 +14,7 @@ class AuthController {
 
       const dto = new RegistrationDto(req.body)
       const user = await authService.registration(dto)
-      return res.json({ user })
+      return res.json({ message: 'Регистрация прошла успешно', user })
     } catch(e) {
       next(e)
     }

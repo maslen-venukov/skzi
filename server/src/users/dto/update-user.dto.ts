@@ -1,4 +1,4 @@
-import { RawUser } from "../user.interface"
+import { RawUser } from '../user.interface'
 
 interface UpdateUserDtoParams {
   name?: string

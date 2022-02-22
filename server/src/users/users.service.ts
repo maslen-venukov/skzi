@@ -27,6 +27,7 @@ class UsersService {
     if(!isDeleted) {
       throw ApiError.NotFound('Пользователь не найден')
     }
+    return isDeleted
   }
 }
 

@@ -157,6 +157,10 @@ INSERT INTO s_user_role(role) VALUES
 ('Оператор'),
 ('Пользователь');
 
+INSERT INTO s_sign_type(type) VALUES
+('На бумаге'),
+('Электронная подпись');
+
 INSERT INTO users(name, real_name, pass_hash, role_id) VALUES
 ('system', 'Сергей Сергеев', '$2a$05$4eFwT91PQ7lEnI2FKtBhA.mG6pC7PA0TpZzI7bi/WFD/Z3WLtnWu.', 1),
 ('admin', 'Иван Иванов', '$2a$05$4eFwT91PQ7lEnI2FKtBhA.mG6pC7PA0TpZzI7bi/WFD/Z3WLtnWu.', 2),
