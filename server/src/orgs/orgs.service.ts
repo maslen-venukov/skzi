@@ -21,7 +21,11 @@ class OrgsService {
   }
 
   async update(id: number, dto: UpdateOrgDto) {
-    return await orgsRepository.update(id, dto)
+    const org = await orgsRepository.update(id, dto)
+    if(!org) {
+      throw ApiError.NotFound('Контрагент не найден')
+    }
+    return org
   }
 
   async remove(id: number) {

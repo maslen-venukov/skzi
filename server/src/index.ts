@@ -6,6 +6,7 @@ import { sendErrorMiddleware } from './middleware/send-error.middleware'
 import { authRouter } from './auth/auth.router'
 import { usersRouter } from './users/users.router'
 import { orgsRouter } from './orgs/orgs.router'
+import { agreementsRouter } from './agreements/agreements.router'
 
 dotenv.config()
 
@@ -20,6 +21,7 @@ app.use(express.urlencoded({ extended: true }))
 app.use('/api/auth', authRouter)
 app.use('/api/users', usersRouter)
 app.use('/api/orgs', orgsRouter)
+app.use('/api/agreements', agreementsRouter)
 
 app.use(sendErrorMiddleware)
 app.use(logErrorMiddleware)

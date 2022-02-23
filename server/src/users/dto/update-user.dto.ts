@@ -1,14 +1,8 @@
 import { RawUser } from '../user.interface'
 
-interface UpdateUserDtoParams {
-  name?: string
-  realName?: string
-  passHash?: string
-  roleId?: number
-  isActive?: boolean
-}
+type UpdateUserDtoParams = Partial<Omit<RawUser, 'id'>>
 
-export class UpdateUserDto implements Partial<Omit<RawUser, 'id'>> {
+export class UpdateUserDto implements UpdateUserDtoParams {
   name?: string
   realName?: string
   passHash?: string

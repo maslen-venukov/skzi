@@ -22,3 +22,9 @@ export const rolesMiddleware = (roles: UserRoles[]) => (req: AuthRequest, res: R
 
   next()
 }
+
+export const adminRolesMiddleware = () => rolesMiddleware([UserRoles.Admin])
+
+export const operatorRolesMiddleware = () => rolesMiddleware([UserRoles.Admin, UserRoles.Operator])
+
+export const userRolesMiddleware = () => rolesMiddleware([UserRoles.Admin, UserRoles.Operator, UserRoles.User])

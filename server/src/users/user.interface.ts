@@ -9,10 +9,6 @@ export interface RawUser {
   isActive: boolean
 }
 
-export interface User {
-  id: number
-  name: string
-  realName: string
-  isActive: boolean
+export interface User extends Omit<RawUser, 'passHash' | 'roleId'> {
   role: UserRole
 }

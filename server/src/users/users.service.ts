@@ -19,6 +19,9 @@ class UsersService {
 
   async update(id: number, dto: UpdateUserDto) {
     const user = await usersRepository.update(id, dto, { exclude: ['passHash'] })
+    if(!user) {
+      throw ApiError.NotFound('Пользователь не найден')
+    }
     return await usersTransform.expandWithRole(user)
   }
 

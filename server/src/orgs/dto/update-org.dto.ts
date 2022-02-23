@@ -1,12 +1,8 @@
 import { Org } from '../org.interface'
 
-interface UpdateOrgDtoParams {
-  inn?: string
-  name?: string
-  isWorks?: boolean
-}
+type UpdateOrgDtoParams = Partial<Omit<Org, 'id'>>
 
-export class UpdateOrgDto implements Partial<Omit<Org, 'id'>> {
+export class UpdateOrgDto implements UpdateOrgDtoParams {
   inn?: string
   name?: string
   isWorks?: boolean

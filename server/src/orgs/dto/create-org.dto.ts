@@ -1,11 +1,8 @@
 import { Org } from '../org.interface'
 
-interface CreateOrgDtoParams {
-  inn: string
-  name: string
-}
+type CreateOrgDtoParams = Omit<Org, 'id' | 'isWorks'>
 
-export class CreateOrgDto implements Omit<Org, 'id' | 'isWorks'> {
+export class CreateOrgDto implements CreateOrgDtoParams {
   inn: string
   name: string
 
