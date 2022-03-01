@@ -7,6 +7,7 @@ import { authRouter } from './auth/auth.router'
 import { usersRouter } from './users/users.router'
 import { orgsRouter } from './orgs/orgs.router'
 import { agreementsRouter } from './agreements/agreements.router'
+import { skziUnitsRouter } from './skzi-units/skzi-units.router'
 
 dotenv.config()
 
@@ -22,6 +23,7 @@ app.use('/api/auth', authRouter)
 app.use('/api/users', usersRouter)
 app.use('/api/orgs', orgsRouter)
 app.use('/api/agreements', agreementsRouter)
+app.use('/api/skzi-units', skziUnitsRouter)
 
 app.use(sendErrorMiddleware)
 app.use(logErrorMiddleware)
@@ -35,3 +37,6 @@ const start = async () => {
 }
 
 start()
+
+// TODO пагинация
+// TODO фильтры в req.query

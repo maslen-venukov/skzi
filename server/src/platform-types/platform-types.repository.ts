@@ -1,5 +1,5 @@
 import { Repository } from '../core/repository'
-import { Type } from '../types'
+import { Type } from '../interfaces/type.interface'
 
 class PlatformTypesRepository extends Repository<Type> {
   constructor() {
