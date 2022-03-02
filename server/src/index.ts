@@ -7,6 +7,7 @@ import { authRouter } from './auth/auth.router'
 import { usersRouter } from './users/users.router'
 import { orgsRouter } from './orgs/orgs.router'
 import { agreementsRouter } from './agreements/agreements.router'
+import { agreementCommentsRouter } from './agreement-comments/agreement-comments.router'
 import { skziUnitsRouter } from './skzi-units/skzi-units.router'
 import { actsRouter } from './acts/acts.router'
 
@@ -24,6 +25,7 @@ app.use('/api/auth', authRouter)
 app.use('/api/users', usersRouter)
 app.use('/api/orgs', orgsRouter)
 app.use('/api/agreements', agreementsRouter)
+app.use('/api/agreement-comments', agreementCommentsRouter)
 app.use('/api/skzi-units', skziUnitsRouter)
 app.use('/api/acts', actsRouter)
 
@@ -40,6 +42,5 @@ const start = async () => {
 
 start()
 
-// TODO переименовать platform в platformType в skziUnit
 // TODO пагинация
 // TODO фильтры в req.query
