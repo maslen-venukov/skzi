@@ -82,7 +82,7 @@ CREATE TABLE skzi_unit (
     serial_num VARCHAR(255) NULL,
     lic_skzi_num VARCHAR(255) NULL,
     serial_skzi_num VARCHAR(255) NULL,
-    platform_id INTEGER REFERENCES s_platform_type(id) NULL,
+    platform_type_id INTEGER REFERENCES s_platform_type(id) NULL,
     is_broken BOOLEAN NOT NULL,
     location VARCHAR(255) NULL,
     add_date TIMESTAMPTZ DEFAULT NOW() NOT NULL,
@@ -103,7 +103,7 @@ CREATE TABLE comment_skzi (
 CREATE TABLE act (
     id SERIAL PRIMARY KEY,
     number VARCHAR(255) NOT NULL,
-    arg_id INTEGER REFERENCES agreement(id) NOT NULL,
+    agreement_id INTEGER REFERENCES agreement(id) NOT NULL,
     date DATE DEFAULT NOW() NOT NULL,
     skzi_unit_id INTEGER REFERENCES skzi_unit(id) NOT NULL,
     sign_type_id INTEGER REFERENCES s_sign_type(id) NOT NULL,

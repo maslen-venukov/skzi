@@ -15,7 +15,7 @@ export class CreateSkziUnitDto implements CreateSkziUnitDtoParams {
   vipnetLanId: number
   agreementId?: number
   skziTypeId: number
-  platformId?: number
+  platformTypeId?: number
   addUserId: number
   inactUserId?: number
   skziOwnerId?: number
@@ -33,7 +33,7 @@ export class CreateSkziUnitDto implements CreateSkziUnitDtoParams {
     vipnetLanId,
     agreementId,
     skziTypeId,
-    platformId,
+    platformTypeId,
     addUserId,
     inactUserId,
     skziOwnerId
@@ -50,7 +50,7 @@ export class CreateSkziUnitDto implements CreateSkziUnitDtoParams {
     this.vipnetLanId = vipnetLanId
     this.agreementId = agreementId
     this.skziTypeId = skziTypeId
-    this.platformId = platformId
+    this.platformTypeId = platformTypeId
     this.addUserId = addUserId
     this.inactUserId = inactUserId
     this.skziOwnerId = skziOwnerId

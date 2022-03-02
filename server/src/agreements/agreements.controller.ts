@@ -54,8 +54,8 @@ class AgreementsController {
     try {
       const id = Number(req.params.id)
       const dto = new UpdateAgreementDto(req.body)
-      const org = await agreementsService.update(id, dto)
-      return res.json({ message: 'Соглашение успешно изменено', org })
+      const agreement = await agreementsService.update(id, dto)
+      return res.json({ message: 'Соглашение успешно изменено', agreement })
     } catch(e) {
       next(e)
     }

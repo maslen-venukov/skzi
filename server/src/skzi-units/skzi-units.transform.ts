@@ -8,11 +8,11 @@ import { orgsService } from '../orgs/orgs.service'
 
 class SkziUnitsTransform {
   async expand(skziUnit: RawSkziUnit) {
-    const { 
+    const {
       vipnetLanId,
       agreementId,
       skziTypeId,
-      platformId,
+      platformTypeId,
       addUserId,
       inactUserId,
       skziOwnerId,
@@ -22,7 +22,7 @@ class SkziUnitsTransform {
     const vipnetLan = await vipnetLansService.getById(vipnetLanId)
     const agreement = agreementId ? await agreementsService.getById(agreementId) : undefined
     const skziType = await skziTypesService.getById(skziTypeId)
-    const platform = platformId ? await platformTypesService.getById(platformId) : undefined
+    const platformType = platformTypeId ? await platformTypesService.getById(platformTypeId) : undefined
     const addUser = await usersService.getById(addUserId)
     const inactUser = inactUserId ? await usersService.getById(inactUserId) : undefined
     const skziOwner = skziOwnerId ? await orgsService.getById(skziOwnerId) : undefined
@@ -32,7 +32,7 @@ class SkziUnitsTransform {
       vipnetLan,
       agreement,
       skziType,
-      platform,
+      platformType,
       addUser,
       inactUser,
       skziOwner

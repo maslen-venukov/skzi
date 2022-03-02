@@ -21,7 +21,7 @@ class SkziUnitsRepository extends Repository<RawSkziUnit> {
         'vipnetLanId',
         'agreementId',
         'skziTypeId',
-        'platformId',
+        'platformTypeId',
         'addUserId',
         'inactUserId',
         'skziOwnerId'

@@ -23,7 +23,7 @@ export interface RawSkziUnit extends CoreSkziUnit {
   vipnetLanId: number
   agreementId?: number
   skziTypeId: number
-  platformId?: number
+  platformTypeId?: number
   addUserId: number
   inactUserId?: number
   skziOwnerId?: number
@@ -33,7 +33,7 @@ export interface SkziUnit extends CoreSkziUnit {
   vipnetLan: VipnetLan
   agreement?: Agreement
   skziType: Type
-  platform?: Type
+  platformType?: Type
   addUser: User
   inactUser?: User
   skziOwner?: Org

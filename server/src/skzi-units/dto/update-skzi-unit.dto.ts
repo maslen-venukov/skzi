@@ -16,7 +16,7 @@ export class UpdateSkziUnitDto implements UpdateSkziUnitDtoParams {
   vipnetLanId?: number
   agreementId?: number
   skziTypeId?: number
-  platformId?: number
+  platformTypeId?: number
   inactUserId?: number
   skziOwnerId?: number
 
@@ -34,7 +34,7 @@ export class UpdateSkziUnitDto implements UpdateSkziUnitDtoParams {
     vipnetLanId,
     agreementId,
     skziTypeId,
-    platformId,
+    platformTypeId,
     inactUserId,
     skziOwnerId
   }: UpdateSkziUnitDtoParams) {
@@ -51,7 +51,7 @@ export class UpdateSkziUnitDto implements UpdateSkziUnitDtoParams {
     this.vipnetLanId = vipnetLanId
     this.agreementId = agreementId
     this.skziTypeId = skziTypeId
-    this.platformId = platformId
+    this.platformTypeId = platformTypeId
     this.inactUserId = inactUserId
     this.skziOwnerId = skziOwnerId
   }
