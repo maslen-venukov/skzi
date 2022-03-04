@@ -2,15 +2,6 @@ import { Knex } from 'knex'
 import { db } from './db'
 import { caseTransform } from '../utils/case-transform'
 
-interface User {
-  id: number
-  name: string
-  realName: string
-  passHash: string
-  roleId: number
-  isActive: number
-}
-
 type Entity = Record<string, Knex.Value>
 type Columns<E = Entity> = Record<keyof E, string>
 type Filters<E = Entity> = Partial<Record<keyof E, Knex.Value>>
