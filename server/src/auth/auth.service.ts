@@ -55,6 +55,15 @@ class AuthService {
 
     return { token: tokenService.generate(payload), user: payload }
   }
+
+  async auth(userId: number) {
+    const user = await usersRepository.getById(userId)
+    if(!user) {
+      throw ApiError.Unauthorized()
+    }
+
+    return await usersTransform.expandWithRole(user)
+  }
 }
 
 export const authService = new AuthService()
