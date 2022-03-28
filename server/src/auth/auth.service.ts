@@ -62,7 +62,13 @@ class AuthService {
       throw ApiError.Unauthorized()
     }
 
-    return await usersTransform.expandWithRole(user)
+    const userWithRole = await usersTransform.expandWithRole(user)
+    if(!userWithRole.isActive) {
+      throw ApiError.Forbidden()
+    }
+
+    const { passHash, ...payload } = userWithRole as User & { passHash: string }
+    return payload
   }
 }
 

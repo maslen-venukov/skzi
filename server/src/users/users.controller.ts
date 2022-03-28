@@ -1,12 +1,14 @@
 import { Request, Response, NextFunction } from 'express'
 import { usersService } from './users.service'
 import { UpdateUserDto } from './dto/update-user.dto'
+import { UserRoles } from '../enums/user-roles.enum'
 
 class UsersController {
   async getAll(req: Request, res: Response, next: NextFunction) {
     try {
       const users = await usersService.getAll()
-      return res.json({ users })
+      const filtered = users.filter(user => user.role.role !== UserRoles.System)
+      return res.json({ users: filtered })
     } catch(e) {
       next(e)
     }
