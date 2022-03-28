@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
+import { message } from 'antd'
 import { auth, login } from './auth.thunks'
 import { AuthState } from './auth.types'
-import { message } from 'antd'
 import catchApiError from '../../utils/catchApiError'
 import storage from '../../utils/storage'
 import { RootState } from '..'
@@ -32,7 +32,7 @@ export const authSlice = createSlice({
       .addCase(auth.fulfilled, (state, action) => {
         state.isAuth = true
         state.isReady = true
-        state.user = action.payload
+        state.user = action.payload.user
       })
       .addCase(auth.rejected, state => {
         state.isAuth = false

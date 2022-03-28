@@ -1,17 +1,4 @@
-import { Roles } from '../../enums/Roles'
-
-export interface Role {
-  id: number
-  role: Roles
-}
-
-export interface User {
-  id: number
-  name: string
-  realName: string
-  isActive: boolean
-  role: Role
-}
+import { User } from '../users/users.types'
 
 export interface AuthState {
   isAuth: boolean
@@ -21,8 +8,11 @@ export interface AuthState {
 }
 
 export interface AuthResponse {
-  token: string
   user: User
+}
+
+export interface LoginResponse extends AuthResponse {
+  token: string
 }
 
 export interface LoginPayload {

@@ -5,7 +5,7 @@ import { LoginPayload } from './auth.types'
 export const auth = createAsyncThunk('auth/auth', async (_, { rejectWithValue }) => {
   try {
     const res = await api.auth()
-    return res.data.user
+    return res.data
   } catch(e) {
     return rejectWithValue(e)
   }

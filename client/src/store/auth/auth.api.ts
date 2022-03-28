@@ -1,10 +1,10 @@
 import api from '../../core/api'
-import { User, LoginPayload, AuthResponse } from './auth.types'
+import { LoginPayload, AuthResponse, LoginResponse } from './auth.types'
 
 export const auth = async () => (
-  await api.get<{ user: User }>('/api/auth')
+  await api.get<AuthResponse>('/api/auth')
 )
 
 export const login = async (data: LoginPayload) => (
-  await api.post<AuthResponse>('/api/auth/login', data)
+  await api.post<LoginResponse>('/api/auth/login', data)
 )
