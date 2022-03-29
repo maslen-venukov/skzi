@@ -13,6 +13,15 @@ export interface UsersState {
   users: User[]
 }
 
+export interface UpdateUserData extends Partial<Omit<User, 'role'>> {
+  roleId?: number
+}
+
 export interface GetUsersResponse {
   users: User[]
+}
+
+export interface UpdateUserResponse {
+  message: string
+  user: User
 }

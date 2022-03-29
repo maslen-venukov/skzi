@@ -12,7 +12,11 @@ const initialState: RolesState = {
 export const rolesSlice = createSlice({
   name: 'users',
   initialState,
-  reducers: {},
+  reducers: {
+    clearRoles: state => {
+      state.roles = []
+    }
+  },
   extraReducers: builder => {
     builder
       .addCase(getRoles.pending, state => {
@@ -29,6 +33,8 @@ export const rolesSlice = createSlice({
       })
   }
 })
+
+export const { clearRoles } = rolesSlice.actions
 
 export const selectRoles = (state: RootState) => state.roles
 

@@ -12,7 +12,6 @@ const Login = React.lazy(() => import('./pages/Login'))
 
 const App: React.FC = () => {
   const dispatch = useTypedDispatch()
-
   const { isReady, user } = useTypedSelector(selectAuth)
 
   useEffect(() => {

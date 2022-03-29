@@ -12,7 +12,6 @@ interface LoginFormValues {
 
 const Login: React.FC = () => {
   const dispatch = useTypedDispatch()
-
   const { isLoading } = useTypedSelector(selectAuth)
 
   const onLogin = (values: LoginFormValues) => dispatch(login(values))
@@ -20,10 +19,10 @@ const Login: React.FC = () => {
   return (
     <div className="login wrapper">
       <Form
-        onFinish={onLogin}
         layout="vertical"
         validateTrigger="onBlur"
         className="login__form"
+        onFinish={onLogin}
       >
         <Form.Item
           label="Логин"

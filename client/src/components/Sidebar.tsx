@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { Layout, Menu } from 'antd'
-import { Page } from './Wrapper'
+import { Page } from '../interfaces/Page'
 
 interface SidebarProps {
   collapsed: boolean
