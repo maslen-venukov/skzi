@@ -5,7 +5,7 @@ import { User } from '../users/user.interface'
 
 interface CoreAct {
   id: number
-  number: string
+  number: number
   date: Date
   addDate: Date
   eqInventoryNum?: string

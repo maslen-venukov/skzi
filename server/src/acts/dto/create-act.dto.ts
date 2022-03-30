@@ -3,7 +3,7 @@ import { RawAct } from '../act.interface'
 type CreateActDtoParams = Omit<RawAct, 'id' | 'addDate'>
 
 export class CreateActDto implements CreateActDtoParams {
-  number: string
+  number: number
   date: Date
   eqInventoryNum?: string
   agreementId: number

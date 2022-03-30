@@ -5,7 +5,7 @@ import { User } from '../users/user.interface'
 interface CoreAgreement {
   id: number
   isActive: boolean
-  number: number
+  number: string
   parentId?: number
   beginDate: Date
   endDate?: Date

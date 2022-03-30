@@ -4,7 +4,7 @@ type CreateAgreementDtoParams = Omit<RawAgreement, 'id' | 'isActive' | 'addDate'
 
 export class CreateAgreementDto implements CreateAgreementDtoParams {
   typeId: number
-  number: number
+  number: string
   parentId?: number
   beginDate: Date
   endDate?: Date

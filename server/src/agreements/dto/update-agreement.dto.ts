@@ -5,7 +5,7 @@ type UpdateAgreementDtoParams = Partial<Omit<RawAgreement, 'id' | 'addDate' | 'a
 export class UpdateAgreementDto implements UpdateAgreementDtoParams {
   typeId?: number
   isActive?: boolean
-  number?: number
+  number?: string
   parentId?: number
   beginDate?: Date
   endDate?: Date
