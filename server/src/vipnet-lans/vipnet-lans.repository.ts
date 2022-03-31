@@ -7,7 +7,8 @@ class VipnetLansRepository extends Repository<VipnetLan> {
       table: 's_vipnet_lan',
       columns: [
         'id',
-        'lanNum'
+        'lanNum',
+        'lanName'
       ]
     })
   }

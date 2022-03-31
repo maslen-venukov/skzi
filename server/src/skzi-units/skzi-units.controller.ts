@@ -29,14 +29,12 @@ class SkziUnitsController {
   async create(req: AuthRequest<{}, {}, Omit<CreateSkziUnitDto, 'addUserId'>>, res: Response, next: NextFunction) {
     try {
       const {
-        lanId,
-        lanName,
         isBroken,
         vipnetLanId,
         skziTypeId
       } = req.body
 
-      if (!lanId || !lanName || typeof isBroken === 'undefined' || !vipnetLanId || !skziTypeId) {
+      if (typeof isBroken === 'undefined' || !vipnetLanId || !skziTypeId) {
         throw ApiError.BadRequest('Заполните все поля')
       }
 
@@ -50,11 +48,18 @@ class SkziUnitsController {
     }
   }
 
-  async update(req: Request<{ id: string }, {}, UpdateSkziUnitDto>, res: Response, next: NextFunction) {
+  async update(req: AuthRequest<{ id: string }, {}, UpdateSkziUnitDto>, res: Response, next: NextFunction) {
     try {
       const id = Number(req.params.id)
       const dto = new UpdateSkziUnitDto(req.body)
-      const skziUnit = await skziUnitsService.update(id, dto)
+
+      const inactData: UpdateSkziUnitDto = {}
+      if(dto.isActive === false) {
+        inactData.inactDate = new Date()
+        inactData.inactUserId = (req.user as User).id
+      }
+
+      const skziUnit = await skziUnitsService.update(id, { ...dto, ...inactData })
       return res.json({ message: 'СКЗИ успешно изменено', skziUnit })
     } catch(e) {
       next(e)

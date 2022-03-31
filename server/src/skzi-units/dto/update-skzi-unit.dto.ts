@@ -5,8 +5,6 @@ type UpdateSkziUnitDtoParams = Partial<Omit<RawSkziUnit, 'id' | 'addDate' | 'add
 export class UpdateSkziUnitDto implements UpdateSkziUnitDtoParams {
   isActive?: boolean
   invNum?: string
-  lanId?: string
-  lanName?: string
   serialNum?: string
   licSkziNum?: string
   serialSkziNum?: string
@@ -23,8 +21,6 @@ export class UpdateSkziUnitDto implements UpdateSkziUnitDtoParams {
   constructor({
     isActive,
     invNum,
-    lanId,
-    lanName,
     serialNum,
     licSkziNum,
     serialSkziNum,
@@ -40,8 +36,6 @@ export class UpdateSkziUnitDto implements UpdateSkziUnitDtoParams {
   }: UpdateSkziUnitDtoParams) {
     this.isActive = isActive
     this.invNum = invNum
-    this.lanId = lanId
-    this.lanName = lanName
     this.serialNum = serialNum
     this.licSkziNum = licSkziNum
     this.serialSkziNum = serialSkziNum

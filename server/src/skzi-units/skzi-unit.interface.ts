@@ -8,8 +8,6 @@ interface CoreSkziUnit {
   id: number
   isActive: boolean
   invNum?: string
-  lanId: string
-  lanName: string
   serialNum?: string
   licSkziNum?: string
   serialSkziNum?: string

@@ -53,7 +53,16 @@ class AgreementsController {
     try {
       const id = Number(req.params.id)
       const dto = new UpdateAgreementDto(req.body)
-      const agreement = await agreementsService.update(id, dto)
+
+      const endData: UpdateAgreementDto = {}
+      if(dto.isActive === false) {
+        const old = await agreementsService.getById(id)
+        if(!old.endDate && !dto.endDate) {
+          endData.endDate = new Date()
+        }
+      }
+
+      const agreement = await agreementsService.update(id, { ...dto, ...endData })
       return res.json({ message: 'Соглашение успешно изменено', agreement })
     } catch(e) {
       next(e)

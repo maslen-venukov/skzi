@@ -9,8 +9,6 @@ class SkziUnitsRepository extends Repository<RawSkziUnit> {
         'id',
         'isActive',
         'invNum',
-        'lanId',
-        'lanName',
         'serialNum',
         'licSkziNum',
         'serialSkziNum',

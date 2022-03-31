@@ -36,7 +36,8 @@ CREATE TABLE s_platform_type (
 
 CREATE TABLE s_vipnet_lan (
     id SERIAL PRIMARY KEY,
-    lan_num INTEGER NOT NULL
+    lan_num INTEGER NOT NULL,
+    lan_name VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE org (
@@ -76,13 +77,11 @@ CREATE TABLE skzi_unit (
     agreement_id INTEGER REFERENCES agreement(id) NULL,
     skzi_type_id INTEGER REFERENCES s_skzi_type(id) NOT NULL,
     inv_num VARCHAR(255) NULL,
-    lan_id VARCHAR(255) NOT NULL,
-    lan_name VARCHAR(255) NOT NULL,
     serial_num VARCHAR(255) NULL,
     lic_skzi_num VARCHAR(255) NULL,
     serial_skzi_num VARCHAR(255) NULL,
     platform_type_id INTEGER REFERENCES s_platform_type(id) NULL,
-    is_broken BOOLEAN NOT NULL,
+    is_broken BOOLEAN DEFAULT FALSE NOT NULL,
     location VARCHAR(255) NULL,
     add_date TIMESTAMPTZ DEFAULT NOW() NOT NULL,
     add_user_id INTEGER REFERENCES users(id) NOT NULL,
@@ -146,9 +145,9 @@ INSERT INTO s_platform_type(type) VALUES
 ('X3');
 
 INSERT INTO s_vipnet_lan(lan_num) VALUES
-(1471),
-(1483),
-(3126);
+(1471, 'first lan'),
+(1483, 'second lan'),
+(3126, 'third lan');
 
 INSERT INTO s_user_role(role) VALUES
 ('Система'),
