@@ -10,7 +10,6 @@ export class CreateAgreementDto implements CreateAgreementDtoParams {
   endDate?: Date
   contractorNodeId: number
   contractorSegmentId?: number
-  comment: string
   addUserId: number
   terminationDate?: Date
 
@@ -22,7 +21,6 @@ export class CreateAgreementDto implements CreateAgreementDtoParams {
     endDate,
     contractorNodeId,
     contractorSegmentId,
-    comment,
     addUserId,
     terminationDate
   }: CreateAgreementDtoParams) {
@@ -33,7 +31,6 @@ export class CreateAgreementDto implements CreateAgreementDtoParams {
     this.endDate = endDate
     this.contractorNodeId = contractorNodeId
     this.contractorSegmentId = contractorSegmentId
-    this.comment = comment
     this.addUserId = addUserId
     this.terminationDate = terminationDate
   }

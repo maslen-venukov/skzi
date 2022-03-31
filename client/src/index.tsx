@@ -14,7 +14,7 @@ const App = React.lazy(() => import('./App'))
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
-      <ConfigProvider locale={locale} componentSize="middle">
+      <ConfigProvider locale={locale} componentSize="small">
         <Router>
           <React.Suspense fallback={<Loader />}>
             <App />

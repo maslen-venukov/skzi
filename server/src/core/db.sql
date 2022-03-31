@@ -56,7 +56,6 @@ CREATE TABLE agreement (
     end_date DATE NULL,
     contractor_node_id INTEGER REFERENCES org(id) NOT NULL,
     contractor_segment_id INTEGER REFERENCES org(id) NULL,
-    comment TEXT NOT NULL,
     add_user_id INTEGER REFERENCES users(id) NOT NULL,
     add_date TIMESTAMPTZ DEFAULT NOW() NOT NULL,
     termination_date DATE NULL

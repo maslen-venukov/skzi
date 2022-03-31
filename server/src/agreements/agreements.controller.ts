@@ -32,11 +32,10 @@ class AgreementsController {
         typeId,
         number,
         beginDate,
-        contractorNodeId,
-        comment
+        contractorNodeId
       } = req.body
 
-      if (!typeId || !number || !beginDate || !contractorNodeId || !comment) {
+      if (!typeId || !number || !beginDate || !contractorNodeId) {
         throw ApiError.BadRequest('Заполните все поля')
       }
 

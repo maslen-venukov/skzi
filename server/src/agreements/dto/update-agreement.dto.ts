@@ -11,7 +11,6 @@ export class UpdateAgreementDto implements UpdateAgreementDtoParams {
   endDate?: Date
   contractorNodeId?: number
   contractorSegmentId?: number
-  comment?: string
   terminationDate?: Date
 
   constructor({
@@ -23,7 +22,6 @@ export class UpdateAgreementDto implements UpdateAgreementDtoParams {
     endDate,
     contractorNodeId,
     contractorSegmentId,
-    comment,
     terminationDate
   }: UpdateAgreementDtoParams) {
     this.typeId = typeId
@@ -34,7 +32,6 @@ export class UpdateAgreementDto implements UpdateAgreementDtoParams {
     this.endDate = endDate
     this.contractorNodeId = contractorNodeId
     this.contractorSegmentId = contractorSegmentId
-    this.comment = comment
     this.terminationDate = terminationDate
   }
 }

@@ -9,7 +9,6 @@ interface CoreAgreement {
   parentId?: number
   beginDate: Date
   endDate?: Date
-  comment: string
   addDate: Date
   terminationDate?: Date
 }

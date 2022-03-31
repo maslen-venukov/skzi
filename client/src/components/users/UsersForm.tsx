@@ -6,22 +6,22 @@ import { selectRoles } from '../../store/roles/roles.slice'
 import { selectUsers } from '../../store/users/users.slice'
 import { User } from '../../store/users/users.types'
 
-export interface UserFormValues {
+export interface UsersFormValues {
   name: string
   realName: string
   isActive: boolean
   roleId: number
 }
 
-interface UserFormProps {
+interface UsersFormProps {
   user?: User | null
-  onFinish: (values: UserFormValues) => void
+  onFinish: (values: UsersFormValues) => void
 }
 
-const UserForm: React.FC<UserFormProps> = ({ user, onFinish }) => {
+const UsersForm: React.FC<UsersFormProps> = ({ user, onFinish }) => {
   const { isLoading: isUsersLoading } = useTypedSelector(selectUsers)
   const { isLoading: isRolesLoading, roles } = useTypedSelector(selectRoles)
-  const [form] = useForm<UserFormValues>()
+  const [form] = useForm<UsersFormValues>()
 
   useEffect(() => {
     if(!user) return
@@ -32,12 +32,12 @@ const UserForm: React.FC<UserFormProps> = ({ user, onFinish }) => {
     })
   }, [form, user])
 
-
   return (
     <Form
       form={form}
       layout="vertical"
       validateTrigger="onBlur"
+      autoComplete="off"
       onFinish={onFinish}
     >
       <Form.Item
@@ -93,4 +93,4 @@ const UserForm: React.FC<UserFormProps> = ({ user, onFinish }) => {
   )
 }
 
-export default UserForm
+export default UsersForm

@@ -15,7 +15,6 @@ class AgreementsRepository extends Repository<RawAgreement> {
         'endDate',
         'contractorNodeId',
         'contractorSegmentId',
-        'comment',
         'addUserId',
         'addDate',
         'terminationDate'

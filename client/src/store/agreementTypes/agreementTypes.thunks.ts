@@ -1,11 +1,11 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
-import * as api from './orgs.api'
+import * as api from './agreementTypes.api'
 
-export const getOrgs = createAsyncThunk(
-  'orgs/getOrgs',
+export const getAgreementTypes = createAsyncThunk(
+  'agreementTypes/getAgreementTypes',
   async (_, { rejectWithValue }) => {
     try {
-      const res = await api.getOrgs()
+      const res = await api.getAgreementTypes()
       return res.data
     } catch(e) {
       return rejectWithValue(e)

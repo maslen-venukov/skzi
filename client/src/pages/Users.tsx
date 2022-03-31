@@ -6,24 +6,20 @@ import StatusTag from '../components/StatusTag'
 import Loader from '../components/Loader'
 import { getUsers, updateUser } from '../store/users/users.thunks'
 import { getRoles } from '../store/roles/roles.thunks'
-import { selectAuth } from '../store/auth/auth.slice'
 import { clearUsers, selectUsers } from '../store/users/users.slice'
 import { clearRoles } from '../store/roles/roles.slice'
 import useBoolean from '../hooks/useBoolean'
 import useTypedDispatch from '../hooks/useTypedDispatch'
 import useTypedSelector from '../hooks/useTypedSelector'
 import getDelta from '../utils/getDelta'
-import isRoleMatch from '../utils/isRoleMatch'
 import { User } from '../store/users/users.types'
-import { Roles } from '../enums/Roles'
-import { UserFormValues } from '../components/users/UserForm'
+import { UsersFormValues } from '../components/users/UsersForm'
 
-const UserForm = React.lazy(() => import('../components/users/UserForm'))
+const UsersForm = React.lazy(() => import('../components/users/UsersForm'))
 
 const Users: React.FC = () => {
   const [currentUser, setCurrentUser] = useState<User | null>(null)
   const dispatch = useTypedDispatch()
-  const { user } = useTypedSelector(selectAuth)
   const { isLoading: isUsersLoading, users } = useTypedSelector(selectUsers)
   const drawerVisible = useBoolean()
 
@@ -39,7 +35,7 @@ const Users: React.FC = () => {
     }, 300)
   }
 
-  const onEdit = (values: UserFormValues) => {
+  const onUpdate = (values: UsersFormValues) => {
     if(!currentUser) return
 
     const delta = getDelta(values, {
@@ -59,18 +55,13 @@ const Users: React.FC = () => {
 
   useEffect(() => {
     dispatch(getUsers())
+    dispatch(getRoles())
 
     return () => {
       dispatch(clearUsers())
       dispatch(clearRoles())
     }
   }, [dispatch])
-
-  useEffect(() => {
-    if(user && isRoleMatch(user.role.role, Roles.Admin)) {
-      dispatch(getRoles())
-    }
-  }, [user, dispatch])
 
   return (
     <>
@@ -107,7 +98,7 @@ const Users: React.FC = () => {
         onClose={closeDrawer}
       >
         <Suspense fallback={<Loader />}>
-          <UserForm onFinish={onEdit} user={currentUser} />
+          <UsersForm onFinish={onUpdate} user={currentUser} />
         </Suspense>
       </Drawer>
     </>
