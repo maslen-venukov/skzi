@@ -1,15 +1,15 @@
 import React, { Suspense, useMemo } from 'react'
+import { observer } from 'mobx-react-lite'
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { Layout } from 'antd'
 import Sidebar from './Sidebar'
 import Header from './Header'
 import Loader from './Loader'
-import { selectAuth } from '../store/auth/auth.slice'
+import authStore from '../store/auth/auth.store'
 import useBoolean from '../hooks/useBoolean'
-import useTypedSelector from '../hooks/useTypedSelector'
 import storage from '../utils/storage'
 import isRoleMatch from '../utils/isRoleMatch'
-import { Roles } from '../enums/Roles'
+import { Roles } from '../enums/roles.enum'
 
 interface Page {
   path: string
@@ -24,7 +24,7 @@ const Agreement = React.lazy(() => import('../pages/Agreement'))
 const SkziUnits = React.lazy(() => import('../pages/SkziUnits'))
 
 const Wrapper = () => {
-  const { user } = useTypedSelector(selectAuth)
+  const { user } = authStore
   const collapsed = useBoolean(storage.get<boolean>('collapsed') || false)
 
   const onToggle = () => {
@@ -88,4 +88,4 @@ const Wrapper = () => {
   )
 }
 
-export default Wrapper
+export default observer(Wrapper)

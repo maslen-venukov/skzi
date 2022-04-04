@@ -1,12 +1,12 @@
 import React, { useEffect, useMemo, useState } from 'react'
+import { observer } from 'mobx-react-lite'
 import { Button, Checkbox, DatePicker, Form, Input, Select } from 'antd'
 import { useForm } from 'antd/lib/form/Form'
 import moment, { Moment } from 'moment'
 import Loader from '../Loader'
-import { selectAgreements } from '../../store/agreements/agreements.slice'
-import { selectAgreementTypes } from '../../store/agreementTypes/agreementTypes.slice'
-import { selectOrgs } from '../../store/orgs/orgs.slice'
-import useTypedSelector from '../../hooks/useTypedSelector'
+import agreementsStore from '../../store/agreements/agreements.store'
+import agreementTypesStore from '../../store/agreement-types/agreement-types.store'
+import orgsStore from '../../store/orgs/orgs.store'
 import { Agreement } from '../../store/agreements/agreements.types'
 
 interface UpdateAgreementFormValues {
@@ -32,9 +32,9 @@ const UpdateAgreementForm: React.FC<UpdateAgreementFormProps> = ({
 }) => {
   const [nodeName, setNodeName] = useState('')
   const [segmentName, setSegmentName] = useState('')
-  const { isLoading: isAgreementsLoading } = useTypedSelector(selectAgreements)
-  const { isLoading: isTypesLoading, types } = useTypedSelector(selectAgreementTypes)
-  const { isLoading: isOrgsLoading, orgs } = useTypedSelector(selectOrgs)
+  const { isLoading: isAgreementsLoading } = agreementsStore
+  const { types, isLoading: isTypesLoading } = agreementTypesStore
+  const { orgs, isLoading: isOrgsLoading } = orgsStore
   const [form] = useForm<UpdateAgreementFormValues>()
 
   const nodes = useMemo(() => (
@@ -186,4 +186,4 @@ const UpdateAgreementForm: React.FC<UpdateAgreementFormProps> = ({
   )
 }
 
-export default UpdateAgreementForm
+export default observer(UpdateAgreementForm)

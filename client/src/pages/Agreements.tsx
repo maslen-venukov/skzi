@@ -1,36 +1,31 @@
 import React, { Suspense, useEffect, useMemo, useState } from 'react'
+import { observer } from 'mobx-react-lite'
 import { useNavigate } from 'react-router-dom'
 import { Drawer, Space, Table, Tooltip } from 'antd'
 import { PlusOutlined, FileDoneOutlined, EditOutlined } from '@ant-design/icons'
 import StatusTag from '../components/StatusTag'
 import Hint from '../components/Hint'
 import Loader from '../components/Loader'
-import useTypedDispatch from '../hooks/useTypedDispatch'
-import useTypedSelector from '../hooks/useTypedSelector'
-import { selectAuth } from '../store/auth/auth.slice'
-import { clearAgreements, selectAgreements } from '../store/agreements/agreements.slice'
-import { clearAgreementTypes, selectAgreementTypes } from '../store/agreementTypes/agreementTypes.slice'
-import { clearOrgs, selectOrgs } from '../store/orgs/orgs.slice'
-import { getAgreements } from '../store/agreements/agreements.thunks'
-import { getAgreementTypes } from '../store/agreementTypes/agreementTypes.thunks'
-import { getOrgs } from '../store/orgs/orgs.thunks'
+import authStore from '../store/auth/auth.store'
+import agreementsStore from '../store/agreements/agreements.store'
+import agreementTypesStore from '../store/agreement-types/agreement-types.store'
+import orgsStore from '../store/orgs/orgs.store'
 import useBoolean from '../hooks/useBoolean'
 import isRoleMatch from '../utils/isRoleMatch'
 import { formatDate } from '../utils/format'
 import { Agreement } from '../store/agreements/agreements.types'
-import { Type } from '../interfaces/Type'
-import { Roles } from '../enums/Roles'
+import { Type } from '../interfaces/type.interface'
+import { Roles } from '../enums/roles.enum'
 
 const CreateAgreementForm = React.lazy(() => import('../components/agreements/CreateAgreementForm'))
 const UpdateAgreementForm = React.lazy(() => import('../components/agreements/UpdateAgreementForm'))
 
 const Agreements: React.FC = () => {
   const [currentAgreement, setCurrentAgreement] = useState<Agreement | null>(null)
-  const dispatch = useTypedDispatch()
-  const { user } = useTypedSelector(selectAuth)
-  const { isLoading: isAgreementsLoading, agreements } = useTypedSelector(selectAgreements)
-  const { isLoading: isTypesLoading } = useTypedSelector(selectAgreementTypes)
-  const { isLoading: isOrgsLoading } = useTypedSelector(selectOrgs)
+  const { user } = authStore
+  const { agreements, isLoading: isAgreementsLoading, getAgreements, setAgreements } = agreementsStore
+  const { isLoading: isTypesLoading, getAgreementTypes, setAgreementTypes } = agreementTypesStore
+  const { isLoading: isOrgsLoading, getOrgs, setOrgs } = orgsStore
   const navigate = useNavigate()
   const createDrawerVisible = useBoolean()
   const updateDrawerVisible = useBoolean()
@@ -56,21 +51,21 @@ const Agreements: React.FC = () => {
   }
 
   useEffect(() => {
-    dispatch(getAgreements())
+    getAgreements()
 
     return () => {
-      dispatch(clearAgreements())
-      dispatch(clearAgreementTypes())
-      dispatch(clearOrgs())
+      setAgreements([])
+      setAgreementTypes([])
+      setOrgs([])
     }
-  }, [dispatch])
+  }, [getAgreements, setAgreements, setAgreementTypes, setOrgs])
 
   useEffect(() => {
     if(isOperator) {
-      dispatch(getAgreementTypes())
-      dispatch(getOrgs())
+      getAgreementTypes()
+      getOrgs()
     }
-  }, [isOperator, dispatch])
+  }, [isOperator, getAgreementTypes, getOrgs])
 
   return (
     <>
@@ -169,4 +164,4 @@ const Agreements: React.FC = () => {
   )
 }
 
-export default Agreements
+export default observer(Agreements)

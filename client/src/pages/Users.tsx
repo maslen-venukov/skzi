@@ -1,16 +1,13 @@
 import React, { useState, useEffect, Suspense } from 'react'
+import { observer } from 'mobx-react-lite'
 import { Drawer, Table } from 'antd'
 import { EditOutlined } from '@ant-design/icons'
 import Hint from '../components/Hint'
 import StatusTag from '../components/StatusTag'
 import Loader from '../components/Loader'
-import { getUsers, updateUser } from '../store/users/users.thunks'
-import { getRoles } from '../store/roles/roles.thunks'
-import { clearUsers, selectUsers } from '../store/users/users.slice'
-import { clearRoles } from '../store/roles/roles.slice'
+import usersStore from '../store/users/users.store'
+import rolesStore from '../store/roles/roles.store'
 import useBoolean from '../hooks/useBoolean'
-import useTypedDispatch from '../hooks/useTypedDispatch'
-import useTypedSelector from '../hooks/useTypedSelector'
 import getDelta from '../utils/getDelta'
 import { User } from '../store/users/users.types'
 import { UsersFormValues } from '../components/users/UsersForm'
@@ -19,8 +16,8 @@ const UsersForm = React.lazy(() => import('../components/users/UsersForm'))
 
 const Users: React.FC = () => {
   const [currentUser, setCurrentUser] = useState<User | null>(null)
-  const dispatch = useTypedDispatch()
-  const { isLoading: isUsersLoading, users } = useTypedSelector(selectUsers)
+  const { users, isLoading, getUsers, setUsers, updateUser } = usersStore
+  const { getRoles, setRoles } = rolesStore
   const drawerVisible = useBoolean()
 
   const openDrawer = (user: User) => {
@@ -44,30 +41,27 @@ const Users: React.FC = () => {
     })
 
     if(Object.keys(delta).length) {
-      dispatch(updateUser({
-        ...delta,
-        id: currentUser.id,
-      }))
+      updateUser(currentUser.id, delta)
     }
 
     closeDrawer()
   }
 
   useEffect(() => {
-    dispatch(getUsers())
-    dispatch(getRoles())
+    getUsers()
+    getRoles()
 
     return () => {
-      dispatch(clearUsers())
-      dispatch(clearRoles())
+      setUsers([])
+      setRoles([])
     }
-  }, [dispatch])
+  }, [getUsers, getRoles, setUsers, setRoles])
 
   return (
     <>
       <Table
         dataSource={users}
-        loading={isUsersLoading}
+        loading={isLoading}
         rowKey="id"
         bordered
       >
@@ -105,4 +99,4 @@ const Users: React.FC = () => {
   )
 }
 
-export default Users
+export default observer(Users)

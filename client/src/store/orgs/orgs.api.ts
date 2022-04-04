@@ -1,6 +1,8 @@
 import api from '../../core/api'
-import { GetOrgsResponse } from './orgs.types'
+import { Org } from './orgs.types'
 
 export const getOrgs = async () => (
-  await api.get<GetOrgsResponse>('/api/orgs')
+  await api.get<{
+    orgs: Org[]
+  }>('/api/orgs')
 )

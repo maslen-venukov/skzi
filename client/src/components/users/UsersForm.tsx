@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react'
+import { observer } from 'mobx-react-lite'
 import { Form, Input, Checkbox, Button, Select } from 'antd'
 import { useForm } from 'antd/lib/form/Form'
-import useTypedSelector from '../../hooks/useTypedSelector'
-import { selectRoles } from '../../store/roles/roles.slice'
-import { selectUsers } from '../../store/users/users.slice'
+import usersStore from '../../store/users/users.store'
+import rolesStore from '../../store/roles/roles.store'
 import { User } from '../../store/users/users.types'
 
 export interface UsersFormValues {
@@ -19,8 +19,8 @@ interface UsersFormProps {
 }
 
 const UsersForm: React.FC<UsersFormProps> = ({ user, onFinish }) => {
-  const { isLoading: isUsersLoading } = useTypedSelector(selectUsers)
-  const { isLoading: isRolesLoading, roles } = useTypedSelector(selectRoles)
+  const { isLoading: isUsersLoading } = usersStore
+  const { roles, isLoading: isRolesLoading } = rolesStore
   const [form] = useForm<UsersFormValues>()
 
   useEffect(() => {
@@ -93,4 +93,4 @@ const UsersForm: React.FC<UsersFormProps> = ({ user, onFinish }) => {
   )
 }
 
-export default UsersForm
+export default observer(UsersForm)

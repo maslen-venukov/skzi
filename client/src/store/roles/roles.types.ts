@@ -1,15 +1,6 @@
-import { Roles } from '../../enums/Roles'
+import { Roles } from '../../enums/roles.enum'
 
 export interface Role {
   id: number
   role: Roles
-}
-
-export interface RolesState {
-  isLoading: boolean
-  roles: Role[]
-}
-
-export interface GetRolesResponse {
-  roles: Role[]
 }

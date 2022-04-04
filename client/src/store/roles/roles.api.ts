@@ -1,6 +1,8 @@
 import api from '../../core/api'
-import { GetRolesResponse } from './roles.types'
+import { Role } from './roles.types'
 
 export const getRoles = async () => (
-  await api.get<GetRolesResponse>('/api/roles')
+  await api.get<{
+    roles: Role[]
+  }>('/api/roles')
 )

@@ -1,5 +1,5 @@
 import { Org } from '../orgs/orgs.types'
-import { Type } from '../../interfaces/Type'
+import { Type } from '../../interfaces/type.interface'
 import { User } from '../users/users.types'
 
 export interface Agreement {
@@ -15,17 +15,4 @@ export interface Agreement {
   contractorSegment?: Org
   type: Type
   addUser: User
-}
-
-export interface AgreementsState {
-  isLoading: boolean
-  agreements: Agreement[]
-}
-
-export interface GetAgreementsResponse {
-  agreements: Agreement[]
-}
-
-export interface GetAgreementResponse {
-  agreement: Agreement
 }

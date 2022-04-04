@@ -1,12 +1,12 @@
 import React, { useMemo, useState } from 'react'
+import { observer } from 'mobx-react-lite'
 import { Moment } from 'moment'
 import { Button, DatePicker, Form, Input, Select } from 'antd'
 import { useForm } from 'antd/lib/form/Form'
 import Loader from '../Loader'
-import { selectAgreements } from '../../store/agreements/agreements.slice'
-import { selectAgreementTypes } from '../../store/agreementTypes/agreementTypes.slice'
-import { selectOrgs } from '../../store/orgs/orgs.slice'
-import useTypedSelector from '../../hooks/useTypedSelector'
+import agreementsStore from '../../store/agreements/agreements.store'
+import agreementTypesStore from '../../store/agreement-types/agreement-types.store'
+import orgsStore from '../../store/orgs/orgs.store'
 
 interface CreateAgreementFormValues {
   number: string
@@ -27,9 +27,9 @@ const CreateAgreementForm: React.FC<CreateAgreementFormProps> = ({
 }) => {
   const [nodeName, setNodeName] = useState('')
   const [segmentName, setSegmentName] = useState('')
-  const { isLoading: isAgreementsLoading } = useTypedSelector(selectAgreements)
-  const { isLoading: isTypesLoading, types } = useTypedSelector(selectAgreementTypes)
-  const { isLoading: isOrgsLoading, orgs } = useTypedSelector(selectOrgs)
+  const { isLoading: isAgreementsLoading } = agreementsStore
+  const { types, isLoading: isTypesLoading } = agreementTypesStore
+  const { orgs, isLoading: isOrgsLoading } = orgsStore
   const [form] = useForm<CreateAgreementFormValues>()
 
   const nodes = useMemo(() => (
@@ -153,4 +153,4 @@ const CreateAgreementForm: React.FC<CreateAgreementFormProps> = ({
   )
 }
 
-export default CreateAgreementForm
+export default observer(CreateAgreementForm)

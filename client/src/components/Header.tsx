@@ -1,9 +1,13 @@
 import React from 'react'
+import { observer } from 'mobx-react-lite'
 import { Layout } from 'antd'
-import { MenuUnfoldOutlined, MenuFoldOutlined, LogoutOutlined } from '@ant-design/icons'
+import {
+  MenuUnfoldOutlined,
+  MenuFoldOutlined,
+  LogoutOutlined
+} from '@ant-design/icons'
 import Hint from './Hint'
-import { logout } from '../store/auth/auth.slice'
-import useTypedDispatch from '../hooks/useTypedDispatch'
+import authStore from '../store/auth/auth.store'
 
 interface HeaderProps {
   collapsed: boolean
@@ -11,9 +15,7 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({ collapsed, onToggle }) => {
-  const dispatch = useTypedDispatch()
-
-  const onLogout = () => dispatch(logout())
+  const { logout } = authStore
 
   return (
     <Layout.Header className="header">
@@ -31,11 +33,11 @@ const Header: React.FC<HeaderProps> = ({ collapsed, onToggle }) => {
           type: 'primary',
           icon: <LogoutOutlined />,
           danger: true,
-          onClick: onLogout
+          onClick: logout
         }}
       />
     </Layout.Header>
   )
 }
 
-export default Header
+export default observer(Header)

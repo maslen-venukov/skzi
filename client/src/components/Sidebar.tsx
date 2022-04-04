@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react'
+import { observer } from 'mobx-react-lite'
 import { Link, useLocation } from 'react-router-dom'
 import { Layout, Menu } from 'antd'
 import {
@@ -7,10 +8,9 @@ import {
   FileDoneOutlined,
   LockOutlined
 } from '@ant-design/icons'
-import { selectAuth } from '../store/auth/auth.slice'
-import useTypedSelector from '../hooks/useTypedSelector'
+import authStore from '../store/auth/auth.store'
 import isRoleMatch from '../utils/isRoleMatch'
-import { Roles } from '../enums/Roles'
+import { Roles } from '../enums/roles.enum'
 
 interface SidebarProps {
   collapsed: boolean
@@ -24,7 +24,7 @@ interface MenuItem {
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ collapsed }) => {
-  const { user } = useTypedSelector(selectAuth)
+  const { user } = authStore
   const location = useLocation()
 
   const menu = useMemo(() => {
@@ -68,4 +68,4 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed }) => {
   )
 }
 
-export default Sidebar
+export default observer(Sidebar)

@@ -8,20 +8,6 @@ export interface User {
   role: Role
 }
 
-export interface UsersState {
-  isLoading: boolean
-  users: User[]
-}
-
-export interface UpdateUserData extends Partial<Omit<User, 'role'>> {
+export interface UpdateUserData extends Partial<Omit<User, 'id' | 'role'>> {
   roleId?: number
-}
-
-export interface GetUsersResponse {
-  users: User[]
-}
-
-export interface UpdateUserResponse {
-  message: string
-  user: User
 }

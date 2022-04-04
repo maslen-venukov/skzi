@@ -1,20 +1,10 @@
 import React from 'react'
+import { observer } from 'mobx-react-lite'
 import { Form, Input, Button } from 'antd'
-import { login } from '../store/auth/auth.thunks'
-import { selectAuth } from '../store/auth/auth.slice'
-import useTypedDispatch from '../hooks/useTypedDispatch'
-import useTypedSelector from '../hooks/useTypedSelector'
-
-interface LoginFormValues {
-  name: string
-  password: string
-}
+import authStore from '../store/auth/auth.store'
 
 const Login: React.FC = () => {
-  const dispatch = useTypedDispatch()
-  const { isLoading } = useTypedSelector(selectAuth)
-
-  const onLogin = (values: LoginFormValues) => dispatch(login(values))
+  const { isLoading, login } = authStore
 
   return (
     <div className="login wrapper">
@@ -22,7 +12,7 @@ const Login: React.FC = () => {
         layout="vertical"
         validateTrigger="onBlur"
         className="login__form"
-        onFinish={onLogin}
+        onFinish={login}
       >
         <Form.Item
           label="Логин"
@@ -55,4 +45,4 @@ const Login: React.FC = () => {
   )
 }
 
-export default Login
+export default observer(Login)

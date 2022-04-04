@@ -1,15 +1,18 @@
 import api from '../../core/api'
-import {
-  GetUsersResponse,
-  UpdateUserResponse,
-  UpdateUserData
-} from './users.types'
+import { UpdateUserData, User } from './users.types'
 
 export const getUsers = async () => (
-  await api.get<GetUsersResponse>('/api/users')
+  await api.get<{
+    users: User[]
+  }>('/api/users')
 )
 
-export const updateUser = async (data: UpdateUserData) => {
-  const { id, ...rest } = data
-  return await api.patch<UpdateUserResponse>(`/api/users/${id}`, rest)
+export const updateUser = async (
+  id: number,
+  data: UpdateUserData
+) => {
+  return await api.patch<{
+    message: string
+    user: User
+  }>(`/api/users/${id}`, data)
 }
