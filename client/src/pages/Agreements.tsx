@@ -10,8 +10,10 @@ import useTypedSelector from '../hooks/useTypedSelector'
 import { selectAuth } from '../store/auth/auth.slice'
 import { clearAgreements, selectAgreements } from '../store/agreements/agreements.slice'
 import { clearAgreementTypes, selectAgreementTypes } from '../store/agreementTypes/agreementTypes.slice'
+import { clearOrgs, selectOrgs } from '../store/orgs/orgs.slice'
 import { getAgreements } from '../store/agreements/agreements.thunks'
 import { getAgreementTypes } from '../store/agreementTypes/agreementTypes.thunks'
+import { getOrgs } from '../store/orgs/orgs.thunks'
 import useBoolean from '../hooks/useBoolean'
 import isRoleMatch from '../utils/isRoleMatch'
 import { formatDate } from '../utils/format'
@@ -19,7 +21,8 @@ import { Agreement } from '../store/agreements/agreements.types'
 import { Type } from '../interfaces/Type'
 import { Roles } from '../enums/Roles'
 
-const AgreementsForm = React.lazy(() => import('../components/agreements/AgreementsForm'))
+const CreateAgreementForm = React.lazy(() => import('../components/agreements/CreateAgreementForm'))
+const UpdateAgreementForm = React.lazy(() => import('../components/agreements/UpdateAgreementForm'))
 
 const Agreements: React.FC = () => {
   const [currentAgreement, setCurrentAgreement] = useState<Agreement | null>(null)
@@ -27,9 +30,14 @@ const Agreements: React.FC = () => {
   const { user } = useTypedSelector(selectAuth)
   const { isLoading: isAgreementsLoading, agreements } = useTypedSelector(selectAgreements)
   const { isLoading: isTypesLoading } = useTypedSelector(selectAgreementTypes)
+  const { isLoading: isOrgsLoading } = useTypedSelector(selectOrgs)
   const navigate = useNavigate()
   const createDrawerVisible = useBoolean()
   const updateDrawerVisible = useBoolean()
+
+  const isAdmin = useMemo(() => (
+    user && isRoleMatch(user.role.role, Roles.Admin)
+  ), [user])
 
   const isOperator = useMemo(() => (
     user && isRoleMatch(user.role.role, Roles.Operator)
@@ -53,12 +61,14 @@ const Agreements: React.FC = () => {
     return () => {
       dispatch(clearAgreements())
       dispatch(clearAgreementTypes())
+      dispatch(clearOrgs())
     }
   }, [dispatch])
 
   useEffect(() => {
     if(isOperator) {
       dispatch(getAgreementTypes())
+      dispatch(getOrgs())
     }
   }, [isOperator, dispatch])
 
@@ -66,7 +76,7 @@ const Agreements: React.FC = () => {
     <>
       <Table
         dataSource={agreements}
-        loading={isAgreementsLoading || isTypesLoading}
+        loading={isAgreementsLoading || isTypesLoading || isOrgsLoading}
         rowKey="id"
         bordered
         onRow={record => ({
@@ -105,15 +115,17 @@ const Agreements: React.FC = () => {
             key="actions"
             render={(_, record: Agreement) => (
               <Space>
-                <Hint
-                  tooltipProps={{ title: 'Редактировать' }}
-                  buttonProps={{
-                    type: 'primary',
-                    shape: 'circle',
-                    icon: <EditOutlined />,
-                    onClick: () => openUpdateDrawer(record)
-                  }}
-                />
+                {isAdmin && (
+                  <Hint
+                    tooltipProps={{ title: 'Редактировать' }}
+                    buttonProps={{
+                      type: 'primary',
+                      shape: 'circle',
+                      icon: <EditOutlined />,
+                      onClick: () => openUpdateDrawer(record)
+                    }}
+                  />
+                )}
 
                 {record.parentId && (
                   <Hint
@@ -137,10 +149,7 @@ const Agreements: React.FC = () => {
         onClose={createDrawerVisible.setFalse}
       >
         <Suspense fallback={<Loader />}>
-          <AgreementsForm
-            submitText="Добавить"
-            onFinish={values => console.log(values)}
-          />
+          <CreateAgreementForm onFinish={values => console.log(values)} />
         </Suspense>
       </Drawer>
 
@@ -150,9 +159,8 @@ const Agreements: React.FC = () => {
         onClose={closeUpdateDrawer}
       >
         <Suspense fallback={<Loader />}>
-          <AgreementsForm
+          <UpdateAgreementForm
             agreement={currentAgreement}
-            submitText="Сохранить"
             onFinish={values => console.log(values)}
           />
         </Suspense>

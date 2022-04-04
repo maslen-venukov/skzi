@@ -1,33 +1,49 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { Button, Checkbox, DatePicker, Form, Input, Select } from 'antd'
 import { useForm } from 'antd/lib/form/Form'
 import moment, { Moment } from 'moment'
+import Loader from '../Loader'
 import { selectAgreements } from '../../store/agreements/agreements.slice'
 import { selectAgreementTypes } from '../../store/agreementTypes/agreementTypes.slice'
+import { selectOrgs } from '../../store/orgs/orgs.slice'
 import useTypedSelector from '../../hooks/useTypedSelector'
 import { Agreement } from '../../store/agreements/agreements.types'
 
-export interface AgreementsFormValues {
+interface UpdateAgreementFormValues {
   number: string
+  isActive: boolean
   typeId: number
   beginDate: Moment
   endDate?: Moment
   terminationDate?: Moment
+  parentId?: number
   contractorNodeId: number
   contractorSegmentId?: number
-  parentId?: number
 }
 
-interface AgreementsFormProps {
-  agreement?: Agreement | null
-  submitText: string
-  onFinish: (values: AgreementsFormValues) => void
+interface UpdateAgreementFormProps {
+  agreement: Agreement | null
+  onFinish: (values: UpdateAgreementFormValues) => void
 }
 
-const AgreementsForm: React.FC<AgreementsFormProps> = ({ agreement, submitText, onFinish }) => {
+const UpdateAgreementForm: React.FC<UpdateAgreementFormProps> = ({
+  agreement,
+  onFinish
+}) => {
+  const [nodeName, setNodeName] = useState('')
+  const [segmentName, setSegmentName] = useState('')
   const { isLoading: isAgreementsLoading } = useTypedSelector(selectAgreements)
   const { isLoading: isTypesLoading, types } = useTypedSelector(selectAgreementTypes)
-  const [form] = useForm<AgreementsFormValues>()
+  const { isLoading: isOrgsLoading, orgs } = useTypedSelector(selectOrgs)
+  const [form] = useForm<UpdateAgreementFormValues>()
+
+  const nodes = useMemo(() => (
+    orgs.filter(org => org.name.toLowerCase().includes(nodeName.toLowerCase()))
+  ), [orgs, nodeName])
+
+  const segments = useMemo(() => (
+    orgs.filter(org => org.name.toLowerCase().includes(segmentName.toLowerCase()))
+  ), [orgs, segmentName])
 
   useEffect(() => {
     if(!agreement) return
@@ -117,14 +133,44 @@ const AgreementsForm: React.FC<AgreementsFormProps> = ({ agreement, submitText, 
         name="contractorNodeId"
         rules={[{ required: true, message: 'Пожалуйста введите узел' }]}
       >
-        <Input />
+        <Select
+          showSearch
+          filterOption={false}
+          notFoundContent={isOrgsLoading ? <Loader /> : null}
+          value={nodeName}
+          onSearch={setNodeName}
+        >
+          {nodes.map(node => (
+            <Select.Option
+              key={node.id}
+              value={node.id}
+            >
+              {node.name}
+            </Select.Option>
+          ))}
+        </Select>
       </Form.Item>
 
       <Form.Item
         label="Сегмент"
         name="contractorSegmentId"
       >
-        <Input />
+        <Select
+          showSearch
+          filterOption={false}
+          notFoundContent={isOrgsLoading ? <Loader /> : null}
+          value={segmentName}
+          onSearch={setSegmentName}
+        >
+          {segments.map(segment => (
+            <Select.Option
+              key={segment.id}
+              value={segment.id}
+            >
+              {segment.name}
+            </Select.Option>
+          ))}
+        </Select>
       </Form.Item>
 
       <Form.Item>
@@ -133,11 +179,11 @@ const AgreementsForm: React.FC<AgreementsFormProps> = ({ agreement, submitText, 
           type="primary"
           htmlType="submit"
         >
-          {submitText}
+          Сохранить
         </Button>
       </Form.Item>
     </Form>
   )
 }
 
-export default AgreementsForm
+export default UpdateAgreementForm
