@@ -1,8 +1,8 @@
 import React, { useMemo, useState } from 'react'
 import { observer } from 'mobx-react-lite'
-import { Moment } from 'moment'
 import { Button, DatePicker, Form, Input, Select } from 'antd'
 import { useForm } from 'antd/lib/form/Form'
+import { Moment } from 'moment'
 import Loader from '../Loader'
 import agreementsStore from '../../store/agreements/agreements.store'
 import agreementTypesStore from '../../store/agreement-types/agreement-types.store'
@@ -18,11 +18,11 @@ export interface CreateAgreementFormValues {
   contractorSegmentId?: number
 }
 
-interface CreateAgreementFormProps {
-  onFinish: (values: CreateAgreementFormValues) => void
+interface CreateAgreementDialogProps {
+  onFinish: (values: CreateAgreementFormValues) => Promise<void>
 }
 
-const CreateAgreementForm: React.FC<CreateAgreementFormProps> = ({
+const CreateAgreementDialog: React.FC<CreateAgreementDialogProps> = ({
   onFinish
 }) => {
   const [nodeName, setNodeName] = useState('')
@@ -81,14 +81,14 @@ const CreateAgreementForm: React.FC<CreateAgreementFormProps> = ({
         name="beginDate"
         rules={[{ required: true, message: 'Пожалуйста выберите дату начала' }]}
       >
-        <DatePicker format={'DD.MM.YYYY'} />
+        <DatePicker format="DD.MM.YYYY" />
       </Form.Item>
 
       <Form.Item
         label="Дата окончания"
         name="endDate"
       >
-        <DatePicker format={'DD.MM.YYYY'} />
+        <DatePicker format="DD.MM.YYYY" />
       </Form.Item>
 
       <Form.Item
@@ -151,11 +151,11 @@ const CreateAgreementForm: React.FC<CreateAgreementFormProps> = ({
           type="primary"
           htmlType="submit"
         >
-          Сохранить
+          Добавить
         </Button>
       </Form.Item>
     </Form>
   )
 }
 
-export default observer(CreateAgreementForm)
+export default observer(CreateAgreementDialog)

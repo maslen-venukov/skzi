@@ -4,8 +4,8 @@ import { vipnetLansService } from './vipnet-lans.service'
 class VipnetLansController {
   async getAll(req: Request, res: Response, next: NextFunction) {
     try {
-      const types = await vipnetLansService.getAll()
-      return res.json({ types })
+      const vipnetLans = await vipnetLansService.getAll()
+      return res.json({ vipnetLans })
     } catch(e) {
       next(e)
     }

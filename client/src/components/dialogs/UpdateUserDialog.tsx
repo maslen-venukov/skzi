@@ -6,26 +6,24 @@ import usersStore from '../../store/users/users.store'
 import rolesStore from '../../store/roles/roles.store'
 import { User } from '../../store/users/users.types'
 
-export interface UsersFormValues {
+export interface UpdateUserFormValues {
   name: string
   realName: string
   isActive: boolean
   roleId: number
 }
 
-interface UsersFormProps {
-  user?: User | null
-  onFinish: (values: UsersFormValues) => void
+interface UsersDialogProps {
+  user: User
+  onFinish: (values: UpdateUserFormValues) => Promise<void>
 }
 
-const UsersForm: React.FC<UsersFormProps> = ({ user, onFinish }) => {
+const UpdateUserDialog: React.FC<UsersDialogProps> = ({ user, onFinish }) => {
   const { isLoading: isUsersLoading } = usersStore
   const { roles, isLoading: isRolesLoading } = rolesStore
-  const [form] = useForm<UsersFormValues>()
+  const [form] = useForm<UpdateUserFormValues>()
 
   useEffect(() => {
-    if(!user) return
-
     form.setFieldsValue({
       ...user,
       roleId: user.role.id
@@ -93,4 +91,4 @@ const UsersForm: React.FC<UsersFormProps> = ({ user, onFinish }) => {
   )
 }
 
-export default observer(UsersForm)
+export default observer(UpdateUserDialog)

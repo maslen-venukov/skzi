@@ -5,11 +5,12 @@ import { Layout } from 'antd'
 import Sidebar from './Sidebar'
 import Header from './Header'
 import Loader from './Loader'
+import Dialog from './Dialog'
 import authStore from '../store/auth/auth.store'
 import useBoolean from '../hooks/useBoolean'
 import storage from '../utils/storage'
 import isRoleMatch from '../utils/isRoleMatch'
-import { Roles } from '../enums/roles.enum'
+import { Roles } from '../store/roles/roles.types'
 
 interface Page {
   path: string
@@ -84,6 +85,8 @@ const Wrapper = () => {
           </Routes>
         </Layout.Content>
       </Layout>
+
+      <Dialog />
     </Layout>
   )
 }

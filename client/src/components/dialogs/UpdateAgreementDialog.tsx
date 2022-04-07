@@ -21,12 +21,12 @@ export interface UpdateAgreementFormValues {
   contractorSegmentId?: number
 }
 
-interface UpdateAgreementFormProps {
-  agreement: Agreement | null
-  onFinish: (values: UpdateAgreementFormValues) => void
+interface UpdateAgreementDialogProps {
+  agreement: Agreement
+  onFinish: (values: UpdateAgreementFormValues) => Promise<void>
 }
 
-const UpdateAgreementForm: React.FC<UpdateAgreementFormProps> = ({
+const UpdateAgreementDialog: React.FC<UpdateAgreementDialogProps> = ({
   agreement,
   onFinish
 }) => {
@@ -46,8 +46,6 @@ const UpdateAgreementForm: React.FC<UpdateAgreementFormProps> = ({
   ), [orgs, segmentName])
 
   useEffect(() => {
-    if(!agreement) return
-
     form.setFieldsValue({
       ...agreement,
       typeId: agreement.type.id,
@@ -108,21 +106,21 @@ const UpdateAgreementForm: React.FC<UpdateAgreementFormProps> = ({
         name="beginDate"
         rules={[{ required: true, message: 'Пожалуйста выберите дату начала' }]}
       >
-        <DatePicker format={'DD.MM.YYYY'} />
+        <DatePicker format="DD.MM.YYYY" />
       </Form.Item>
 
       <Form.Item
         label="Дата окончания"
         name="endDate"
       >
-        <DatePicker format={'DD.MM.YYYY'} />
+        <DatePicker format="DD.MM.YYYY" />
       </Form.Item>
 
       <Form.Item
         label="Дата расторжения"
         name="terminationDate"
       >
-        <DatePicker format={'DD.MM.YYYY'} />
+        <DatePicker format="DD.MM.YYYY" />
       </Form.Item>
 
       <Form.Item
@@ -192,4 +190,4 @@ const UpdateAgreementForm: React.FC<UpdateAgreementFormProps> = ({
   )
 }
 
-export default observer(UpdateAgreementForm)
+export default observer(UpdateAgreementDialog)

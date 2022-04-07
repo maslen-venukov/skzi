@@ -1,4 +1,4 @@
-import { Roles } from '../enums/roles.enum'
+import { Roles } from '../store/roles/roles.types'
 
 const queue = [Roles.User, Roles.Operator, Roles.Admin, Roles.System]
 
