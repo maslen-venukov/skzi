@@ -23,6 +23,11 @@ const Acts = React.lazy(() => import('../pages/Acts'))
 const Agreements = React.lazy(() => import('../pages/Agreements'))
 const Agreement = React.lazy(() => import('../pages/Agreement'))
 const SkziUnits = React.lazy(() => import('../pages/SkziUnits'))
+const AgreementTypes = React.lazy(() => import('../pages/AgreementTypes'))
+const SkziTypes = React.lazy(() => import('../pages/SkziTypes'))
+const PlatformTypes = React.lazy(() => import('../pages/PlatformTypes'))
+const SignTypes = React.lazy(() => import('../pages/SignTypes'))
+const VipnetLans = React.lazy(() => import('../pages/VipnetLans'))
 
 const Wrapper = () => {
   const { user } = authStore
@@ -55,6 +60,26 @@ const Wrapper = () => {
       {
         path: '/skzi-units',
         element: <SkziUnits />
+      },
+      {
+        path: '/agreement-types',
+        element: <AgreementTypes />
+      },
+      {
+        path: '/skzi-types',
+        element: <SkziTypes />
+      },
+      {
+        path: '/platform-types',
+        element: <PlatformTypes />
+      },
+      {
+        path: '/sign-types',
+        element: <SignTypes />
+      },
+      {
+        path: '/vipnet-lans',
+        element: <VipnetLans />
       }
     ]
 
