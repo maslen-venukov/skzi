@@ -1,6 +1,6 @@
 import { RawAgreement } from '../agreement.interface'
 
-type CreateAgreementDtoParams = Omit<RawAgreement, 'id' | 'isActive' | 'addDate'>
+type CreateAgreementDtoParams = Omit<RawAgreement, 'id' | 'isActive' | 'addDate' | 'terminationDate'>
 
 export class CreateAgreementDto implements CreateAgreementDtoParams {
   typeId: number
@@ -11,7 +11,6 @@ export class CreateAgreementDto implements CreateAgreementDtoParams {
   contractorNodeId: number
   contractorSegmentId?: number
   addUserId: number
-  terminationDate?: Date
 
   constructor({
     typeId,
@@ -21,8 +20,7 @@ export class CreateAgreementDto implements CreateAgreementDtoParams {
     endDate,
     contractorNodeId,
     contractorSegmentId,
-    addUserId,
-    terminationDate
+    addUserId
   }: CreateAgreementDtoParams) {
     this.typeId = typeId
     this.number = number
@@ -32,6 +30,5 @@ export class CreateAgreementDto implements CreateAgreementDtoParams {
     this.contractorNodeId = contractorNodeId
     this.contractorSegmentId = contractorSegmentId
     this.addUserId = addUserId
-    this.terminationDate = terminationDate
   }
 }

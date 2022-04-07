@@ -9,14 +9,14 @@ import agreementTypesStore from '../../store/agreement-types/agreement-types.sto
 import orgsStore from '../../store/orgs/orgs.store'
 import { Agreement } from '../../store/agreements/agreements.types'
 
-interface UpdateAgreementFormValues {
+export interface UpdateAgreementFormValues {
   number: string
   isActive: boolean
   typeId: number
   beginDate: Moment
   endDate?: Moment
   terminationDate?: Moment
-  parentId?: number
+  parentId?: string
   contractorNodeId: number
   contractorSegmentId?: number
 }
@@ -54,6 +54,7 @@ const UpdateAgreementForm: React.FC<UpdateAgreementFormProps> = ({
       beginDate: moment(agreement.beginDate),
       endDate: agreement.endDate && moment(agreement.endDate),
       terminationDate: agreement.terminationDate && moment(agreement.terminationDate),
+      parentId: agreement.parentId?.toString(),
       contractorNodeId: agreement.contractorNode.id,
       contractorSegmentId: agreement.contractorSegment?.id
     })
@@ -87,7 +88,10 @@ const UpdateAgreementForm: React.FC<UpdateAgreementFormProps> = ({
         name="typeId"
         rules={[{ required: true, message: 'Пожалуйста выберите тип' }]}
       >
-        <Select loading={isTypesLoading}>
+        <Select
+          loading={isTypesLoading}
+          allowClear
+        >
           {types.map(type => (
             <Select.Option
               key={type.id}
@@ -135,6 +139,7 @@ const UpdateAgreementForm: React.FC<UpdateAgreementFormProps> = ({
       >
         <Select
           showSearch
+          allowClear
           filterOption={false}
           notFoundContent={isOrgsLoading ? <Loader /> : null}
           value={nodeName}
@@ -157,6 +162,7 @@ const UpdateAgreementForm: React.FC<UpdateAgreementFormProps> = ({
       >
         <Select
           showSearch
+          allowClear
           filterOption={false}
           notFoundContent={isOrgsLoading ? <Loader /> : null}
           value={segmentName}

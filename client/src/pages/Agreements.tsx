@@ -12,10 +12,14 @@ import agreementTypesStore from '../store/agreement-types/agreement-types.store'
 import orgsStore from '../store/orgs/orgs.store'
 import useBoolean from '../hooks/useBoolean'
 import isRoleMatch from '../utils/isRoleMatch'
+import getDelta from '../utils/getDelta'
+import nullify from '../utils/nullify'
 import { formatDate } from '../utils/format'
 import { Agreement } from '../store/agreements/agreements.types'
 import { Type } from '../interfaces/type.interface'
 import { Roles } from '../enums/roles.enum'
+import { CreateAgreementFormValues } from '../components/agreements/CreateAgreementForm'
+import { UpdateAgreementFormValues } from '../components/agreements/UpdateAgreementForm'
 
 const CreateAgreementForm = React.lazy(() => import('../components/agreements/CreateAgreementForm'))
 const UpdateAgreementForm = React.lazy(() => import('../components/agreements/UpdateAgreementForm'))
@@ -23,7 +27,14 @@ const UpdateAgreementForm = React.lazy(() => import('../components/agreements/Up
 const Agreements: React.FC = () => {
   const [currentAgreement, setCurrentAgreement] = useState<Agreement | null>(null)
   const { user } = authStore
-  const { agreements, isLoading: isAgreementsLoading, getAgreements, setAgreements } = agreementsStore
+  const {
+    agreements,
+    isLoading: isAgreementsLoading,
+    getAgreements,
+    createAgreement,
+    updateAgreement,
+    setAgreements
+  } = agreementsStore
   const { isLoading: isTypesLoading, getAgreementTypes, setAgreementTypes } = agreementTypesStore
   const { isLoading: isOrgsLoading, getOrgs, setOrgs } = orgsStore
   const navigate = useNavigate()
@@ -38,6 +49,42 @@ const Agreements: React.FC = () => {
     user && isRoleMatch(user.role.role, Roles.Operator)
   ), [user])
 
+  const onCreate = async (values: CreateAgreementFormValues) => {
+    await createAgreement({
+      ...values,
+      beginDate: values.beginDate.toDate(),
+      endDate: values.endDate?.toDate(),
+      parentId: Number(values.parentId)
+    })
+    createDrawerVisible.setFalse()
+  }
+
+  const onUpdate = async (values: UpdateAgreementFormValues) => {
+    if(!currentAgreement) return
+
+    const delta = getDelta(
+      {
+        ...values,
+        beginDate: values.beginDate.toJSON(),
+        endDate: values.endDate?.toJSON(),
+        terminationDate: values.terminationDate?.toJSON()
+      },
+      {
+        ...currentAgreement,
+        typeId: currentAgreement.type.id,
+        contractorNodeId: currentAgreement.contractorNode.id,
+        contractorSegmentId: currentAgreement.contractorSegment?.id,
+        parentId: currentAgreement.parentId?.toString()
+      }
+    )
+
+    if(Object.keys(delta).length) {
+      await updateAgreement(currentAgreement.id, nullify(delta))
+    }
+
+    updateDrawerVisible.setFalse()
+  }
+
   const openUpdateDrawer = (agreement: Agreement) => {
     setCurrentAgreement(agreement)
     updateDrawerVisible.setTrue()
@@ -51,21 +98,24 @@ const Agreements: React.FC = () => {
   }
 
   useEffect(() => {
-    getAgreements()
+    Promise.all([
+      getAgreements(),
+      ...isOperator ? [
+        getAgreementTypes(),
+        getOrgs()
+      ] : []
+    ])
 
     return () => {
       setAgreements([])
       setAgreementTypes([])
       setOrgs([])
     }
-  }, [getAgreements, setAgreements, setAgreementTypes, setOrgs])
-
-  useEffect(() => {
-    if(isOperator) {
-      getAgreementTypes()
-      getOrgs()
-    }
-  }, [isOperator, getAgreementTypes, getOrgs])
+  }, [
+    isOperator,
+    getAgreements, getAgreementTypes, getOrgs,
+    setAgreements, setAgreementTypes, setOrgs
+  ])
 
   return (
     <>
@@ -129,7 +179,7 @@ const Agreements: React.FC = () => {
                       type: 'primary',
                       shape: 'circle',
                       icon: <FileDoneOutlined />,
-                      onClick: () => navigate(`/agreements/${record.id}`)
+                      onClick: () => navigate(`/agreements/${record.parentId}`)
                     }}
                   />
                 )}
@@ -144,7 +194,7 @@ const Agreements: React.FC = () => {
         onClose={createDrawerVisible.setFalse}
       >
         <Suspense fallback={<Loader />}>
-          <CreateAgreementForm onFinish={values => console.log(values)} />
+          <CreateAgreementForm onFinish={onCreate} />
         </Suspense>
       </Drawer>
 
@@ -156,7 +206,7 @@ const Agreements: React.FC = () => {
         <Suspense fallback={<Loader />}>
           <UpdateAgreementForm
             agreement={currentAgreement}
-            onFinish={values => console.log(values)}
+            onFinish={onUpdate}
           />
         </Suspense>
       </Drawer>

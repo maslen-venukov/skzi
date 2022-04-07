@@ -16,3 +16,25 @@ export interface Agreement {
   type: Type
   addUser: User
 }
+
+export interface CreateAgreementData {
+  typeId: number
+  number: string
+  parentId?: number
+  beginDate: Date
+  endDate?: Date
+  contractorNodeId: number
+  contractorSegmentId?: number
+}
+
+export interface UpdateAgreementData {
+  typeId?: number
+  isActive?: boolean
+  number?: string
+  parentId?: number
+  beginDate?: Date
+  endDate?: Date
+  contractorNodeId?: number
+  contractorSegmentId?: number
+  terminationDate?: Date
+}

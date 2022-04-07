@@ -48,8 +48,10 @@ const Users: React.FC = () => {
   }
 
   useEffect(() => {
-    getUsers()
-    getRoles()
+    Promise.all([
+      getUsers(),
+      getRoles()
+    ])
 
     return () => {
       setUsers([])

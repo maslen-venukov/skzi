@@ -53,13 +53,13 @@ CREATE TABLE agreement (
     is_active BOOLEAN DEFAULT TRUE NOT NULL,
     number VARCHAR(255) NOT NULL,
     parent_id INTEGER REFERENCES agreement(id) NULL,
-    begin_date DATE NOT NULL DEFAULT NOW() NOT NULL,
-    end_date DATE NULL,
+    begin_date TIMESTAMPTZ NOT NULL DEFAULT NOW() NOT NULL,
+    end_date TIMESTAMPTZ NULL,
     contractor_node_id INTEGER REFERENCES org(id) NOT NULL,
     contractor_segment_id INTEGER REFERENCES org(id) NULL,
     add_user_id INTEGER REFERENCES users(id) NOT NULL,
     add_date TIMESTAMPTZ DEFAULT NOW() NOT NULL,
-    termination_date DATE NULL
+    termination_date TIMESTAMPTZ NULL
 );
 
 CREATE TABLE comment_agreement (
@@ -85,7 +85,7 @@ CREATE TABLE skzi_unit (
     location VARCHAR(255) NULL,
     add_date TIMESTAMPTZ DEFAULT NOW() NOT NULL,
     add_user_id INTEGER REFERENCES users(id) NOT NULL,
-    inact_date DATE NULL,
+    inact_date TIMESTAMPTZ NULL,
     inact_user_id INTEGER REFERENCES users(id) NULL,
     skzi_owner_id INTEGER REFERENCES org(id) NULL
 );
@@ -102,7 +102,7 @@ CREATE TABLE act (
     id SERIAL PRIMARY KEY,
     number INTEGER NOT NULL,
     agreement_id INTEGER REFERENCES agreement(id) NOT NULL,
-    date DATE DEFAULT NOW() NOT NULL,
+    date TIMESTAMPTZ DEFAULT NOW() NOT NULL,
     skzi_unit_id INTEGER REFERENCES skzi_unit(id) NOT NULL,
     sign_type_id INTEGER REFERENCES s_sign_type(id) NOT NULL,
     add_date TIMESTAMPTZ DEFAULT NOW() NOT NULL,

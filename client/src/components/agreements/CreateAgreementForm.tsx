@@ -8,12 +8,12 @@ import agreementsStore from '../../store/agreements/agreements.store'
 import agreementTypesStore from '../../store/agreement-types/agreement-types.store'
 import orgsStore from '../../store/orgs/orgs.store'
 
-interface CreateAgreementFormValues {
+export interface CreateAgreementFormValues {
   number: string
   typeId: number
   beginDate: Moment
   endDate?: Moment
-  parentId?: number
+  parentId?: string
   contractorNodeId: number
   contractorSegmentId?: number
 }
@@ -61,7 +61,10 @@ const CreateAgreementForm: React.FC<CreateAgreementFormProps> = ({
         name="typeId"
         rules={[{ required: true, message: 'Пожалуйста выберите тип' }]}
       >
-        <Select loading={isTypesLoading}>
+        <Select
+          loading={isTypesLoading}
+          allowClear
+        >
           {types.map(type => (
             <Select.Option
               key={type.id}
@@ -102,6 +105,7 @@ const CreateAgreementForm: React.FC<CreateAgreementFormProps> = ({
       >
         <Select
           showSearch
+          allowClear
           filterOption={false}
           notFoundContent={isOrgsLoading ? <Loader /> : null}
           value={nodeName}
@@ -124,6 +128,7 @@ const CreateAgreementForm: React.FC<CreateAgreementFormProps> = ({
       >
         <Select
           showSearch
+          allowClear
           filterOption={false}
           notFoundContent={isOrgsLoading ? <Loader /> : null}
           value={segmentName}

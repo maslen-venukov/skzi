@@ -1,4 +1,5 @@
 import axios from 'axios'
+import authStore from '../store/auth/auth.store'
 import storage from '../utils/storage'
 
 const api = axios.create({
@@ -11,5 +12,17 @@ api.interceptors.request.use(config => {
   }
   return config
 })
+
+api.interceptors.response.use(
+  res => res,
+  e => {
+    if(e.response?.status === 401) {
+      authStore.setAuth(false)
+      authStore.setUser(null)
+      storage.remove('token')
+    }
+    throw e
+  }
+)
 
 export default api
