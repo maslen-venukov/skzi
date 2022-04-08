@@ -3,7 +3,7 @@ import authStore from '../store/auth/auth.store'
 import storage from '../utils/storage'
 
 const api = axios.create({
-  baseURL: process.env.REACT_APP_API_URL
+  baseURL: process.env.API_URL
 })
 
 api.interceptors.request.use(config => {

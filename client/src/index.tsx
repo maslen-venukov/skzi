@@ -3,8 +3,9 @@ import ReactDOM from 'react-dom'
 import { BrowserRouter as Router } from 'react-router-dom'
 import { ConfigProvider } from 'antd'
 import locale from 'antd/lib/locale/ru_RU'
-import 'moment/locale/ru'
 import Loader from './components/Loader'
+import 'moment/locale/ru'
+import 'antd/dist/antd.css'
 import './styles/index.sass'
 
 const App = React.lazy(() => import('./App'))
