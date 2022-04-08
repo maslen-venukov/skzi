@@ -1,11 +1,9 @@
-import React, { useMemo } from 'react'
+import React from 'react'
 import { Space, Table, Typography } from 'antd'
 import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons'
 import Hint from './Hint'
 import authStore from '../store/auth/auth.store'
-import isRoleMatch from '../utils/isRoleMatch'
 import { Type } from '../interfaces/type.interface'
-import { Roles } from '../store/roles/roles.types'
 
 export interface TypesTableProps {
   title: string
@@ -14,11 +12,7 @@ export interface TypesTableProps {
 }
 
 const TypesTable: React.FC<TypesTableProps> = ({ title, types, isLoading }) => {
-  const { user } = authStore
-
-  const isAdmin = useMemo(() => (
-    user && isRoleMatch(user.role.role, Roles.Admin)
-  ), [user])
+  const { isAdmin } = authStore
 
   return (
     <Table
@@ -44,12 +38,13 @@ const TypesTable: React.FC<TypesTableProps> = ({ title, types, isLoading }) => {
       rowKey="id"
       bordered
     >
-      <Table.Column title="ID" dataIndex="id" key="id" width="5%" />
+      <Table.Column title="ID" dataIndex="id" key="id" width="0" />
       <Table.Column title="Название" dataIndex="type" key="type" />
       {isAdmin && (
         <Table.Column
           title="Действия"
           key="actions"
+          width="0"
           render={(_, record: Type) => (
             <Space>
               <Hint

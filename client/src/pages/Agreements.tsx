@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react'
+import React, { useEffect } from 'react'
 import { observer } from 'mobx-react-lite'
 import { useNavigate } from 'react-router-dom'
 import { Space, Table, Tooltip } from 'antd'
@@ -10,18 +10,16 @@ import agreementsStore from '../store/agreements/agreements.store'
 import agreementTypesStore from '../store/agreement-types/agreement-types.store'
 import orgsStore from '../store/orgs/orgs.store'
 import dialogStore from '../store/dialog/dialog.store'
-import isRoleMatch from '../utils/isRoleMatch'
 import getDelta from '../utils/getDelta'
 import nullify from '../utils/nullify'
 import { formatDate } from '../utils/format'
 import { Agreement } from '../store/agreements/agreements.types'
-import { Roles } from '../store/roles/roles.types'
 import { Type } from '../interfaces/type.interface'
 import { CreateAgreementFormValues } from '../components/dialogs/CreateAgreementDialog'
 import { UpdateAgreementFormValues } from '../components/dialogs/UpdateAgreementDialog'
 
 const Agreements: React.FC = () => {
-  const { user } = authStore
+  const { isAdmin, isOperator } = authStore
   const {
     agreements,
     isLoading: isAgreementsLoading,
@@ -34,14 +32,6 @@ const Agreements: React.FC = () => {
   const { isLoading: isOrgsLoading, getOrgs, setOrgs } = orgsStore
   const { openDialog, closeDialog } = dialogStore
   const navigate = useNavigate()
-
-  const isAdmin = useMemo(() => (
-    user && isRoleMatch(user.role.role, Roles.Admin)
-  ), [user])
-
-  const isOperator = useMemo(() => (
-    user && isRoleMatch(user.role.role, Roles.Operator)
-  ), [user])
 
   const onCreate = async (values: CreateAgreementFormValues) => {
     await createAgreement({

@@ -3,8 +3,10 @@ import { message } from 'antd'
 import { auth, login } from './auth.api'
 import catchApiError from '../../utils/catchApiError'
 import storage from '../../utils/storage'
+import isRoleMatch from '../../utils/isRoleMatch'
 import { LoginData } from './auth.types'
 import { User } from '../users/users.types'
+import { Roles } from '../roles/roles.types'
 
 class AuthStore {
   isAuth = false
@@ -14,6 +16,18 @@ class AuthStore {
 
   constructor() {
     makeAutoObservable(this, {}, { autoBind: true })
+  }
+
+  private isUserHasRole(role: Roles) {
+    return this.user && isRoleMatch(this.user.role.role, role)
+  }
+
+  get isAdmin() {
+    return this.isUserHasRole(Roles.Admin)
+  }
+
+  get isOperator() {
+    return this.isUserHasRole(Roles.Operator)
   }
 
   setAuth(value: boolean) {
