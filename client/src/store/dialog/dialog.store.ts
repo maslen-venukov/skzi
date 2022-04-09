@@ -5,7 +5,6 @@ class DialogStore {
   type: DialogType | null = null
   title?: string = undefined
   props?: any = undefined
-  onClose?: () => void = undefined
 
   constructor() {
     makeAutoObservable(this, {}, { autoBind: true })
@@ -23,22 +22,16 @@ class DialogStore {
     this.props = value
   }
 
-  setOnClose(value?: () => void) {
-    this.onClose = value
-  }
-
   openDialog(params: OpenDialogParams) {
     this.setType(params.type)
     this.setTitle(params.title)
     this.setProps(params.props)
-    this.setOnClose(params.onClose)
   }
 
   closeDialog() {
     this.setType(null)
     this.setTitle(undefined)
     this.setProps(undefined)
-    this.setOnClose(undefined)
   }
 }
 

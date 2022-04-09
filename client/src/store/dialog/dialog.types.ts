@@ -7,5 +7,4 @@ export interface OpenDialogParams {
   type: DialogType
   title?: string
   props?: any
-  onClose?: () => void
 }

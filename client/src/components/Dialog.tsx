@@ -1,32 +1,28 @@
-import React, { Suspense, useMemo } from 'react'
+import React, { LazyExoticComponent, Suspense } from 'react'
 import { observer } from 'mobx-react-lite'
 import { Drawer } from 'antd'
 import Loader from './Loader'
 import dialogStore from '../store/dialog/dialog.store'
+import { DialogType } from '../store/dialog/dialog.types'
+
+const dialogsMap: Record<DialogType, LazyExoticComponent<React.FC<any>>> = {
+  CreateAgreement: React.lazy(() => import('./dialogs/CreateAgreementDialog')),
+  UpdateAgreement: React.lazy(() => import('./dialogs/UpdateAgreementDialog')),
+  UpdateUser: React.lazy(() => import('./dialogs/UpdateUserDialog'))
+}
 
 const Dialog: React.FC = () => {
-  const { type, title, props, onClose, closeDialog } = dialogStore
-
-  const selectedDialog = useMemo(() => (
-    type
-      ? React.lazy(() => import(`./dialogs/${type}Dialog`))
-      : null
-  ), [type])
-
-  const handleClose = () => {
-    closeDialog()
-    onClose?.()
-  }
+  const { type, title, props, closeDialog } = dialogStore
 
   return (
     <Drawer
       title={title}
       visible={Boolean(type)}
       width="33vw"
-      onClose={handleClose}
+      onClose={closeDialog}
     >
       <Suspense fallback={<Loader />}>
-        {selectedDialog && React.createElement(selectedDialog, props)}
+        {type && React.createElement(dialogsMap[type], props)}
       </Suspense>
     </Drawer>
   )
