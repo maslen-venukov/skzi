@@ -8,7 +8,9 @@ import { DialogType } from '../store/dialog/dialog.types'
 const dialogsMap: Record<DialogType, LazyExoticComponent<React.FC<any>>> = {
   CreateAgreement: React.lazy(() => import('./dialogs/CreateAgreementDialog')),
   UpdateAgreement: React.lazy(() => import('./dialogs/UpdateAgreementDialog')),
-  UpdateUser: React.lazy(() => import('./dialogs/UpdateUserDialog'))
+  UpdateUser: React.lazy(() => import('./dialogs/UpdateUserDialog')),
+  CreateSkziUnit: React.lazy(() => import('./dialogs/CreateSkziUnitDialog')),
+  UpdateSkziUnit: React.lazy(() => import('./dialogs/UpdateSkziUnitDialog'))
 }
 
 const Dialog: React.FC = () => {

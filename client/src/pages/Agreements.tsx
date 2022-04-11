@@ -22,14 +22,14 @@ const Agreements: React.FC = () => {
   const { isAdmin, isOperator } = authStore
   const {
     agreements,
-    isLoading: isAgreementsLoading,
+    isLoading,
     getAgreements,
     createAgreement,
     updateAgreement,
     setAgreements
   } = agreementsStore
-  const { isLoading: isTypesLoading, getAgreementTypes, setAgreementTypes } = agreementTypesStore
-  const { isLoading: isOrgsLoading, getOrgs, setOrgs } = orgsStore
+  const { getAgreementTypes, setAgreementTypes } = agreementTypesStore
+  const { getOrgs, setOrgs } = orgsStore
   const { openDialog, closeDialog } = dialogStore
   const navigate = useNavigate()
 
@@ -38,13 +38,13 @@ const Agreements: React.FC = () => {
       ...values,
       beginDate: values.beginDate.toDate(),
       endDate: values.endDate?.toDate(),
-      parentId: Number(values.parentId)
+      parentId: Number(values.parentId) || undefined
     })
     closeDialog()
   }
 
   const onUpdate = (agreement: Agreement) => async (values: UpdateAgreementFormValues) => {
-    const delta = getDelta(
+    const delta = nullify(getDelta(
       {
         ...values,
         beginDate: values.beginDate.toJSON(),
@@ -58,10 +58,10 @@ const Agreements: React.FC = () => {
         contractorSegmentId: agreement.contractorSegment?.id,
         parentId: agreement.parentId?.toString()
       }
-    )
+    ))
 
     if(Object.keys(delta).length) {
-      await updateAgreement(agreement.id, nullify(delta))
+      await updateAgreement(agreement.id, delta)
     }
 
     closeDialog()
@@ -109,7 +109,7 @@ const Agreements: React.FC = () => {
   return (
     <Table
       dataSource={agreements}
-      loading={isAgreementsLoading || isTypesLoading || isOrgsLoading}
+      loading={isLoading}
       rowKey="id"
       bordered
       onRow={record => ({
@@ -130,19 +130,19 @@ const Agreements: React.FC = () => {
       } : {}}
     >
       <Table.Column title="Номер" dataIndex="number" key="number" />
-      <Table.Column title="Активно" dataIndex="isActive" key="isActive" render={value => <StatusTag value={value} />} />
+      <Table.Column title="Активно" dataIndex="isActive" key="isActive" render={isActive => <StatusTag value={isActive} />} />
       <Table.Column
         title="Тип"
         dataIndex="type"
         key="type"
         ellipsis={{ showTitle: false }}
-        render={(value: Type) => <Tooltip title={value.type} placement="topLeft">{value.type}</Tooltip>}
+        render={({ type }: Type) => <Tooltip title={type} placement="topLeft">{type}</Tooltip>}
       />
       <Table.Column title="Дата начала" dataIndex="beginDate" key="beginDate" render={formatDate} />
-      <Table.Column title="Дата окончания" dataIndex="endDate" key="endDate" render={value => value && formatDate(value)} />
-      <Table.Column title="Дата расторжения" dataIndex="terminationDate" key="terminationDate" render={value => value && formatDate(value)} />
-      <Table.Column title="Узел" dataIndex="contractorNode" key="contractorNode" render={value => value.name} />
-      <Table.Column title="Сегмент" dataIndex="contractorSegment" key="contractorSegment" render={value => value?.name} />
+      <Table.Column title="Дата окончания" dataIndex="endDate" key="endDate" render={date => date && formatDate(date)} />
+      <Table.Column title="Дата расторжения" dataIndex="terminationDate" key="terminationDate" render={date => date && formatDate(date)} />
+      <Table.Column title="Узел" dataIndex="contractorNode" key="contractorNode" render={org => org.name} />
+      <Table.Column title="Сегмент" dataIndex="contractorSegment" key="contractorSegment" render={org => org?.name} />
       <Table.Column
           title="Действия"
           key="actions"

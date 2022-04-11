@@ -28,13 +28,9 @@ class SkziUnitsController {
 
   async create(req: AuthRequest<{}, {}, Omit<CreateSkziUnitDto, 'addUserId'>>, res: Response, next: NextFunction) {
     try {
-      const {
-        isBroken,
-        vipnetLanId,
-        skziTypeId
-      } = req.body
+      const { vipnetLanId, skziTypeId } = req.body
 
-      if (typeof isBroken === 'undefined' || !vipnetLanId || !skziTypeId) {
+      if (!vipnetLanId || !skziTypeId) {
         throw ApiError.BadRequest('Заполните все поля')
       }
 

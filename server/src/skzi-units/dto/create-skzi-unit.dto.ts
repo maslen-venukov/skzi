@@ -1,13 +1,12 @@
 import { RawSkziUnit } from '../skzi-unit.interface'
 
-type CreateSkziUnitDtoParams = Omit<RawSkziUnit, 'id' | 'isActive' | 'addDate' | 'inactDate' | 'inactUserId'>
+type CreateSkziUnitDtoParams = Omit<RawSkziUnit, 'id' | 'isActive' | 'isBroken' | 'addDate' | 'inactDate' | 'inactUserId'>
 
 export class CreateSkziUnitDto implements CreateSkziUnitDtoParams {
   invNum?: string
   serialNum?: string
   licSkziNum?: string
   serialSkziNum?: string
-  isBroken: boolean
   location?: string
   vipnetLanId: number
   agreementId?: number
@@ -21,7 +20,6 @@ export class CreateSkziUnitDto implements CreateSkziUnitDtoParams {
     serialNum,
     licSkziNum,
     serialSkziNum,
-    isBroken,
     location,
     vipnetLanId,
     agreementId,
@@ -34,7 +32,6 @@ export class CreateSkziUnitDto implements CreateSkziUnitDtoParams {
     this.serialNum = serialNum
     this.licSkziNum = licSkziNum
     this.serialSkziNum = serialSkziNum
-    this.isBroken = isBroken
     this.location = location
     this.vipnetLanId = vipnetLanId
     this.agreementId = agreementId

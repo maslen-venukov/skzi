@@ -1,12 +1,13 @@
 import React, { useMemo, useState } from 'react'
 import { observer } from 'mobx-react-lite'
 import { Button, DatePicker, Form, Input, Select } from 'antd'
-import { useForm } from 'antd/lib/form/Form'
 import { Moment } from 'moment'
-import Loader from '../Loader'
+import FormSearchSelect from '../FormSearchSelect'
 import agreementsStore from '../../store/agreements/agreements.store'
 import agreementTypesStore from '../../store/agreement-types/agreement-types.store'
 import orgsStore from '../../store/orgs/orgs.store'
+import includes from '../../utils/includes'
+import { Org } from '../../store/orgs/orgs.types'
 
 export interface CreateAgreementFormValues {
   number: string
@@ -27,22 +28,31 @@ const CreateAgreementDialog: React.FC<CreateAgreementDialogProps> = ({
 }) => {
   const [nodeName, setNodeName] = useState('')
   const [segmentName, setSegmentName] = useState('')
+  const [typeName, setTypeName] = useState('')
   const { isLoading: isAgreementsLoading } = agreementsStore
   const { types, isLoading: isTypesLoading } = agreementTypesStore
   const { orgs, isLoading: isOrgsLoading } = orgsStore
-  const [form] = useForm<CreateAgreementFormValues>()
 
   const nodes = useMemo(() => (
-    orgs.filter(org => org.name.toLowerCase().includes(nodeName.toLowerCase()))
+    orgs.filter(org => includes(org.name, nodeName))
   ), [orgs, nodeName])
 
   const segments = useMemo(() => (
-    orgs.filter(org => org.name.toLowerCase().includes(segmentName.toLowerCase()))
+    orgs.filter(org => includes(org.name, segmentName))
   ), [orgs, segmentName])
+
+  const filteredTypes = useMemo(() => (
+    types.filter(({ type }) => includes(type, typeName))
+  ), [types, typeName])
+
+  const renderOrgOption = ({ id, name }: Org) => (
+    <Select.Option key={id} value={id}>
+      {name}
+    </Select.Option>
+  )
 
   return (
     <Form
-      form={form}
       layout="vertical"
       validateTrigger="onBlur"
       autoComplete="off"
@@ -56,25 +66,20 @@ const CreateAgreementDialog: React.FC<CreateAgreementDialogProps> = ({
         <Input />
       </Form.Item>
 
-      <Form.Item
+      <FormSearchSelect
+        items={filteredTypes}
         label="Тип"
         name="typeId"
         rules={[{ required: true, message: 'Пожалуйста выберите тип' }]}
-      >
-        <Select
-          loading={isTypesLoading}
-          allowClear
-        >
-          {types.map(type => (
-            <Select.Option
-              key={type.id}
-              value={type.id}
-            >
-              {type.type}
-            </Select.Option>
-          ))}
-        </Select>
-      </Form.Item>
+        isLoading={isTypesLoading}
+        value={typeName}
+        setValue={setTypeName}
+        renderItem={({ id, type }) => (
+          <Select.Option key={id} value={id}>
+            {type}
+          </Select.Option>
+        )}
+      />
 
       <Form.Item
         label="Дата начала"
@@ -98,52 +103,26 @@ const CreateAgreementDialog: React.FC<CreateAgreementDialogProps> = ({
         <Input />
       </Form.Item>
 
-      <Form.Item
+      <FormSearchSelect
+        items={nodes}
         label="Узел"
         name="contractorNodeId"
         rules={[{ required: true, message: 'Пожалуйста введите узел' }]}
-      >
-        <Select
-          showSearch
-          allowClear
-          filterOption={false}
-          notFoundContent={isOrgsLoading ? <Loader /> : null}
-          value={nodeName}
-          onSearch={setNodeName}
-        >
-          {nodes.map(node => (
-            <Select.Option
-              key={node.id}
-              value={node.id}
-            >
-              {node.name}
-            </Select.Option>
-          ))}
-        </Select>
-      </Form.Item>
+        isLoading={isOrgsLoading}
+        value={nodeName}
+        setValue={setNodeName}
+        renderItem={renderOrgOption}
+      />
 
-      <Form.Item
+      <FormSearchSelect
+        items={segments}
         label="Сегмент"
         name="contractorSegmentId"
-      >
-        <Select
-          showSearch
-          allowClear
-          filterOption={false}
-          notFoundContent={isOrgsLoading ? <Loader /> : null}
-          value={segmentName}
-          onSearch={setSegmentName}
-        >
-          {segments.map(segment => (
-            <Select.Option
-              key={segment.id}
-              value={segment.id}
-            >
-              {segment.name}
-            </Select.Option>
-          ))}
-        </Select>
-      </Form.Item>
+        isLoading={isOrgsLoading}
+        value={segmentName}
+        setValue={setSegmentName}
+        renderItem={renderOrgOption}
+      />
 
       <Form.Item>
         <Button

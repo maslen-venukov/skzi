@@ -19,9 +19,9 @@ interface UsersDialogProps {
 }
 
 const UpdateUserDialog: React.FC<UsersDialogProps> = ({ user, onFinish }) => {
+  const [form] = useForm<UpdateUserFormValues>()
   const { isLoading: isUsersLoading } = usersStore
   const { roles, isLoading: isRolesLoading } = rolesStore
-  const [form] = useForm<UpdateUserFormValues>()
 
   useEffect(() => {
     form.setFieldsValue({
