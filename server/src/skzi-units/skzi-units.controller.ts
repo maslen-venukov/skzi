@@ -9,7 +9,7 @@ import { User } from '../users/user.interface'
 class SkziUnitsController {
   async getAll(req: Request, res: Response, next: NextFunction) {
     try {
-      const skziUnits = await skziUnitsService.getAll()
+      const skziUnits = await skziUnitsService.getAll(req.query)
       return res.json({ skziUnits })
     } catch(e) {
       next(e)

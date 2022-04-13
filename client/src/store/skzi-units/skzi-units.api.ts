@@ -1,10 +1,15 @@
 import api from '../../core/api'
-import { SkziUnit, CreateSkziUnitData, UpdateSkziUnitData } from './skzi-units.types'
+import {
+  SkziUnit,
+  GetSkziUnitsParams,
+  CreateSkziUnitData,
+  UpdateSkziUnitData
+} from './skzi-units.types'
 
-export const getSkziUnits = async () => (
+export const getSkziUnits = async (params: GetSkziUnitsParams = {}) => (
   await api.get<{
     skziUnits: SkziUnit[]
-  }>('/api/skzi-units')
+  }>('/api/skzi-units', { params })
 )
 
 export const createSkziUnit = async (data: CreateSkziUnitData) => (

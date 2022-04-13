@@ -1,6 +1,6 @@
 import React from 'react'
 import { observer } from 'mobx-react-lite'
-import { Layout } from 'antd'
+import { Layout, Typography } from 'antd'
 import {
   MenuUnfoldOutlined,
   MenuFoldOutlined,
@@ -15,7 +15,7 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({ collapsed, onToggle }) => {
-  const { logout } = authStore
+  const { user, logout } = authStore
 
   return (
     <Layout.Header className="header">
@@ -23,6 +23,10 @@ const Header: React.FC<HeaderProps> = ({ collapsed, onToggle }) => {
         className: 'header__collapse',
         onClick: onToggle
       })}
+
+      <Typography.Text>
+        {user?.realName} - {user?.name}
+      </Typography.Text>
 
       <Hint
         tooltipProps={{

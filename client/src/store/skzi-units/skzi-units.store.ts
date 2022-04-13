@@ -2,7 +2,12 @@ import { makeAutoObservable } from 'mobx'
 import { message } from 'antd'
 import { createSkziUnit, getSkziUnits, updateSkziUnit } from './skzi-units.api'
 import catchApiError from '../../utils/catchApiError'
-import { SkziUnit, CreateSkziUnitData, UpdateSkziUnitData } from './skzi-units.types'
+import {
+  SkziUnit,
+  GetSkziUnitsParams,
+  CreateSkziUnitData,
+  UpdateSkziUnitData
+} from './skzi-units.types'
 
 class SkziUnitsStore {
   isLoading = false
@@ -20,10 +25,10 @@ class SkziUnitsStore {
     this.skziUnits = value
   }
 
-  async getSkziUnits() {
+  async getSkziUnits(params: GetSkziUnitsParams = {}) {
     this.setLoading(true)
     try {
-      const res = await getSkziUnits()
+      const res = await getSkziUnits(params)
       this.setSkziUnits(res.data.skziUnits)
     } catch(e) {
       catchApiError(e)

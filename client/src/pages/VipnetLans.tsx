@@ -67,7 +67,6 @@ const VipnetLans: React.FC = () => {
                 tooltipProps={{ title: 'Удалить' }}
                 buttonProps={{
                   type: 'primary',
-                  shape: 'circle',
                   danger: true,
                   icon: <DeleteOutlined />,
                   onClick: () => console.log(record.id)

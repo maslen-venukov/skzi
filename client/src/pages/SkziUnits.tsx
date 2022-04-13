@@ -138,12 +138,12 @@ const SkziUnits: React.FC = () => {
       <Table.Column title="Тип" dataIndex="skziType" key="skziType" render={({ type }: Type) => type} />
       <Table.Column title="Платформа" dataIndex="platformType" key="platformType" render={(type: Type) => type?.type} />
       <Table.Column title="Владелец" dataIndex="skziOwner" key="skziOwner" render={(org: Org) => org?.name} />
-      {isAdmin && (
-        <Table.Column
-          title="Действия"
-          key="actions"
-          render={(_, record: SkziUnit) => (
-            <Space>
+      <Table.Column
+        title="Действия"
+        key="actions"
+        render={(_, record: SkziUnit) => (
+          <Space>
+            {isAdmin && (
               <Hint
                 tooltipProps={{ title: 'Редактировать' }}
                 buttonProps={{
@@ -153,22 +153,22 @@ const SkziUnits: React.FC = () => {
                   onClick: () => openUpdateDialog(record)
                 }}
               />
+            )}
 
-              {record.agreement && (
-                <Hint
-                  tooltipProps={{ title: 'Соглашение' }}
-                  buttonProps={{
-                    type: 'primary',
-                    shape: 'circle',
-                    icon: <FileDoneOutlined />,
-                    onClick: () => navigate(`/agreements/${record.agreement?.id}`)
-                  }}
-                />
-              )}
-            </Space>
-          )}
-        />
-      )}
+            {record.agreement && (
+              <Hint
+                tooltipProps={{ title: 'Соглашение' }}
+                buttonProps={{
+                  type: 'primary',
+                  shape: 'circle',
+                  icon: <FileDoneOutlined />,
+                  onClick: () => navigate(`/agreements/${record.agreement?.id}`)
+                }}
+              />
+            )}
+          </Space>
+        )}
+      />
     </Table>
   )
 }

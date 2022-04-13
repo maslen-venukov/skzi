@@ -5,8 +5,8 @@ import { UpdateSkziUnitDto } from './dto/update-skzi-unit.dto'
 import { ApiError } from '../exceptions/api-error'
 
 class SkziUnitsService {
-  async getAll() {
-    const skziUnits = await skziUnitsRepository.getAll({ sort: { id: 'desc' } })
+  async getAll(filters = {}) {
+    const skziUnits = await skziUnitsRepository.getAll({ filters, sort: { id: 'desc' } })
     return await Promise.all(skziUnits.map(skziUnit => skziUnitsTransform.expand(skziUnit)))
   }
 

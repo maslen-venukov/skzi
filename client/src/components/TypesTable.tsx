@@ -61,7 +61,6 @@ const TypesTable: React.FC<TypesTableProps> = ({ title, types, isLoading }) => {
                 tooltipProps={{ title: 'Удалить' }}
                 buttonProps={{
                   type: 'primary',
-                  shape: 'circle',
                   danger: true,
                   icon: <DeleteOutlined />,
                   onClick: () => console.log(record.id)

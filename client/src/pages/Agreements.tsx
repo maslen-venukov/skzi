@@ -139,8 +139,8 @@ const Agreements: React.FC = () => {
         render={({ type }: Type) => <Tooltip title={type} placement="topLeft">{type}</Tooltip>}
       />
       <Table.Column title="Дата начала" dataIndex="beginDate" key="beginDate" render={formatDate} />
-      <Table.Column title="Дата окончания" dataIndex="endDate" key="endDate" render={date => date && formatDate(date)} />
-      <Table.Column title="Дата расторжения" dataIndex="terminationDate" key="terminationDate" render={date => date && formatDate(date)} />
+      <Table.Column title="Дата окончания" dataIndex="endDate" key="endDate" render={formatDate} />
+      <Table.Column title="Дата расторжения" dataIndex="terminationDate" key="terminationDate" render={formatDate} />
       <Table.Column title="Узел" dataIndex="contractorNode" key="contractorNode" render={org => org.name} />
       <Table.Column title="Сегмент" dataIndex="contractorSegment" key="contractorSegment" render={org => org?.name} />
       <Table.Column
