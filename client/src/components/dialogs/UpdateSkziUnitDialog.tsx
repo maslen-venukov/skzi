@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react'
+import { observer } from 'mobx-react-lite'
 import { Button, Checkbox, Form, Input, Select } from 'antd'
 import { useForm } from 'antd/lib/form/Form'
 import FormSearchSelect from '../FormSearchSelect'
@@ -179,4 +180,4 @@ const UpdateSkziUnitDialog: React.FC<UpdateSkziUnitDialogProps> = ({ skziUnit, o
   )
 }
 
-export default UpdateSkziUnitDialog
+export default observer(UpdateSkziUnitDialog)

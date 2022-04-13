@@ -131,49 +131,44 @@ const Agreements: React.FC = () => {
     >
       <Table.Column title="Номер" dataIndex="number" key="number" />
       <Table.Column title="Активно" dataIndex="isActive" key="isActive" render={isActive => <StatusTag value={isActive} />} />
-      <Table.Column
-        title="Тип"
-        dataIndex="type"
-        key="type"
-        ellipsis={{ showTitle: false }}
-        render={({ type }: Type) => <Tooltip title={type} placement="topLeft">{type}</Tooltip>}
-      />
+      <Table.Column title="Тип" dataIndex="type" key="type" render={({ type }: Type) => type} />
       <Table.Column title="Дата начала" dataIndex="beginDate" key="beginDate" render={formatDate} />
       <Table.Column title="Дата окончания" dataIndex="endDate" key="endDate" render={formatDate} />
       <Table.Column title="Дата расторжения" dataIndex="terminationDate" key="terminationDate" render={formatDate} />
       <Table.Column title="Узел" dataIndex="contractorNode" key="contractorNode" render={org => org.name} />
       <Table.Column title="Сегмент" dataIndex="contractorSegment" key="contractorSegment" render={org => org?.name} />
       <Table.Column
-          title="Действия"
-          key="actions"
-          render={(_, record: Agreement) => (
-            <Space>
-              {isAdmin && (
-                <Hint
-                  tooltipProps={{ title: 'Редактировать' }}
-                  buttonProps={{
-                    type: 'primary',
-                    shape: 'circle',
-                    icon: <EditOutlined />,
-                    onClick: () => openUpdateDialog(record)
-                  }}
-                />
-              )}
+        title="Действия"
+        key="actions"
+        width="0"
+        render={(_, record: Agreement) => (
+          <Space>
+            {isAdmin && (
+              <Hint
+                tooltipProps={{ title: 'Редактировать' }}
+                buttonProps={{
+                  type: 'primary',
+                  shape: 'circle',
+                  icon: <EditOutlined />,
+                  onClick: () => openUpdateDialog(record)
+                }}
+              />
+            )}
 
-              {record.parentId && (
-                <Hint
-                  tooltipProps={{ title: 'Родительское соглашение' }}
-                  buttonProps={{
-                    type: 'primary',
-                    shape: 'circle',
-                    icon: <FileDoneOutlined />,
-                    onClick: () => navigate(`/agreements/${record.parentId}`)
-                  }}
-                />
-              )}
-            </Space>
-          )}
-        />
+            {record.parentId && (
+              <Hint
+                tooltipProps={{ title: 'Родительское соглашение' }}
+                buttonProps={{
+                  type: 'primary',
+                  shape: 'circle',
+                  icon: <FileDoneOutlined />,
+                  onClick: () => navigate(`/agreements/${record.parentId}`)
+                }}
+              />
+            )}
+          </Space>
+        )}
+      />
     </Table>
   )
 }

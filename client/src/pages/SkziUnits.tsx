@@ -141,6 +141,7 @@ const SkziUnits: React.FC = () => {
       <Table.Column
         title="Действия"
         key="actions"
+        width="0"
         render={(_, record: SkziUnit) => (
           <Space>
             {isAdmin && (

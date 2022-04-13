@@ -66,6 +66,7 @@ const Users: React.FC = () => {
       <Table.Column
         title="Действия"
         key="actions"
+        width="0"
         render={(_, record: User) => (
           <Hint
             tooltipProps={{ title: 'Редактировать' }}

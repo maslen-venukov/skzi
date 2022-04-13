@@ -11,7 +11,6 @@ import authStore from '../store/auth/auth.store'
 import dialogStore from '../store/dialog/dialog.store'
 import nullify from '../utils/nullify'
 import getDelta from '../utils/getDelta'
-import { Agreement as AgreementInterface } from '../store/agreements/agreements.types'
 import { UpdateAgreementFormValues } from '../components/dialogs/UpdateAgreementDialog'
 
 const Agreement: React.FC = () => {
@@ -21,7 +20,9 @@ const Agreement: React.FC = () => {
   const { isAdmin } = authStore
   const { openDialog, closeDialog } = dialogStore
 
-  const onUpdate = (agreement: AgreementInterface) => async (values: UpdateAgreementFormValues) => {
+  const onUpdate = async (values: UpdateAgreementFormValues) => {
+    if(!agreement) return
+
     const delta = nullify(getDelta(
       {
         ...values,
@@ -53,7 +54,7 @@ const Agreement: React.FC = () => {
       title: agreement.number,
       props: {
         agreement,
-        onFinish: onUpdate(agreement)
+        onFinish: onUpdate
       }
     })
   }

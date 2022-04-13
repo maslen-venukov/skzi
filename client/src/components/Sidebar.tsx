@@ -4,6 +4,7 @@ import { Link, useLocation } from 'react-router-dom'
 import { Layout, Menu } from 'antd'
 import {
   TeamOutlined,
+  WalletOutlined,
   SnippetsOutlined,
   FileDoneOutlined,
   LockOutlined,
@@ -39,6 +40,11 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed }) => {
         label: 'Пользователи',
         icon: <TeamOutlined />,
         role: Roles.Admin
+      },
+      {
+        path: '/orgs',
+        label: 'Контрагенты',
+        icon: <WalletOutlined />
       },
       {
         path: '/acts',

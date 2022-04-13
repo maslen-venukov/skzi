@@ -10,7 +10,9 @@ const dialogsMap: Record<DialogType, LazyExoticComponent<React.FC<any>>> = {
   UpdateAgreement: React.lazy(() => import('./dialogs/UpdateAgreementDialog')),
   UpdateUser: React.lazy(() => import('./dialogs/UpdateUserDialog')),
   CreateSkziUnit: React.lazy(() => import('./dialogs/CreateSkziUnitDialog')),
-  UpdateSkziUnit: React.lazy(() => import('./dialogs/UpdateSkziUnitDialog'))
+  UpdateSkziUnit: React.lazy(() => import('./dialogs/UpdateSkziUnitDialog')),
+  CreateOrg: React.lazy(() => import('./dialogs/CreateOrgDialog')),
+  UpdateOrg: React.lazy(() => import('./dialogs/UpdateOrgDialog'))
 }
 
 const Dialog: React.FC = () => {

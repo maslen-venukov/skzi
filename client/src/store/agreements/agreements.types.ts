@@ -27,14 +27,7 @@ export interface CreateAgreementData {
   contractorSegmentId?: number
 }
 
-export interface UpdateAgreementData {
-  typeId?: number
+export interface UpdateAgreementData extends Partial<CreateAgreementData> {
   isActive?: boolean
-  number?: string
-  parentId?: number
-  beginDate?: Date
-  endDate?: Date
-  contractorNodeId?: number
-  contractorSegmentId?: number
   terminationDate?: Date
 }

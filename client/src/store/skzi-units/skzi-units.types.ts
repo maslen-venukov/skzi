@@ -41,17 +41,7 @@ export interface CreateSkziUnitData {
   skziOwnerId?: number
 }
 
-export interface UpdateSkziUnitData {
+export interface UpdateSkziUnitData extends Partial<CreateSkziUnitData> {
   isActive?: boolean
-  invNum?: string
-  serialNum?: string
-  licSkziNum?: string
-  serialSkziNum?: string
   isBroken?: boolean
-  location?: string
-  vipnetLanId?: number
-  agreementId?: number
-  skziTypeId?: number
-  platformTypeId?: number
-  skziOwnerId?: number
 }

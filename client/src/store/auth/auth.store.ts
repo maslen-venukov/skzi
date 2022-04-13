@@ -19,7 +19,7 @@ class AuthStore {
   }
 
   private isUserHasRole(role: Roles) {
-    return this.user && isRoleMatch(this.user.role.role, role)
+    return (this.user && isRoleMatch(this.user.role.role, role)) || false
   }
 
   get isAdmin() {

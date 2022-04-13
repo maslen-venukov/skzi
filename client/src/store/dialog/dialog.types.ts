@@ -4,6 +4,8 @@ export type DialogType =
   | 'UpdateUser'
   | 'CreateSkziUnit'
   | 'UpdateSkziUnit'
+  | 'CreateOrg'
+  | 'UpdateOrg'
 
 export interface OpenDialogParams {
   type: DialogType
