@@ -12,6 +12,12 @@ export const getSkziUnits = async (params: GetSkziUnitsParams = {}) => (
   }>('/api/skzi-units', { params })
 )
 
+export const getSkziUnit = async (id: number) => (
+  await api.get<{
+    skziUnit: SkziUnit
+  }>(`/api/skzi-units/${id}`)
+)
+
 export const createSkziUnit = async (data: CreateSkziUnitData) => (
   await api.post<{
     message: string

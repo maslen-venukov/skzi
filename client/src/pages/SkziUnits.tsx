@@ -130,7 +130,7 @@ const SkziUnits: React.FC = () => {
       <Table.Column title="Активно" dataIndex="isActive" key="isActive" render={isActive => <StatusTag value={isActive} />} />
       <Table.Column title="Инвентарный номер" dataIndex="invNum" key="invNum" />
       <Table.Column title="Лицензионный номер" dataIndex="licSkziNum" key="licSkziNum" />
-      <Table.Column title="Серийный номер СКЗИ" dataIndex="serialSkziNum" key="serialSkziNum" />
+      <Table.Column title="Номер СКЗИ" dataIndex="serialSkziNum" key="serialSkziNum" />
       <Table.Column title="Повреждено" dataIndex="isBroken" key="isBroken" render={isBroken => <StatusTag value={isBroken} />} />
       <Table.Column title="Местоположение" dataIndex="location" key="location" />
       <Table.Column title="ViPNet" dataIndex="vipnetLan" key="vipnetLan" render={({ lanNum }: VipnetLan) => lanNum} />

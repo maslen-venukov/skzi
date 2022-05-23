@@ -6,6 +6,7 @@ import moment, { Moment } from 'moment'
 import FormSearchSelect from '../FormSearchSelect'
 import agreementsStore from '../../store/agreements/agreements.store'
 import agreementTypesStore from '../../store/agreement-types/agreement-types.store'
+import skziUnitsStore from '../../store/skzi-units/skzi-units.store'
 import orgsStore from '../../store/orgs/orgs.store'
 import includes from '../../utils/includes'
 import { Agreement } from '../../store/agreements/agreements.types'
@@ -38,6 +39,7 @@ const UpdateAgreementDialog: React.FC<UpdateAgreementDialogProps> = ({
   const [form] = useForm<UpdateAgreementFormValues>()
   const { isLoading: isAgreementsLoading } = agreementsStore
   const { types, isLoading: isTypesLoading } = agreementTypesStore
+  const { isAgreementLoading: isSkziUnitAgreementLoading } = skziUnitsStore
   const { orgs, isLoading: isOrgsLoading } = orgsStore
 
   const nodes = useMemo(() => (
@@ -161,7 +163,7 @@ const UpdateAgreementDialog: React.FC<UpdateAgreementDialogProps> = ({
 
       <Form.Item>
         <Button
-          loading={isAgreementsLoading}
+          loading={isAgreementsLoading || isSkziUnitAgreementLoading}
           type="primary"
           htmlType="submit"
         >

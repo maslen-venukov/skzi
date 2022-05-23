@@ -79,7 +79,7 @@ const CreateSkziUnitDialog: React.FC<CreateSkziUnitDialogProps> = ({ onFinish })
         <Input />
       </Form.Item>
 
-      <Form.Item label="Серийный номер СКЗИ" name="serialSkziNum">
+      <Form.Item label="Номер СКЗИ" name="serialSkziNum">
         <Input />
       </Form.Item>
 

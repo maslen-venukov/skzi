@@ -22,7 +22,11 @@ const AgreementSkziUnits: React.FC<AgreementSkziUnitsProps> = ({
 
   return (
     <Collapse>
-      <Collapse.Panel header="СКЗИ" extra={<Badge count={total} showZero />}>
+      <Collapse.Panel
+        header="СКЗИ"
+        disabled={total == 0}
+        extra={<Badge count={total} showZero />}
+      >
         <Table
           dataSource={skziUnits}
           loading={isLoading}
@@ -36,7 +40,7 @@ const AgreementSkziUnits: React.FC<AgreementSkziUnitsProps> = ({
           <Table.Column title="Активно" dataIndex="isActive" key="isActive" render={isActive => <StatusTag value={isActive} />} />
           <Table.Column title="Инвентарный номер" dataIndex="invNum" key="invNum" />
           <Table.Column title="Лицензионный номер" dataIndex="licSkziNum" key="licSkziNum" />
-          <Table.Column title="Серийный номер СКЗИ" dataIndex="serialSkziNum" key="serialSkziNum" />
+          <Table.Column title="Номер СКЗИ" dataIndex="serialSkziNum" key="serialSkziNum" />
           <Table.Column title="Повреждено" dataIndex="isBroken" key="isBroken" render={isBroken => <StatusTag value={isBroken} />} />
           <Table.Column title="Местоположение" dataIndex="location" key="location" />
           <Table.Column title="ViPNet" dataIndex="vipnetLan" key="vipnetLan" render={({ lanNum }: VipnetLan) => lanNum} />

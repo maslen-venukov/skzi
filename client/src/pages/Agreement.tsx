@@ -4,9 +4,11 @@ import { Empty } from 'antd'
 import Loader from '../components/Loader'
 import agreementsStore from '../store/agreements/agreements.store'
 import AgreementInfo from '../components/agreements/AgreementInfo'
+import AgreementSkziUnits from '../components/agreements/AgreementSkziUnits'
 import { useParams } from 'react-router-dom'
 import skziUnitsStore from '../store/skzi-units/skzi-units.store'
-import AgreementSkziUnits from '../components/agreements/AgreementSkziUnits'
+import agreementTypesStore from '../store/agreement-types/agreement-types.store'
+import orgsStore from '../store/orgs/orgs.store'
 import authStore from '../store/auth/auth.store'
 import dialogStore from '../store/dialog/dialog.store'
 import nullify from '../utils/nullify'
@@ -17,6 +19,8 @@ const Agreement: React.FC = () => {
   const { id } = useParams()
   const { agreement, isLoading: isAgreementLoading, getAgreement, updateAgreement, setAgreement } = agreementsStore
   const { skziUnits, isLoading: isSkziUnitsLoading, getSkziUnits, setSkziUnits } = skziUnitsStore
+  const { getAgreementTypes, setAgreementTypes } = agreementTypesStore
+  const { getOrgs, setOrgs } = orgsStore
   const { isAdmin } = authStore
   const { openDialog, closeDialog } = dialogStore
 
@@ -61,14 +65,26 @@ const Agreement: React.FC = () => {
 
   useEffect(() => {
     const agreementId = Number(id)
-    getAgreement(agreementId)
-    getSkziUnits({ agreementId })
+    Promise.all([
+      getAgreement(agreementId),
+      getSkziUnits({ agreementId }),
+      ...isAdmin ? [
+        getAgreementTypes(),
+        getOrgs()
+      ] : []
+    ])
 
     return () => {
       setAgreement(null)
       setSkziUnits([])
+      setAgreementTypes([])
+      setOrgs([])
     }
-  }, [id, getAgreement, setAgreement])
+  }, [
+    id, isAdmin,
+    getAgreement, getSkziUnits, getAgreementTypes, getOrgs,
+    setAgreement, setSkziUnits, setAgreementTypes, setOrgs
+  ])
 
   if(isAgreementLoading) {
     return <Loader />
@@ -79,7 +95,7 @@ const Agreement: React.FC = () => {
   }
 
   return (
-    <div className="agreement">
+    <div className="vertical-space">
       <AgreementInfo
         agreement={agreement}
         isAdmin={isAdmin}
