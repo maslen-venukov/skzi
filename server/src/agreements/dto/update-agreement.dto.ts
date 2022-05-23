@@ -13,25 +13,15 @@ export class UpdateAgreementDto implements UpdateAgreementDtoParams {
   contractorSegmentId?: number
   terminationDate?: Date
 
-  constructor({
-    typeId,
-    isActive,
-    number,
-    parentId,
-    beginDate,
-    endDate,
-    contractorNodeId,
-    contractorSegmentId,
-    terminationDate
-  }: UpdateAgreementDtoParams) {
-    this.typeId = typeId
-    this.isActive = isActive
-    this.number = number
-    this.parentId = parentId
-    this.beginDate = beginDate
-    this.endDate = endDate
-    this.contractorNodeId = contractorNodeId
-    this.contractorSegmentId = contractorSegmentId
-    this.terminationDate = terminationDate
+  constructor(params: UpdateAgreementDtoParams) {
+    this.typeId = params.typeId
+    this.isActive = params.isActive
+    this.number = params.number
+    this.parentId = params.parentId
+    this.beginDate = params.beginDate
+    this.endDate = params.endDate
+    this.contractorNodeId = params.contractorNodeId
+    this.contractorSegmentId = params.contractorSegmentId
+    this.terminationDate = params.terminationDate
   }
 }

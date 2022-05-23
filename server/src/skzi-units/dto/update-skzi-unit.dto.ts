@@ -18,35 +18,20 @@ export class UpdateSkziUnitDto implements UpdateSkziUnitDtoParams {
   inactUserId?: number
   skziOwnerId?: number
 
-  constructor({
-    isActive,
-    invNum,
-    serialNum,
-    licSkziNum,
-    serialSkziNum,
-    isBroken,
-    location,
-    inactDate,
-    vipnetLanId,
-    agreementId,
-    skziTypeId,
-    platformTypeId,
-    inactUserId,
-    skziOwnerId
-  }: UpdateSkziUnitDtoParams) {
-    this.isActive = isActive
-    this.invNum = invNum
-    this.serialNum = serialNum
-    this.licSkziNum = licSkziNum
-    this.serialSkziNum = serialSkziNum
-    this.isBroken = isBroken
-    this.location = location
-    this.inactDate = inactDate
-    this.vipnetLanId = vipnetLanId
-    this.agreementId = agreementId
-    this.skziTypeId = skziTypeId
-    this.platformTypeId = platformTypeId
-    this.inactUserId = inactUserId
-    this.skziOwnerId = skziOwnerId
+  constructor(params: UpdateSkziUnitDtoParams) {
+    this.isActive = params.isActive
+    this.invNum = params.invNum
+    this.serialNum = params.serialNum
+    this.licSkziNum = params.licSkziNum
+    this.serialSkziNum = params.serialSkziNum
+    this.isBroken = params.isBroken
+    this.location = params.location
+    this.inactDate = params.inactDate
+    this.vipnetLanId = params.vipnetLanId
+    this.agreementId = params.agreementId
+    this.skziTypeId = params.skziTypeId
+    this.platformTypeId = params.platformTypeId
+    this.inactUserId = params.inactUserId
+    this.skziOwnerId = params.skziOwnerId
   }
 }

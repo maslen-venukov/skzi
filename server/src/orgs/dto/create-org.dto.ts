@@ -6,8 +6,8 @@ export class CreateOrgDto implements CreateOrgDtoParams {
   inn: string
   name: string
 
-  constructor({ inn, name }: CreateOrgDtoParams) {
-    this.inn = inn
-    this.name = name
+  constructor(params: CreateOrgDtoParams) {
+    this.inn = params.inn
+    this.name = params.name
   }
 }

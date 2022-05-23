@@ -11,9 +11,9 @@ export class RegistrationDto extends LoginDto {
   realName: string
   roleId: number
 
-  constructor({ name, realName, password, roleId }: RegistrationDtoParams) {
-    super({ name, password })
-    this.realName = realName
-    this.roleId = roleId
+  constructor(params: RegistrationDtoParams) {
+    super(params)
+    this.realName = params.realName
+    this.roleId = params.roleId
   }
 }

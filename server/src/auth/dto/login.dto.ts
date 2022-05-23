@@ -7,8 +7,8 @@ export class LoginDto {
   name: string
   password: string
 
-  constructor({ name, password }: LoginDtoParams) {
-    this.name = name
-    this.password = password
+  constructor(params: LoginDtoParams) {
+    this.name = params.name
+    this.password = params.password
   }
 }

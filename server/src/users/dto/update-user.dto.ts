@@ -9,11 +9,11 @@ export class UpdateUserDto implements UpdateUserDtoParams {
   roleId?: number
   isActive?: boolean
 
-  constructor({ name, realName, passHash, roleId, isActive }: UpdateUserDtoParams) {
-    this.name = name
-    this.realName = realName
-    this.passHash = passHash
-    this.roleId = roleId
-    this.isActive = isActive
+  constructor(params: UpdateUserDtoParams) {
+    this.name = params.name
+    this.realName = params.realName
+    this.passHash = params.passHash
+    this.roleId = params.roleId
+    this.isActive = params.isActive
   }
 }

@@ -10,19 +10,12 @@ export class UpdateActDto implements UpdateActDtoParams {
   skziUnitId?: number
   signTypeId?: number
 
-  constructor({
-    number,
-    date,
-    eqInventoryNum,
-    agreementId,
-    skziUnitId,
-    signTypeId
-  }: UpdateActDtoParams) {
-    this.number = number
-    this.date = date
-    this.eqInventoryNum = eqInventoryNum
-    this.agreementId = agreementId
-    this.skziUnitId = skziUnitId
-    this.signTypeId = signTypeId
+  constructor(params: UpdateActDtoParams) {
+    this.number = params.number
+    this.date = params.date
+    this.eqInventoryNum = params.eqInventoryNum
+    this.agreementId = params.agreementId
+    this.skziUnitId = params.skziUnitId
+    this.signTypeId = params.signTypeId
   }
 }

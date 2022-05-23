@@ -7,13 +7,9 @@ export class CreateAgreementCommentDto implements CreateAgreementCommentDtoParam
   comment: string
   addUserId: number
 
-  constructor({
-    agreementId,
-    comment,
-    addUserId
-  }: CreateAgreementCommentDtoParams) {
-    this.agreementId = agreementId
-    this.comment = comment
-    this.addUserId = addUserId
+  constructor(params: CreateAgreementCommentDtoParams) {
+    this.agreementId = params.agreementId
+    this.comment = params.comment
+    this.addUserId = params.addUserId
   }
 }

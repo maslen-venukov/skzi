@@ -15,29 +15,17 @@ export class CreateSkziUnitDto implements CreateSkziUnitDtoParams {
   addUserId: number
   skziOwnerId?: number
 
-  constructor({
-    invNum,
-    serialNum,
-    licSkziNum,
-    serialSkziNum,
-    location,
-    vipnetLanId,
-    agreementId,
-    skziTypeId,
-    platformTypeId,
-    addUserId,
-    skziOwnerId
-  }: CreateSkziUnitDtoParams) {
-    this.invNum = invNum
-    this.serialNum = serialNum
-    this.licSkziNum = licSkziNum
-    this.serialSkziNum = serialSkziNum
-    this.location = location
-    this.vipnetLanId = vipnetLanId
-    this.agreementId = agreementId
-    this.skziTypeId = skziTypeId
-    this.platformTypeId = platformTypeId
-    this.addUserId = addUserId
-    this.skziOwnerId = skziOwnerId
+  constructor(params: CreateSkziUnitDtoParams) {
+    this.invNum = params.invNum
+    this.serialNum = params.serialNum
+    this.licSkziNum = params.licSkziNum
+    this.serialSkziNum = params.serialSkziNum
+    this.location = params.location
+    this.vipnetLanId = params.vipnetLanId
+    this.agreementId = params.agreementId
+    this.skziTypeId = params.skziTypeId
+    this.platformTypeId = params.platformTypeId
+    this.addUserId = params.addUserId
+    this.skziOwnerId = params.skziOwnerId
   }
 }

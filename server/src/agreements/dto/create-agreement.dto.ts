@@ -12,23 +12,14 @@ export class CreateAgreementDto implements CreateAgreementDtoParams {
   contractorSegmentId?: number
   addUserId: number
 
-  constructor({
-    typeId,
-    number,
-    parentId,
-    beginDate,
-    endDate,
-    contractorNodeId,
-    contractorSegmentId,
-    addUserId
-  }: CreateAgreementDtoParams) {
-    this.typeId = typeId
-    this.number = number
-    this.parentId = parentId
-    this.beginDate = beginDate
-    this.endDate = endDate
-    this.contractorNodeId = contractorNodeId
-    this.contractorSegmentId = contractorSegmentId
-    this.addUserId = addUserId
+  constructor(params: CreateAgreementDtoParams) {
+    this.typeId = params.typeId
+    this.number = params.number
+    this.parentId = params.parentId
+    this.beginDate = params.beginDate
+    this.endDate = params.endDate
+    this.contractorNodeId = params.contractorNodeId
+    this.contractorSegmentId = params.contractorSegmentId
+    this.addUserId = params.addUserId
   }
 }
