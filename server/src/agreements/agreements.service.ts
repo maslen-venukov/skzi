@@ -1,15 +1,22 @@
 import { agreementsRepository } from './agreements.repository'
 import { agreementsTransform } from './agreements.transform'
+import { GetAllAgreementsDto } from './dto/get-all-agreements.dto'
 import { CreateAgreementDto } from './dto/create-agreement.dto'
 import { UpdateAgreementDto } from './dto/update-agreement.dto'
 import { ApiError } from '../exceptions/api-error'
 
 class AgreementsService {
-  async getAll() {
-    const agreements = await agreementsRepository.getAll({ sort: { id: 'desc' } })
-    return await Promise.all(agreements.map(agreement => (
-      agreementsTransform.expand(agreement))
-    ))
+  async getAll(params: GetAllAgreementsDto) {
+    const { page, count } = params
+
+    const { data, pagination } = await agreementsRepository.paginate({
+      sort: { id: 'desc' },
+      pagination: { page, count }
+    })
+
+    const agreements = await Promise.all(data.map(agreementsTransform.expand))
+
+    return { agreements, ...pagination }
   }
 
   async getById(id: number) {

@@ -7,7 +7,7 @@ import { ApiError } from '../exceptions/api-error'
 class ActsService {
   async getAll() {
     const acts = await actsRepository.getAll({ sort: { id: 'desc' } })
-    return await Promise.all(acts.map(act => actsTransform.expand(act)))
+    return await Promise.all(acts.map(actsTransform.expand))
   }
 
   async getById(id: number) {

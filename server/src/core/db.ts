@@ -1,7 +1,9 @@
 import dotenv from 'dotenv'
 import knex from 'knex'
+import { attachPaginate } from 'knex-paginate'
 
 dotenv.config()
+attachPaginate()
 
 export const db = knex({
   client: 'pg',

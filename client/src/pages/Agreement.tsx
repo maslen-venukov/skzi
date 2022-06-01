@@ -1,12 +1,12 @@
 import React, { useEffect } from 'react'
 import { observer } from 'mobx-react-lite'
 import { Empty } from 'antd'
+import { useParams } from 'react-router-dom'
 import Loader from '../components/Loader'
-import agreementsStore from '../store/agreements/agreements.store'
 import AgreementInfo from '../components/agreements/AgreementInfo'
 import AgreementSkziUnits from '../components/agreements/AgreementSkziUnits'
-import { useParams } from 'react-router-dom'
 import skziUnitsStore from '../store/skzi-units/skzi-units.store'
+import agreementsStore from '../store/agreements/agreements.store'
 import agreementTypesStore from '../store/agreement-types/agreement-types.store'
 import orgsStore from '../store/orgs/orgs.store'
 import authStore from '../store/auth/auth.store'
@@ -18,7 +18,7 @@ import { UpdateAgreementFormValues } from '../components/dialogs/UpdateAgreement
 const Agreement: React.FC = () => {
   const { id } = useParams()
   const { agreement, isLoading: isAgreementLoading, getAgreement, updateAgreement, setAgreement } = agreementsStore
-  const { skziUnits, isLoading: isSkziUnitsLoading, getSkziUnits, setSkziUnits } = skziUnitsStore
+  const { skziUnits, isLoading: isSkziUnitsLoading, getAgreementSkziUnits, setSkziUnits } = skziUnitsStore
   const { getAgreementTypes, setAgreementTypes } = agreementTypesStore
   const { getOrgs, setOrgs } = orgsStore
   const { isAdmin } = authStore
@@ -65,9 +65,10 @@ const Agreement: React.FC = () => {
 
   useEffect(() => {
     const agreementId = Number(id)
+
     Promise.all([
       getAgreement(agreementId),
-      getSkziUnits({ agreementId }),
+      getAgreementSkziUnits(agreementId),
       ...isAdmin ? [
         getAgreementTypes(),
         getOrgs()
@@ -82,7 +83,7 @@ const Agreement: React.FC = () => {
     }
   }, [
     id, isAdmin,
-    getAgreement, getSkziUnits, getAgreementTypes, getOrgs,
+    getAgreement, getAgreementSkziUnits, getAgreementTypes, getOrgs,
     setAgreement, setSkziUnits, setAgreementTypes, setOrgs
   ])
 

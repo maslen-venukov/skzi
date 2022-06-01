@@ -24,10 +24,6 @@ export interface SkziUnit {
   skziOwner?: Org
 }
 
-export interface GetSkziUnitsParams {
-  agreementId?: number
-}
-
 export interface CreateSkziUnitData {
   serialNum?: string
   invNum?: string

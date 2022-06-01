@@ -57,9 +57,7 @@ const AgreementInfo: React.FC<AgreementInfoProps> = ({
         <Link to={`/orgs/${agreement.contractorSegment?.id}`}>{agreement.contractorSegment?.name}</Link>
       </Descriptions.Item>
 
-      <Descriptions.Item label="Добавил">
-        <Link to={`/users/${agreement.addUser.id}`}>{agreement.addUser.realName}</Link>
-      </Descriptions.Item>
+      <Descriptions.Item label="Добавил">{agreement.addUser.realName}</Descriptions.Item>
 
       <Descriptions.Item label="Дата добавления">{formatDate(agreement.addDate)}</Descriptions.Item>
     </Descriptions>

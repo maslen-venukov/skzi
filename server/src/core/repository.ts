@@ -17,6 +17,11 @@ interface RepositorySearchOneParams<E = Entity> {
   exclude?: Exclude<E>
 }
 
+interface RepositoryPagination {
+  page: number
+  count: number
+}
+
 interface RepositorySearchParams<E = Entity> extends RepositorySearchOneParams<E> {
   filters?: Filters<E>
   sort?: Sort<E>
@@ -37,6 +42,28 @@ export class Repository<E = Entity> {
     const select = this.getSelect(exclude)
 
     return await db.select<E[]>(select).from(this.table).orderBy(order).where(where)
+  }
+
+  async paginate({ filters = {}, sort = {}, pagination }: RepositorySearchParams<E> & { pagination: RepositoryPagination }) {
+    const order = this.getOrder(sort)
+    const where = this.getWhere(filters)
+    const select = this.getSelect([])
+    const { page, count } = pagination
+
+    const result = await db.select<E[]>(select).from(this.table).orderBy(order).where(where).paginate({
+      currentPage: Number(page),
+      perPage: Number(count),
+      isLengthAware: true
+    })
+
+    return {
+      data: result.data as E[],
+      pagination: {
+        page: Number(page),
+        count: Number(count),
+        total: result.pagination.total
+      }
+    }
   }
 
   async getById(id: number, { exclude = [] }: RepositorySearchOneParams<E> = {}) {

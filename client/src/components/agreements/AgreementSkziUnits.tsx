@@ -1,7 +1,8 @@
 import React, { useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Badge, Collapse, Table } from 'antd'
+import { Badge, Table } from 'antd'
 import StatusTag from '../StatusTag'
+import TypedCollapse from '../TypedCollapse'
 import { SkziUnit } from '../../store/skzi-units/skzi-units.types'
 import { VipnetLan } from '../../store/vipnet-lans/vipnet-lans.types'
 import { Type } from '../../interfaces/type.interface'
@@ -20,11 +21,14 @@ const AgreementSkziUnits: React.FC<AgreementSkziUnitsProps> = ({
 
   const total = useMemo(() => skziUnits.length, [skziUnits])
 
+  const collapsible = useMemo(() => !isLoading && total == 0 ? 'disabled' : undefined, [isLoading, total])
+
   return (
-    <Collapse>
-      <Collapse.Panel
+    <TypedCollapse>
+      <TypedCollapse.Panel
+        key="1"
         header="СКЗИ"
-        disabled={total == 0}
+        collapsible={collapsible}
         extra={<Badge count={total} showZero />}
       >
         <Table
@@ -48,8 +52,8 @@ const AgreementSkziUnits: React.FC<AgreementSkziUnitsProps> = ({
           <Table.Column title="Платформа" dataIndex="platformType" key="platformType" render={(type: Type) => type?.type} />
           <Table.Column title="Владелец" dataIndex="skziOwner" key="skziOwner" render={(org: Org) => org?.name} />
         </Table>
-      </Collapse.Panel>
-    </Collapse>
+      </TypedCollapse.Panel>
+    </TypedCollapse>
   )
 }
 

@@ -9,9 +9,7 @@ class AgreementCommentsService {
       filters: { agreementId },
       sort: { id: 'desc' }
     })
-    return await Promise.all(agreementComments.map(agreementComment => (
-      agreementCommentsTransform.expand(agreementComment))
-    ))
+    return await Promise.all(agreementComments.map(agreementCommentsTransform.expand))
   }
 
   async create(dto: CreateAgreementCommentDto) {

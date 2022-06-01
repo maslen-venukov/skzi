@@ -1,5 +1,6 @@
 import { skziUnitsRepository } from './skzi-units.repository'
 import { skziUnitsTransform } from './skzi-units.transform'
+import { GetAllSkziUnitsDto } from './dto/get-all-skzi-units.dto'
 import { CreateSkziUnitDto } from './dto/create-skzi-unit.dto'
 import { UpdateSkziUnitDto } from './dto/update-skzi-unit.dto'
 import { ApiError } from '../exceptions/api-error'
@@ -7,7 +8,20 @@ import { ApiError } from '../exceptions/api-error'
 class SkziUnitsService {
   async getAll(filters = {}) {
     const skziUnits = await skziUnitsRepository.getAll({ filters, sort: { id: 'desc' } })
-    return await Promise.all(skziUnits.map(skziUnit => skziUnitsTransform.expand(skziUnit)))
+    return await Promise.all(skziUnits.map(skziUnitsTransform.expand))
+  }
+
+  async paginate(params: GetAllSkziUnitsDto) {
+    const { page, count } = params
+
+    const { data, pagination } = await skziUnitsRepository.paginate({
+      sort: { id: 'desc' },
+      pagination: { page, count }
+    })
+
+    const skziUnits = await Promise.all(data.map(skziUnitsTransform.expand))
+
+    return { skziUnits, ...pagination }
   }
 
   async getById(id: number) {

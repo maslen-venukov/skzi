@@ -1,11 +1,14 @@
 import { makeAutoObservable } from 'mobx'
+import { NavigateFunction } from 'react-router-dom'
 import { message } from 'antd'
 import { getAgreements, getAgreement, createAgreement, updateAgreement } from './agreements.api'
 import catchApiError from '../../utils/catchApiError'
 import { Agreement, CreateAgreementData, UpdateAgreementData } from './agreements.types'
+import { Pagination } from '../../interfaces/pagination.interface'
 
 class AgreementsStore {
   isLoading = false
+  total = 0
   agreements: Agreement[] = []
   agreement: Agreement | null = null
 
@@ -25,11 +28,16 @@ class AgreementsStore {
     this.agreement = value
   }
 
-  async getAgreements() {
+  setTotal(value: number) {
+    this.total = value
+  }
+
+  async getAgreements(params: Pagination) {
     this.setLoading(true)
     try {
-      const res = await getAgreements()
+      const res = await getAgreements(params)
       this.setAgreements(res.data.agreements)
+      this.setTotal(res.data.total)
     } catch(e) {
       catchApiError(e)
     } finally {
@@ -49,12 +57,12 @@ class AgreementsStore {
     }
   }
 
-  async createAgreement(data: CreateAgreementData) {
+  async createAgreement(data: CreateAgreementData, navigate: NavigateFunction) {
     this.setLoading(true)
     try {
       const res = await createAgreement(data)
-      this.setAgreements([res.data.agreement, ...this.agreements])
       message.success(res.data.message)
+      navigate(`/agreements/${res.data.agreement.id}`)
     } catch(e) {
       catchApiError(e)
     } finally {

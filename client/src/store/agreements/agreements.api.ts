@@ -1,10 +1,14 @@
 import api from '../../core/api'
 import { Agreement, CreateAgreementData, UpdateAgreementData } from './agreements.types'
+import { Pagination } from '../../interfaces/pagination.interface'
 
-export const getAgreements = async () => (
+export const getAgreements = async (params: Pagination) => (
   await api.get<{
     agreements: Agreement[]
-  }>('/api/agreements')
+    page: number
+    count: number
+    total: number
+  }>('/api/agreements', { params })
 )
 
 export const getAgreement = async (id: number) => (
