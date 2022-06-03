@@ -7,12 +7,10 @@ interface HintProps {
   buttonProps: ButtonProps
 }
 
-const Hint: React.FC<HintProps> = ({ tooltipProps, buttonProps }) => {
-  return (
-    <Tooltip {...tooltipProps} destroyTooltipOnHide={{ keepParent: false }}>
-      <Button {...buttonProps} />
-    </Tooltip>
-  )
-}
+const Hint: React.FC<HintProps> = ({ tooltipProps, buttonProps }) => (
+  <Tooltip {...tooltipProps} destroyTooltipOnHide={{ keepParent: false }}>
+    <Button {...buttonProps} />
+  </Tooltip>
+)
 
 export default Hint

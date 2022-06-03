@@ -1,6 +1,6 @@
 import { ParsedQs } from 'qs'
 
-export class GetAllSkziUnitsDto {
+export class PaginationDto {
   page: number
   count: number
 

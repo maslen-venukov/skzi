@@ -17,8 +17,14 @@ import { UpdateAgreementFormValues } from '../components/dialogs/UpdateAgreement
 
 const Agreement: React.FC = () => {
   const { id } = useParams()
-  const { agreement, isLoading: isAgreementLoading, getAgreement, updateAgreement, setAgreement } = agreementsStore
-  const { skziUnits, isLoading: isSkziUnitsLoading, getAgreementSkziUnits, setSkziUnits } = skziUnitsStore
+  const {
+    agreement, isLoading: isAgreementLoading,
+    getAgreement, updateAgreement, setAgreement
+  } = agreementsStore
+  const {
+    skziUnits, isLoading: isSkziUnitsLoading,
+    getAgreementSkziUnits, setSkziUnits
+  } = skziUnitsStore
   const { getAgreementTypes, setAgreementTypes } = agreementTypesStore
   const { getOrgs, setOrgs } = orgsStore
   const { isAdmin } = authStore

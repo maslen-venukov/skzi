@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express'
 import { actsService } from './acts.service'
 import { CreateActDto } from './dto/create-act.dto'
 import { UpdateActDto } from './dto/update-act.dto'
+import { PaginationDto } from '../dto/pagination.dto'
 import { ApiError } from '../exceptions/api-error'
 import { AuthRequest } from '../interfaces/auth-request.interface'
 import { User } from '../users/user.interface'
@@ -9,8 +10,9 @@ import { User } from '../users/user.interface'
 class ActsController {
   async getAll(req: Request, res: Response, next: NextFunction) {
     try {
-      const acts = await actsService.getAll()
-      return res.json({ acts })
+      const dto = new PaginationDto(req.query)
+      const data = await actsService.paginate(dto)
+      return res.json(data)
     } catch(e) {
       next(e)
     }

@@ -3,7 +3,7 @@ import { RawAct } from '../act.interface'
 type UpdateActDtoParams = Partial<Omit<RawAct, 'id' | 'addDate' | 'addUserId'>>
 
 export class UpdateActDto implements UpdateActDtoParams {
-  number?: number
+  number?: string
   date?: Date
   eqInventoryNum?: string
   agreementId?: number

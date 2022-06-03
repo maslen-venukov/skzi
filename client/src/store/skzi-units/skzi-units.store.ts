@@ -1,6 +1,5 @@
 import { makeAutoObservable } from 'mobx'
 import { message } from 'antd'
-import { NavigateFunction } from 'react-router-dom'
 import {
   createSkziUnit,
   getSkziUnit,
@@ -80,17 +79,20 @@ class SkziUnitsStore {
     }
   }
 
-  async createSkziUnit(data: CreateSkziUnitData, navigate: NavigateFunction) {
-    this.setLoading(true)
-    try {
-      const res = await createSkziUnit(data)
-      message.success(res.data.message)
-      navigate(`/skzi-units/${res.data.skziUnit.id}`)
-    } catch(e) {
-      catchApiError(e)
-    } finally {
-      this.setLoading(false)
-    }
+  async createSkziUnit(data: CreateSkziUnitData) {
+    return new Promise<SkziUnit>(async (resolve, reject) => {
+      this.setLoading(true)
+      try {
+        const res = await createSkziUnit(data)
+        message.success(res.data.message)
+        resolve(res.data.skziUnit)
+      } catch(e) {
+        catchApiError(e)
+        reject(e)
+      } finally {
+        this.setLoading(false)
+      }
+    })
   }
 
   async updateSkziUnit(id: number, data: UpdateSkziUnitData) {

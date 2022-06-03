@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from 'express'
 import { agreementsService } from './agreements.service'
-import { GetAllAgreementsDto } from './dto/get-all-agreements.dto'
 import { CreateAgreementDto } from './dto/create-agreement.dto'
 import { UpdateAgreementDto } from './dto/update-agreement.dto'
+import { PaginationDto } from '../dto/pagination.dto'
 import { skziUnitsService } from '../skzi-units/skzi-units.service'
 import { ApiError } from '../exceptions/api-error'
 import { AuthRequest } from '../interfaces/auth-request.interface'
@@ -11,7 +11,7 @@ import { User } from '../users/user.interface'
 class AgreementsController {
   async getAll(req: Request, res: Response, next: NextFunction) {
     try {
-      const dto = new GetAllAgreementsDto(req.query)
+      const dto = new PaginationDto(req.query)
       const data = await agreementsService.getAll(dto)
       return res.json(data)
     } catch(e) {

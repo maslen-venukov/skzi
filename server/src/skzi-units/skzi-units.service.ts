@@ -1,8 +1,8 @@
 import { skziUnitsRepository } from './skzi-units.repository'
 import { skziUnitsTransform } from './skzi-units.transform'
-import { GetAllSkziUnitsDto } from './dto/get-all-skzi-units.dto'
 import { CreateSkziUnitDto } from './dto/create-skzi-unit.dto'
 import { UpdateSkziUnitDto } from './dto/update-skzi-unit.dto'
+import { PaginationDto } from '../dto/pagination.dto'
 import { ApiError } from '../exceptions/api-error'
 
 class SkziUnitsService {
@@ -11,7 +11,7 @@ class SkziUnitsService {
     return await Promise.all(skziUnits.map(skziUnitsTransform.expand))
   }
 
-  async paginate(params: GetAllSkziUnitsDto) {
+  async paginate(params: PaginationDto) {
     const { page, count } = params
 
     const { data, pagination } = await skziUnitsRepository.paginate({

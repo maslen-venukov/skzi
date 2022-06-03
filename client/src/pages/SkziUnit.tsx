@@ -16,11 +16,8 @@ import { UpdateSkziUnitFormValues } from '../components/dialogs/UpdateSkziUnitDi
 const SkziUnit: React.FC = () => {
   const { id } = useParams()
   const {
-    skziUnit,
-    isLoading,
-    getSkziUnit,
-    updateSkziUnit,
-    setSkziUnit
+    skziUnit, isLoading,
+    getSkziUnit, updateSkziUnit, setSkziUnit
   } = skziUnitsStore
   const { getAgreementTypes, setAgreementTypes } = agreementTypesStore
   const { getOrgs, setOrgs } = orgsStore

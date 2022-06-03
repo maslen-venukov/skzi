@@ -2,12 +2,26 @@ import { actsRepository } from './acts.repository'
 import { actsTransform } from './acts.transform'
 import { CreateActDto } from './dto/create-act.dto'
 import { UpdateActDto } from './dto/update-act.dto'
+import { PaginationDto } from '../dto/pagination.dto'
 import { ApiError } from '../exceptions/api-error'
 
 class ActsService {
   async getAll() {
     const acts = await actsRepository.getAll({ sort: { id: 'desc' } })
     return await Promise.all(acts.map(actsTransform.expand))
+  }
+
+  async paginate(params: PaginationDto) {
+    const { page, count } = params
+
+    const { data, pagination } = await actsRepository.paginate({
+      sort: { id: 'desc' },
+      pagination: { page, count }
+    })
+
+    const acts = await Promise.all(data.map(actsTransform.expand))
+
+    return { acts, ...pagination }
   }
 
   async getById(id: number) {

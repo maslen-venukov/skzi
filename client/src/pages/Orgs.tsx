@@ -65,19 +65,17 @@ const Orgs: React.FC = () => {
       loading={isLoading}
       rowKey="id"
       bordered
-      {...isOperator ? {
-        title: () => (
-          <Hint
-            tooltipProps={{ title: 'Добавить' }}
-            buttonProps={{
-              type: 'primary',
-              shape: 'circle',
-              icon: <PlusOutlined />,
-              onClick: openCreateDialog
-            }}
-          />
-        )
-      } : {}}
+      title={isOperator ? () => (
+        <Hint
+          tooltipProps={{ title: 'Добавить' }}
+          buttonProps={{
+            type: 'primary',
+            shape: 'circle',
+            icon: <PlusOutlined />,
+            onClick: openCreateDialog
+          }}
+        />
+      ) : undefined}
     >
       <Table.Column title="Наименование" dataIndex="name" key="name" />
       <Table.Column title="ИНН" dataIndex="inn" key="inn" />

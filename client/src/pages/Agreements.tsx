@@ -22,32 +22,26 @@ import { UpdateAgreementFormValues } from '../components/dialogs/UpdateAgreement
 const Agreements: React.FC = () => {
   const { isAdmin, isOperator } = authStore
   const {
-    agreements,
-    isLoading,
-    total,
-    getAgreements,
-    createAgreement,
-    updateAgreement,
-    setAgreements,
-    setTotal
+    agreements, isLoading, total,
+    getAgreements, createAgreement, updateAgreement,
+    setAgreements, setTotal
   } = agreementsStore
   const { getAgreementTypes, setAgreementTypes } = agreementTypesStore
   const { getOrgs, setOrgs } = orgsStore
   const { openDialog, closeDialog } = dialogStore
   const navigate = useNavigate()
-
-  const pagination = usePagination({
-    fetch: getAgreements
-  })
+  const pagination = usePagination({ fetch: getAgreements })
 
   const onCreate = async (values: CreateAgreementFormValues) => {
-    await createAgreement({
+    createAgreement({
       ...values,
       beginDate: values.beginDate.toDate(),
       endDate: values.endDate?.toDate(),
       parentId: Number(values.parentId) || undefined
-    }, navigate)
-    closeDialog()
+    }).then(agreement => {
+      navigate(`/agreements/${agreement.id}`)
+      closeDialog()
+    })
   }
 
   const onUpdate = (agreement: Agreement) => async (values: UpdateAgreementFormValues) => {
@@ -124,19 +118,17 @@ const Agreements: React.FC = () => {
         onRow={record => ({
           onDoubleClick: () => navigate(`/agreements/${record.id}`)
         })}
-        {...isOperator ? {
-          title: () => (
-            <Hint
-              tooltipProps={{ title: 'Добавить' }}
-              buttonProps={{
-                type: 'primary',
-                shape: 'circle',
-                icon: <PlusOutlined />,
-                onClick: openCreateDialog
-              }}
-            />
-          )
-        } : {}}
+        title={isOperator ? () => (
+          <Hint
+            tooltipProps={{ title: 'Добавить' }}
+            buttonProps={{
+              type: 'primary',
+              shape: 'circle',
+              icon: <PlusOutlined />,
+              onClick: openCreateDialog
+            }}
+          />
+        ) : undefined}
       >
         <Table.Column title="Номер" dataIndex="number" key="number" />
         <Table.Column title="Активно" dataIndex="isActive" key="isActive" render={isActive => <StatusTag value={isActive} />} />

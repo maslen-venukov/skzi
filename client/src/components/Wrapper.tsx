@@ -21,6 +21,7 @@ interface Page {
 const Users = React.lazy(() => import('../pages/Users'))
 const Orgs = React.lazy(() => import('../pages/Orgs'))
 const Acts = React.lazy(() => import('../pages/Acts'))
+const Act = React.lazy(() => import('../pages/Act'))
 const Agreements = React.lazy(() => import('../pages/Agreements'))
 const Agreement = React.lazy(() => import('../pages/Agreement'))
 const SkziUnits = React.lazy(() => import('../pages/SkziUnits'))
@@ -54,6 +55,10 @@ const Wrapper = () => {
       {
         path: '/acts',
         element: <Acts />
+      },
+      {
+        path: '/acts/:id',
+        element: <Act />
       },
       {
         path: '/agreements',

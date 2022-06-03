@@ -6,6 +6,8 @@ export type DialogType =
   | 'UpdateSkziUnit'
   | 'CreateOrg'
   | 'UpdateOrg'
+  | 'CreateAct'
+  | 'UpdateAct'
 
 export interface OpenDialogParams {
   type: DialogType

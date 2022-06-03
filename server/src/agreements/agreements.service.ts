@@ -1,12 +1,12 @@
 import { agreementsRepository } from './agreements.repository'
 import { agreementsTransform } from './agreements.transform'
-import { GetAllAgreementsDto } from './dto/get-all-agreements.dto'
 import { CreateAgreementDto } from './dto/create-agreement.dto'
 import { UpdateAgreementDto } from './dto/update-agreement.dto'
+import { PaginationDto } from '../dto/pagination.dto'
 import { ApiError } from '../exceptions/api-error'
 
 class AgreementsService {
-  async getAll(params: GetAllAgreementsDto) {
+  async getAll(params: PaginationDto) {
     const { page, count } = params
 
     const { data, pagination } = await agreementsRepository.paginate({

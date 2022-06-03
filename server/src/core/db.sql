@@ -100,7 +100,7 @@ CREATE TABLE comment_skzi (
 
 CREATE TABLE act (
     id SERIAL PRIMARY KEY,
-    number INTEGER NOT NULL,
+    number VARCHAR(255) NOT NULL,
     agreement_id INTEGER REFERENCES agreement(id) NOT NULL,
     date TIMESTAMPTZ DEFAULT NOW() NOT NULL,
     skzi_unit_id INTEGER REFERENCES skzi_unit(id) NOT NULL,

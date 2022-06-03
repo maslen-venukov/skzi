@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from 'express'
 import { skziUnitsService } from './skzi-units.service'
-import { GetAllAgreementsDto } from '../agreements/dto/get-all-agreements.dto'
 import { CreateSkziUnitDto } from './dto/create-skzi-unit.dto'
 import { UpdateSkziUnitDto } from './dto/update-skzi-unit.dto'
+import { PaginationDto } from '../dto/pagination.dto'
 import { ApiError } from '../exceptions/api-error'
 import { AuthRequest } from '../interfaces/auth-request.interface'
 import { User } from '../users/user.interface'
@@ -10,7 +10,7 @@ import { User } from '../users/user.interface'
 class SkziUnitsController {
   async getAll(req: Request, res: Response, next: NextFunction) {
     try {
-      const dto = new GetAllAgreementsDto(req.query)
+      const dto = new PaginationDto(req.query)
       const data = await skziUnitsService.paginate(dto)
       return res.json(data)
     } catch(e) {

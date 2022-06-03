@@ -1,5 +1,4 @@
 import { makeAutoObservable } from 'mobx'
-import { NavigateFunction } from 'react-router-dom'
 import { message } from 'antd'
 import { getAgreements, getAgreement, createAgreement, updateAgreement } from './agreements.api'
 import catchApiError from '../../utils/catchApiError'
@@ -57,17 +56,20 @@ class AgreementsStore {
     }
   }
 
-  async createAgreement(data: CreateAgreementData, navigate: NavigateFunction) {
-    this.setLoading(true)
-    try {
-      const res = await createAgreement(data)
-      message.success(res.data.message)
-      navigate(`/agreements/${res.data.agreement.id}`)
-    } catch(e) {
-      catchApiError(e)
-    } finally {
-      this.setLoading(false)
-    }
+  async createAgreement(data: CreateAgreementData) {
+    return new Promise<Agreement>(async (resolve, reject) => {
+      this.setLoading(true)
+      try {
+        const res = await createAgreement(data)
+        message.success(res.data.message)
+        resolve(res.data.agreement)
+      } catch(e) {
+        catchApiError(e)
+        reject(e)
+      } finally {
+        this.setLoading(false)
+      }
+    })
   }
 
   async updateAgreement(id: number, data: UpdateAgreementData) {

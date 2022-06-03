@@ -26,14 +26,9 @@ import { UpdateSkziUnitFormValues } from '../components/dialogs/UpdateSkziUnitDi
 const SkziUnits: React.FC = () => {
   const { isOperator, isAdmin } = authStore
   const {
-    skziUnits,
-    isLoading,
-    total,
-    getSkziUnits,
-    createSkziUnit,
-    updateSkziUnit,
-    setSkziUnits,
-    setTotal
+    skziUnits, isLoading, total,
+    getSkziUnits, createSkziUnit, updateSkziUnit,
+    setSkziUnits, setTotal
   } = skziUnitsStore
   const { getVipnetLans, setVipnetLans } = vipnetLansStore
   const { getSkziTypes, setSkziTypes } = skziTypesStore
@@ -41,17 +36,16 @@ const SkziUnits: React.FC = () => {
   const { getOrgs, setOrgs } = orgsStore
   const { openDialog, closeDialog } = dialogStore
   const navigate = useNavigate()
-
-  const pagination = usePagination({
-    fetch: getSkziUnits
-  })
+  const pagination = usePagination({ fetch: getSkziUnits })
 
   const onCreate = async (values: CreateSkziUnitFormValues) => {
-    await createSkziUnit({
+    createSkziUnit({
       ...values,
       agreementId: Number(values.agreementId) || undefined
-    }, navigate)
-    closeDialog()
+    }).then(skziUnit => {
+      navigate(`/skzi-units/${skziUnit.id}`)
+      closeDialog()
+    })
   }
 
   const onUpdate = (skziUnit: SkziUnit) => async (values: UpdateSkziUnitFormValues) => {
@@ -119,24 +113,23 @@ const SkziUnits: React.FC = () => {
       <Table
         dataSource={skziUnits}
         loading={isLoading}
+        pagination={false}
         rowKey="id"
         bordered
         onRow={record => ({
           onDoubleClick: () => navigate(`/skzi-units/${record.id}`)
         })}
-        {...isOperator ? {
-          title: () => (
-            <Hint
-              tooltipProps={{ title: 'Добавить' }}
-              buttonProps={{
-                type: 'primary',
-                shape: 'circle',
-                icon: <PlusOutlined />,
-                onClick: openCreateDialog
-              }}
-            />
-          )
-        } : {}}
+        title={isOperator ? () => (
+          <Hint
+            tooltipProps={{ title: 'Добавить' }}
+            buttonProps={{
+              type: 'primary',
+              shape: 'circle',
+              icon: <PlusOutlined />,
+              onClick: openCreateDialog
+            }}
+          />
+        ) : undefined}
       >
         <Table.Column title="Серийный номер" dataIndex="serialNum" key="serialNum" />
         <Table.Column title="Активно" dataIndex="isActive" key="isActive" render={isActive => <StatusTag value={isActive} />} />
