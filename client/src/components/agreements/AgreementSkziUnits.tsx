@@ -9,13 +9,13 @@ import { Type } from '../../interfaces/type.interface'
 import { Org } from '../../store/orgs/orgs.types'
 
 interface AgreementSkziUnitsProps {
-  isLoading: boolean
   skziUnits: SkziUnit[]
+  isLoading: boolean
 }
 
 const AgreementSkziUnits: React.FC<AgreementSkziUnitsProps> = ({
-  isLoading,
-  skziUnits
+  skziUnits,
+  isLoading
 }) => {
   const navigate = useNavigate()
 

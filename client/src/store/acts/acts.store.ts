@@ -1,6 +1,6 @@
 import { makeAutoObservable } from 'mobx'
 import { message } from 'antd'
-import { getActs, getAct, createAct, updateAct, removeAct } from './acts.api'
+import { getActs, getAct, createAct, updateAct, removeAct, getAgreementActs } from './acts.api'
 import catchApiError from '../../utils/catchApiError'
 import { Act, CreateActData, UpdateActData } from './acts.types'
 import { Pagination } from '../../interfaces/pagination.interface'
@@ -49,6 +49,18 @@ class ActsStore {
     try {
       const res = await getAct(id)
       this.setAct(res.data.act)
+    } catch(e) {
+      catchApiError(e)
+    } finally {
+      this.setLoading(false)
+    }
+  }
+
+  async getAgreementActs(id: number) {
+    this.setLoading(true)
+    try {
+      const res = await getAgreementActs(id)
+      this.setActs(res.data.acts)
     } catch(e) {
       catchApiError(e)
     } finally {

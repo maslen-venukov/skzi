@@ -6,8 +6,8 @@ import { PaginationDto } from '../dto/pagination.dto'
 import { ApiError } from '../exceptions/api-error'
 
 class ActsService {
-  async getAll() {
-    const acts = await actsRepository.getAll({ sort: { id: 'desc' } })
+  async getAll(filters = {}) {
+    const acts = await actsRepository.getAll({ filters, sort: { id: 'desc' } })
     return await Promise.all(acts.map(actsTransform.expand))
   }
 

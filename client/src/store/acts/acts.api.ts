@@ -11,6 +11,12 @@ export const getActs = async (params: Pagination) => (
   }>('/api/acts', { params })
 )
 
+export const getAgreementActs = async (id: number) => (
+  await api.get<{
+    acts: Act[]
+  }>(`/api/agreements/${id}/acts`)
+)
+
 export const getAct = async (id: number) => (
   await api.get<{
     act: Act

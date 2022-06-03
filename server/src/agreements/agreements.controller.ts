@@ -4,6 +4,7 @@ import { CreateAgreementDto } from './dto/create-agreement.dto'
 import { UpdateAgreementDto } from './dto/update-agreement.dto'
 import { PaginationDto } from '../dto/pagination.dto'
 import { skziUnitsService } from '../skzi-units/skzi-units.service'
+import { actsService } from '../acts/acts.service'
 import { ApiError } from '../exceptions/api-error'
 import { AuthRequest } from '../interfaces/auth-request.interface'
 import { User } from '../users/user.interface'
@@ -34,6 +35,16 @@ class AgreementsController {
       const agreementId = Number(req.params.id)
       const skziUnits = await skziUnitsService.getAll({ agreementId })
       return res.json({ skziUnits })
+    } catch(e) {
+      next(e)
+    }
+  }
+
+  async getActs(req: Request<{ id: string }>, res: Response, next: NextFunction) {
+    try {
+      const agreementId = Number(req.params.id)
+      const acts = await actsService.getAll({ agreementId })
+      return res.json({ acts })
     } catch(e) {
       next(e)
     }
