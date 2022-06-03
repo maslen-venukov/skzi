@@ -13,7 +13,7 @@ class AgreementsController {
   async getAll(req: Request, res: Response, next: NextFunction) {
     try {
       const dto = new PaginationDto(req.query)
-      const data = await agreementsService.getAll(dto)
+      const data = await agreementsService.paginate(dto)
       return res.json(data)
     } catch(e) {
       next(e)

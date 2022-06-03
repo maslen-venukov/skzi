@@ -7,6 +7,7 @@ export const skziUnitsRouter = Router()
 
 skziUnitsRouter.get('/', authMiddleware, skziUnitsController.getAll)
 skziUnitsRouter.get('/:id', authMiddleware, skziUnitsController.getById)
+skziUnitsRouter.get('/:id/acts', authMiddleware, skziUnitsController.getActs)
 skziUnitsRouter.post('/', authMiddleware, operatorRolesMiddleware(), skziUnitsController.create)
 skziUnitsRouter.patch('/:id', authMiddleware, adminRolesMiddleware(), skziUnitsController.update)
 skziUnitsRouter.delete('/:id', authMiddleware, adminRolesMiddleware(), skziUnitsController.remove)

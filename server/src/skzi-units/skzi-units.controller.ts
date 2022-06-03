@@ -3,6 +3,7 @@ import { skziUnitsService } from './skzi-units.service'
 import { CreateSkziUnitDto } from './dto/create-skzi-unit.dto'
 import { UpdateSkziUnitDto } from './dto/update-skzi-unit.dto'
 import { PaginationDto } from '../dto/pagination.dto'
+import { actsService } from '../acts/acts.service'
 import { ApiError } from '../exceptions/api-error'
 import { AuthRequest } from '../interfaces/auth-request.interface'
 import { User } from '../users/user.interface'
@@ -23,6 +24,16 @@ class SkziUnitsController {
       const id = Number(req.params.id)
       const skziUnit = await skziUnitsService.getById(id)
       return res.json({ skziUnit })
+    } catch(e) {
+      next(e)
+    }
+  }
+
+  async getActs(req: Request<{ id: string }>, res: Response, next: NextFunction) {
+    try {
+      const skziUnitId = Number(req.params.id)
+      const acts = await actsService.getAll({ skziUnitId })
+      return res.json({ acts })
     } catch(e) {
       next(e)
     }

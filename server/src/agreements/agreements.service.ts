@@ -6,7 +6,7 @@ import { PaginationDto } from '../dto/pagination.dto'
 import { ApiError } from '../exceptions/api-error'
 
 class AgreementsService {
-  async getAll(params: PaginationDto) {
+  async paginate(params: PaginationDto) {
     const { page, count } = params
 
     const { data, pagination } = await agreementsRepository.paginate({

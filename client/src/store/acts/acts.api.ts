@@ -17,6 +17,12 @@ export const getAgreementActs = async (id: number) => (
   }>(`/api/agreements/${id}/acts`)
 )
 
+export const getSkziUnitActs = async (id: number) => (
+  await api.get<{
+    acts: Act[]
+  }>(`/api/skzi-units/${id}/acts`)
+)
+
 export const getAct = async (id: number) => (
   await api.get<{
     act: Act

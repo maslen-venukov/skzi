@@ -4,8 +4,12 @@ import { useParams } from 'react-router-dom'
 import { Empty } from 'antd'
 import Loader from '../components/Loader'
 import SkziInfo from '../components/skzi/SkziInfo'
+import SkziActs from '../components/skzi/SkziActs'
 import skziUnitsStore from '../store/skzi-units/skzi-units.store'
-import agreementTypesStore from '../store/agreement-types/agreement-types.store'
+import actsStore from '../store/acts/acts.store'
+import vipnetLansStore from '../store/vipnet-lans/vipnet-lans.store'
+import skziTypesStore from '../store/skzi-types/skzi-types.store'
+import platformTypesStore from '../store/platform-types/platform-types.store'
 import orgsStore from '../store/orgs/orgs.store'
 import authStore from '../store/auth/auth.store'
 import dialogStore from '../store/dialog/dialog.store'
@@ -19,7 +23,10 @@ const SkziUnit: React.FC = () => {
     skziUnit, isLoading,
     getSkziUnit, updateSkziUnit, setSkziUnit
   } = skziUnitsStore
-  const { getAgreementTypes, setAgreementTypes } = agreementTypesStore
+  const { acts, isLoading: isActsLoading, getSkziUnitActs, setActs } = actsStore
+  const { getVipnetLans, setVipnetLans } = vipnetLansStore
+  const { getSkziTypes, setSkziTypes } = skziTypesStore
+  const { getPlatformTypes, setPlatformTypes } = platformTypesStore
   const { getOrgs, setOrgs } = orgsStore
   const { isAdmin } = authStore
   const { openDialog, closeDialog } = dialogStore
@@ -57,23 +64,32 @@ const SkziUnit: React.FC = () => {
   }
 
   useEffect(() => {
-    getSkziUnit(Number(id))
+    const skziUnitId = Number(id)
+
+    Promise.all([
+      getSkziUnit(skziUnitId),
+      getSkziUnitActs(skziUnitId),
+      ...isAdmin ? [
+        getVipnetLans(),
+        getSkziTypes(),
+        getPlatformTypes(),
+        getOrgs(),
+      ] : []
+    ])
 
     return () => {
       setSkziUnit(null)
-      setAgreementTypes([])
+      setActs([])
+      setVipnetLans([])
+      setSkziTypes([])
+      setPlatformTypes([])
       setOrgs([])
     }
-  }, [id, getSkziUnit, setSkziUnit, setAgreementTypes, setOrgs])
-
-  useEffect(() => {
-    if(!skziUnit?.agreement) return
-
-    Promise.all([
-      getAgreementTypes(),
-      getOrgs()
-    ])
-  }, [skziUnit, getAgreementTypes, getOrgs])
+  }, [
+    id, isAdmin,
+    getSkziUnit, getSkziUnitActs, getVipnetLans, getSkziTypes, getPlatformTypes, getOrgs,
+    setSkziUnit, setActs, setVipnetLans, setSkziTypes, setPlatformTypes, setOrgs
+  ])
 
   if(isLoading) {
     return <Loader />
@@ -89,6 +105,11 @@ const SkziUnit: React.FC = () => {
         skziUnit={skziUnit}
         isAdmin={isAdmin}
         onUpdateClick={openUpdateDialog}
+      />
+
+      <SkziActs
+        acts={acts}
+        isLoading={isActsLoading}
       />
     </div>
   )

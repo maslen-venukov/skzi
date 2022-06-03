@@ -11,10 +11,12 @@ import nullify from '../utils/nullify'
 import getDelta from '../utils/getDelta'
 import { Act } from '../store/acts/acts.types'
 import { UpdateActFormValues } from '../components/dialogs/UpdateActDialog'
+import signTypesStore from '../store/sign-types/sign-types.store'
 
 const Act: React.FC = () => {
   const { id } = useParams()
   const { act, isLoading, getAct, updateAct, removeAct, setAct } = actsStore
+  const { getSignTypes, setSignTypes } = signTypesStore
   const { isAdmin } = authStore
   const { openDialog, closeDialog } = dialogStore
   const navigate = useNavigate()
@@ -58,12 +60,16 @@ const Act: React.FC = () => {
   }
 
   useEffect(() => {
-    getAct(Number(id))
+    Promise.all([
+      getAct(Number(id)),
+      ...isAdmin ? [getSignTypes()] : []
+    ])
 
     return () => {
       setAct(null)
+      setSignTypes([])
     }
-  }, [getAct, setAct])
+  }, [isAdmin, getAct, getSignTypes, setAct, setSignTypes])
 
   if(isLoading) {
     return <Loader />
