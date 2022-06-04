@@ -18,3 +18,9 @@ export interface CreateUserData {
 export interface UpdateUserData extends Partial<Omit<User, 'id' | 'role'>> {
   roleId?: number
 }
+
+export interface ChangePasswordData {
+  new: string
+  old: string
+  repeat: string
+}

@@ -16,6 +16,7 @@ const dialogsMap: Record<DialogType, LazyExoticComponent<React.FC<any>>> = {
   UpdateOrg: React.lazy(() => import('./dialogs/UpdateOrgDialog')),
   CreateAct: React.lazy(() => import('./dialogs/CreateActDialog')),
   UpdateAct: React.lazy(() => import('./dialogs/UpdateActDialog')),
+  ChangePassword: React.lazy(() => import('./dialogs/ChangePasswordDialog')),
 }
 
 const Dialog: React.FC = () => {

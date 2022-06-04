@@ -2,8 +2,11 @@ import { Request, Response, NextFunction } from 'express'
 import { usersService } from './users.service'
 import { CreateUserDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
-import { UserRoles } from '../enums/user-roles.enum'
+import { ChangePasswordDto } from './dto/change-password.dto'
 import { ApiError } from '../exceptions/api-error'
+import { AuthRequest } from '../interfaces/auth-request.interface'
+import { User } from './user.interface'
+import { UserRoles } from '../enums/user-roles.enum'
 
 class UsersController {
   async getAll(req: Request, res: Response, next: NextFunction) {
@@ -36,6 +39,23 @@ class UsersController {
       const dto = new CreateUserDto(req.body)
       const user = await usersService.create(dto)
       return res.json({ message: 'Пользователь успешно добавлен', user })
+    } catch(e) {
+      next(e)
+    }
+  }
+
+  async changePassword(req: AuthRequest<{}, {}, ChangePasswordDto>, res: Response, next: NextFunction) {
+    try {
+      const { old, repeat } = req.body
+      if(!req.body.new || !old || !repeat) {
+        throw ApiError.BadRequest('Заполните все поля')
+      }
+
+      const userId = (req.user as User).id
+      const dto = new ChangePasswordDto(req.body)
+
+      await usersService.changePassword(userId, dto)
+      return res.json({ message: 'Пароль успешно изменен' })
     } catch(e) {
       next(e)
     }

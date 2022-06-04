@@ -1,7 +1,7 @@
 import { makeAutoObservable } from 'mobx'
-import { getUsers, createUser, updateUser } from './users.api'
+import { getUsers, createUser, updateUser, changePassword } from './users.api'
 import catchApiError from '../../utils/catchApiError'
-import { CreateUserData, UpdateUserData, User } from './users.types'
+import { CreateUserData, UpdateUserData, ChangePasswordData, User } from './users.types'
 import { message } from 'antd'
 
 class UsersStore {
@@ -62,6 +62,22 @@ class UsersStore {
     } finally {
       this.setLoading(false)
     }
+  }
+
+  async changePassword(data: ChangePasswordData) {
+    return new Promise<boolean>(async (resolve, reject) => {
+      this.setLoading(true)
+      try {
+        const res = await changePassword(data)
+        message.success(res.data.message)
+        resolve(true)
+      } catch(e) {
+        catchApiError(e)
+        reject(e)
+      } finally {
+        this.setLoading(false)
+      }
+    })
   }
 }
 

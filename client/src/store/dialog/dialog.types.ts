@@ -9,6 +9,7 @@ export type DialogType =
   | 'UpdateOrg'
   | 'CreateAct'
   | 'UpdateAct'
+  | 'ChangePassword'
 
 export interface OpenDialogParams {
   type: DialogType
