@@ -3,6 +3,7 @@ import { skziUnitsTransform } from './skzi-units.transform'
 import { CreateSkziUnitDto } from './dto/create-skzi-unit.dto'
 import { UpdateSkziUnitDto } from './dto/update-skzi-unit.dto'
 import { PaginationDto } from '../dto/pagination.dto'
+import { actsService } from '../acts/acts.service'
 import { ApiError } from '../exceptions/api-error'
 
 class SkziUnitsService {
@@ -46,11 +47,21 @@ class SkziUnitsService {
   }
 
   async remove(id: number) {
+    const actsCount = await actsService.count({ skziUnitId: id })
+    if(actsCount) {
+      throw ApiError.BadRequest('Невозможно удалить СКЗИ, т.к. существуют связанные акты')
+    }
+
     const isDeleted = await skziUnitsRepository.remove(id)
     if(!isDeleted) {
       throw ApiError.NotFound('СКЗИ не найдено')
     }
+
     return isDeleted
+  }
+
+  async count(filters = {}) {
+    return await skziUnitsRepository.count(filters)
   }
 }
 

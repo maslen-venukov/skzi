@@ -63,7 +63,7 @@ const Header: React.FC<HeaderProps> = ({ collapsed, onToggle }) => {
           }
           destroyPopupOnHide
         >
-          <Button type="primary" icon={<UserOutlined />} />
+          <Button icon={<UserOutlined />} />
         </TypedDropdown>
 
         <Hint

@@ -57,4 +57,4 @@ const AgreementSkziUnits: React.FC<AgreementSkziUnitsProps> = ({
   )
 }
 
-export default AgreementSkziUnits
+export default React.memo(AgreementSkziUnits)

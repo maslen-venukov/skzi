@@ -52,6 +52,10 @@ class ActsService {
     }
     return isDeleted
   }
+
+  async count(filters = {}) {
+    return await actsRepository.count(filters)
+  }
 }
 
 export const actsService = new ActsService()

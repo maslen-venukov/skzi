@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { observer } from 'mobx-react-lite'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { Empty } from 'antd'
 import Loader from '../components/Loader'
 import SkziInfo from '../components/skzi/SkziInfo'
@@ -18,10 +18,12 @@ import getDelta from '../utils/getDelta'
 import { UpdateSkziUnitFormValues } from '../components/dialogs/UpdateSkziUnitDialog'
 
 const SkziUnit: React.FC = () => {
+  const [isFirstLoading, setFirstLoading] = useState(false)
   const { id } = useParams()
   const {
     skziUnit, isLoading,
-    getSkziUnit, updateSkziUnit, setSkziUnit
+    getSkziUnit, updateSkziUnit, removeSkziUnit,
+    setSkziUnit
   } = skziUnitsStore
   const { acts, isLoading: isActsLoading, getSkziUnitActs, setActs } = actsStore
   const { getVipnetLans, setVipnetLans } = vipnetLansStore
@@ -30,6 +32,7 @@ const SkziUnit: React.FC = () => {
   const { getOrgs, setOrgs } = orgsStore
   const { isAdmin } = authStore
   const { openDialog, closeDialog } = dialogStore
+  const navigate = useNavigate()
 
   const onUpdate = async (values: UpdateSkziUnitFormValues) => {
     if(!skziUnit) return
@@ -50,6 +53,10 @@ const SkziUnit: React.FC = () => {
     closeDialog()
   }
 
+  const onRemove = async (id: number) => {
+    removeSkziUnit(id).then(() => navigate(`/skzi-units`))
+  }
+
   const openUpdateDialog = () => {
     if(!skziUnit) return
 
@@ -65,6 +72,7 @@ const SkziUnit: React.FC = () => {
 
   useEffect(() => {
     const skziUnitId = Number(id)
+    setFirstLoading(true)
 
     Promise.all([
       getSkziUnit(skziUnitId),
@@ -75,7 +83,7 @@ const SkziUnit: React.FC = () => {
         getPlatformTypes(),
         getOrgs(),
       ] : []
-    ])
+    ]).finally(() => setFirstLoading(false))
 
     return () => {
       setSkziUnit(null)
@@ -91,7 +99,7 @@ const SkziUnit: React.FC = () => {
     setSkziUnit, setActs, setVipnetLans, setSkziTypes, setPlatformTypes, setOrgs
   ])
 
-  if(isLoading) {
+  if(isFirstLoading) {
     return <Loader />
   }
 
@@ -103,8 +111,10 @@ const SkziUnit: React.FC = () => {
     <div className="vertical-space">
       <SkziInfo
         skziUnit={skziUnit}
+        isLoading={isLoading}
         isAdmin={isAdmin}
         onUpdateClick={openUpdateDialog}
+        onRemove={onRemove}
       />
 
       <SkziActs

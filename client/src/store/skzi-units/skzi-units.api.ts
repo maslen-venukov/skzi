@@ -36,3 +36,9 @@ export const updateSkziUnit = async (id: number, data: UpdateSkziUnitData) => (
     skziUnit: SkziUnit
   }>(`/api/skzi-units/${id}`, data)
 )
+
+export const removeSkziUnit = async (id: number) => (
+  await api.delete<{
+    message: string
+  }>(`/api/skzi-units/${id}`)
+)

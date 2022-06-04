@@ -30,3 +30,9 @@ export const updateAgreement = async (id: number, data: UpdateAgreementData) => 
     agreement: Agreement
   }>(`/api/agreements/${id}`, data)
 )
+
+export const removeAgreement = async (id: number) => (
+  await api.delete<{
+    message: string
+  }>(`/api/agreements/${id}`)
+)

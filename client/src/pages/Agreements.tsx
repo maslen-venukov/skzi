@@ -2,9 +2,10 @@ import React, { useEffect } from 'react'
 import { observer } from 'mobx-react-lite'
 import { useNavigate } from 'react-router-dom'
 import { Pagination, Space, Table } from 'antd'
-import { PlusOutlined, FileDoneOutlined, EditOutlined } from '@ant-design/icons'
+import { PlusOutlined, FileDoneOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons'
 import StatusTag from '../components/StatusTag'
 import Hint from '../components/Hint'
+import Confirm from '../components/Confirm'
 import authStore from '../store/auth/auth.store'
 import agreementsStore from '../store/agreements/agreements.store'
 import agreementTypesStore from '../store/agreement-types/agreement-types.store'
@@ -23,7 +24,7 @@ const Agreements: React.FC = () => {
   const { isAdmin, isOperator } = authStore
   const {
     agreements, isLoading, total,
-    getAgreements, createAgreement, updateAgreement,
+    getAgreements, createAgreement, updateAgreement, removeAgreement,
     setAgreements, setTotal
   } = agreementsStore
   const { getAgreementTypes, setAgreementTypes } = agreementTypesStore
@@ -66,6 +67,10 @@ const Agreements: React.FC = () => {
     }
 
     closeDialog()
+  }
+
+  const onRemove = async (id: number) => {
+    removeAgreement(id).then(pagination.fetch)
   }
 
   const openCreateDialog = () => openDialog({
@@ -144,18 +149,6 @@ const Agreements: React.FC = () => {
           width="0"
           render={(_, record: Agreement) => (
             <Space>
-              {isAdmin && (
-                <Hint
-                  tooltipProps={{ title: 'Редактировать' }}
-                  buttonProps={{
-                    type: 'primary',
-                    shape: 'circle',
-                    icon: <EditOutlined />,
-                    onClick: () => openUpdateDialog(record)
-                  }}
-                />
-              )}
-
               {record.parentId && (
                 <Hint
                   tooltipProps={{ title: 'Родительское соглашение' }}
@@ -166,6 +159,34 @@ const Agreements: React.FC = () => {
                     onClick: () => navigate(`/agreements/${record.parentId}`)
                   }}
                 />
+              )}
+
+              {isAdmin && (
+                <>
+                  <Hint
+                    tooltipProps={{ title: 'Редактировать' }}
+                    buttonProps={{
+                      type: 'primary',
+                      shape: 'circle',
+                      icon: <EditOutlined />,
+                      onClick: () => openUpdateDialog(record)
+                    }}
+                  />
+
+                  <Confirm
+                    popconfirmProps={{
+                      title: 'Вы действительно хотите удалить соглашение?',
+                      placement: 'topRight'
+                    }}
+                    tooltipProps={{ title: 'Удалить' }}
+                    buttonProps={{
+                      type: 'primary',
+                      icon: <DeleteOutlined />,
+                      danger: true
+                    }}
+                    onConfirm={() => onRemove(record.id)}
+                  />
+                </>
               )}
             </Space>
           )}

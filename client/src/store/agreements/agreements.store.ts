@@ -1,6 +1,12 @@
 import { makeAutoObservable } from 'mobx'
 import { message } from 'antd'
-import { getAgreements, getAgreement, createAgreement, updateAgreement } from './agreements.api'
+import {
+  getAgreements,
+  getAgreement,
+  createAgreement,
+  updateAgreement,
+  removeAgreement
+} from './agreements.api'
 import catchApiError from '../../utils/catchApiError'
 import { Agreement, CreateAgreementData, UpdateAgreementData } from './agreements.types'
 import { Pagination } from '../../interfaces/pagination.interface'
@@ -91,6 +97,22 @@ class AgreementsStore {
     } finally {
       this.setLoading(false)
     }
+  }
+
+  async removeAgreement(id: number) {
+    return new Promise<number>(async (resolve, reject) => {
+      this.setLoading(true)
+        try {
+          const res = await removeAgreement(id)
+          message.success(res.data.message)
+          resolve(id)
+        } catch(e) {
+          catchApiError(e)
+          reject(e)
+        } finally {
+          this.setLoading(false)
+        }
+    })
   }
 }
 

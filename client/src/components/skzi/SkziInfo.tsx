@@ -1,34 +1,57 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { Card, Descriptions } from 'antd'
-import { EditOutlined } from '@ant-design/icons'
-import { SkziUnit } from '../../store/skzi-units/skzi-units.types'
+import { Card, Descriptions, Space } from 'antd'
+import { EditOutlined, DeleteOutlined } from '@ant-design/icons'
 import Hint from '../Hint'
 import StatusTag from '../StatusTag'
+import Confirm from '../Confirm'
+import { SkziUnit } from '../../store/skzi-units/skzi-units.types'
+
 
 interface SkziInfoProps {
   skziUnit: SkziUnit
+  isLoading: boolean
   isAdmin: boolean
   onUpdateClick: () => void
+  onRemove: (id: number) => Promise<void>
 }
 
 const SkziInfo: React.FC<SkziInfoProps> = ({
   skziUnit,
+  isLoading,
   isAdmin,
-  onUpdateClick
+  onUpdateClick,
+  onRemove
 }) => (
   <Card
     title={skziUnit.serialNum}
+    loading={isLoading}
     extra={isAdmin && (
-      <Hint
-        tooltipProps={{ title: 'Редактировать' }}
-        buttonProps={{
-          type: 'primary',
-          shape: 'circle',
-          icon: <EditOutlined />,
-          onClick: onUpdateClick
-        }}
-      />
+      <Space>
+        <Hint
+          tooltipProps={{ title: 'Редактировать' }}
+          buttonProps={{
+            type: 'primary',
+            shape: 'circle',
+            icon: <EditOutlined />,
+            onClick: onUpdateClick
+          }}
+        />
+
+        <Confirm
+          popconfirmProps={{
+            title: 'Вы действительно хотите удалить СКЗИ?',
+            placement: 'topRight'
+          }}
+          tooltipProps={{ title: 'Удалить' }}
+          buttonProps={{
+            type: 'primary',
+            icon: <DeleteOutlined />,
+            danger: true
+          }}
+          onConfirm={() => onRemove(skziUnit.id)}
+        />
+      </Space>
     )}
   >
     <Descriptions>

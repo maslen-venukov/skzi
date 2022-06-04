@@ -5,7 +5,8 @@ import {
   getSkziUnit,
   getSkziUnits,
   getAgreementSkziUnits,
-  updateSkziUnit
+  updateSkziUnit,
+  removeSkziUnit
 } from './skzi-units.api'
 import catchApiError from '../../utils/catchApiError'
 import { SkziUnit, CreateSkziUnitData, UpdateSkziUnitData } from './skzi-units.types'
@@ -114,6 +115,22 @@ class SkziUnitsStore {
     } finally {
       this.setLoading(false)
     }
+  }
+
+  async removeSkziUnit(id: number) {
+    return new Promise<number>(async (resolve, reject) => {
+      this.setLoading(true)
+        try {
+          const res = await removeSkziUnit(id)
+          message.success(res.data.message)
+          resolve(id)
+        } catch(e) {
+          catchApiError(e)
+          reject(e)
+        } finally {
+          this.setLoading(false)
+        }
+    })
   }
 }
 

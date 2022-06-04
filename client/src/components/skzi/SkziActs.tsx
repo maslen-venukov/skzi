@@ -56,4 +56,4 @@ const SkziActs: React.FC<SkziActsProps> = ({ acts, isLoading }) => {
   )
 }
 
-export default SkziActs
+export default React.memo(SkziActs)

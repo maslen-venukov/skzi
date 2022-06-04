@@ -1,35 +1,75 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { Card, Descriptions } from 'antd'
-import { EditOutlined } from '@ant-design/icons'
+import { Card, Descriptions, Space } from 'antd'
+import { FileDoneOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons'
 import Hint from '../Hint'
 import StatusTag from '../StatusTag'
+import Confirm from '../Confirm'
 import { formatDate } from '../../utils/format'
 import { Agreement } from '../../store/agreements/agreements.types'
 
 interface AgreementInfoProps {
   agreement: Agreement
+  isLoading: boolean
   isAdmin: boolean
   onUpdateClick: () => void
+  onParentClick: () => void
+  onRemove: (id: number) => Promise<void>
 }
 
 const AgreementInfo: React.FC<AgreementInfoProps> = ({
   agreement,
   isAdmin,
-  onUpdateClick
+  isLoading,
+  onParentClick,
+  onUpdateClick,
+  onRemove
 }) => (
   <Card
     title={agreement.number}
-    extra={isAdmin && (
-      <Hint
-        tooltipProps={{ title: 'Редактировать' }}
-        buttonProps={{
-          type: 'primary',
-          shape: 'circle',
-          icon: <EditOutlined />,
-          onClick: onUpdateClick
-        }}
-      />
+    loading={isLoading}
+    extra={(
+      <Space>
+        {agreement.parentId && (
+          <Hint
+            tooltipProps={{ title: 'Родительское соглашение' }}
+            buttonProps={{
+              type: 'primary',
+              shape: 'circle',
+              icon: <FileDoneOutlined />,
+              onClick: onParentClick
+            }}
+          />
+        )}
+
+        {isAdmin && (
+          <>
+            <Hint
+              tooltipProps={{ title: 'Редактировать' }}
+              buttonProps={{
+                type: 'primary',
+                shape: 'circle',
+                icon: <EditOutlined />,
+                onClick: onUpdateClick
+              }}
+            />
+
+            <Confirm
+              popconfirmProps={{
+                title: 'Вы действительно хотите удалить соглашение?',
+                placement: 'topRight'
+              }}
+              tooltipProps={{ title: 'Удалить' }}
+              buttonProps={{
+                type: 'primary',
+                icon: <DeleteOutlined />,
+                danger: true
+              }}
+              onConfirm={() => onRemove(agreement.id)}
+            />
+          </>
+        )}
+      </Space>
     )}
   >
     <Descriptions>

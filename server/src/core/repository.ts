@@ -104,6 +104,13 @@ export class Repository<E = Entity> {
     return Boolean(removed)
   }
 
+  async count(filters: Filters<E> = {}) {
+    const where = this.getWhere(filters)
+
+    const res = await db.select().count().from(this.table).where(where)
+    return Number(res[0].count)
+  }
+
   private getColumnKey(key: string) {
     return this.columns[key as keyof E]
   }

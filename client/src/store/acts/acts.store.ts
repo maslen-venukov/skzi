@@ -134,7 +134,7 @@ class ActsStore {
           resolve(id)
         } catch(e) {
           catchApiError(e)
-          reject()
+          reject(e)
         } finally {
           this.setLoading(false)
         }

@@ -2,9 +2,10 @@ import React, { useEffect } from 'react'
 import { observer } from 'mobx-react-lite'
 import { Link, useNavigate } from 'react-router-dom'
 import { Pagination, Space, Table } from 'antd'
-import { PlusOutlined, EditOutlined } from '@ant-design/icons'
+import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons'
 import Hint from '../components/Hint'
 import StatusTag from '../components/StatusTag'
+import Confirm from '../components/Confirm'
 import authStore from '../store/auth/auth.store'
 import skziUnitsStore from '../store/skzi-units/skzi-units.store'
 import vipnetLansStore from '../store/vipnet-lans/vipnet-lans.store'
@@ -27,7 +28,7 @@ const SkziUnits: React.FC = () => {
   const { isOperator, isAdmin } = authStore
   const {
     skziUnits, isLoading, total,
-    getSkziUnits, createSkziUnit, updateSkziUnit,
+    getSkziUnits, createSkziUnit, updateSkziUnit, removeSkziUnit,
     setSkziUnits, setTotal
   } = skziUnitsStore
   const { getVipnetLans, setVipnetLans } = vipnetLansStore
@@ -63,6 +64,10 @@ const SkziUnits: React.FC = () => {
     }
 
     closeDialog()
+  }
+
+  const onRemove = async (id: number) => {
+    removeSkziUnit(id).then(pagination.fetch)
   }
 
   const openCreateDialog = () => openDialog({
@@ -163,6 +168,20 @@ const SkziUnits: React.FC = () => {
                     icon: <EditOutlined />,
                     onClick: () => openUpdateDialog(record)
                   }}
+                />
+
+                <Confirm
+                  popconfirmProps={{
+                    title: 'Вы действительно хотите удалить соглашение?',
+                    placement: 'topRight'
+                  }}
+                  tooltipProps={{ title: 'Удалить' }}
+                  buttonProps={{
+                    type: 'primary',
+                    icon: <DeleteOutlined />,
+                    danger: true
+                  }}
+                  onConfirm={() => onRemove(record.id)}
                 />
               </Space>
             )}

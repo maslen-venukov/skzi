@@ -56,4 +56,4 @@ const AgreementActs: React.FC<AgreementActsProps> = ({ acts, isLoading }) => {
   )
 }
 
-export default AgreementActs
+export default React.memo(AgreementActs)

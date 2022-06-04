@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { observer } from 'mobx-react-lite'
 import { Empty } from 'antd'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import Loader from '../components/Loader'
 import AgreementInfo from '../components/agreements/AgreementInfo'
 import AgreementSkziUnits from '../components/agreements/AgreementSkziUnits'
@@ -18,10 +18,12 @@ import getDelta from '../utils/getDelta'
 import { UpdateAgreementFormValues } from '../components/dialogs/UpdateAgreementDialog'
 
 const Agreement: React.FC = () => {
+  const [isFirstLoading, setFirstLoading] = useState(false)
   const { id } = useParams()
   const {
-    agreement, isLoading: isAgreementLoading,
-    getAgreement, updateAgreement, setAgreement
+    agreement, isLoading,
+    getAgreement, updateAgreement, removeAgreement,
+    setAgreement
   } = agreementsStore
   const {
     skziUnits, isLoading: isSkziUnitsLoading,
@@ -35,6 +37,7 @@ const Agreement: React.FC = () => {
   const { getOrgs, setOrgs } = orgsStore
   const { isAdmin } = authStore
   const { openDialog, closeDialog } = dialogStore
+  const navigate = useNavigate()
 
   const onUpdate = async (values: UpdateAgreementFormValues) => {
     if(!agreement) return
@@ -62,6 +65,10 @@ const Agreement: React.FC = () => {
     closeDialog()
   }
 
+  const onRemove = async (id: number) => {
+    removeAgreement(id).then(() => navigate(`/agreements`))
+  }
+
   const openUpdateDialog = () => {
     if(!agreement) return
 
@@ -75,8 +82,11 @@ const Agreement: React.FC = () => {
     })
   }
 
+  const openParentPage = () => navigate(`/agreements/${agreement?.parentId}`)
+
   useEffect(() => {
     const agreementId = Number(id)
+    setFirstLoading(true)
 
     Promise.all([
       getAgreement(agreementId),
@@ -86,7 +96,7 @@ const Agreement: React.FC = () => {
         getAgreementTypes(),
         getOrgs()
       ] : []
-    ])
+    ]).finally(() => setFirstLoading(false))
 
     return () => {
       setAgreement(null)
@@ -101,7 +111,7 @@ const Agreement: React.FC = () => {
     setAgreement, setSkziUnits, setActs, setAgreementTypes, setOrgs
   ])
 
-  if(isAgreementLoading) {
+  if(isFirstLoading) {
     return <Loader />
   }
 
@@ -113,8 +123,11 @@ const Agreement: React.FC = () => {
     <div className="vertical-space">
       <AgreementInfo
         agreement={agreement}
+        isLoading={isLoading}
         isAdmin={isAdmin}
         onUpdateClick={openUpdateDialog}
+        onParentClick={openParentPage}
+        onRemove={onRemove}
       />
 
       <AgreementSkziUnits
