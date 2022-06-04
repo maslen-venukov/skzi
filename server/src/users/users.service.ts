@@ -1,7 +1,11 @@
+import bcrypt from 'bcrypt'
 import { usersRepository } from './users.repository'
 import { usersTransform } from './users.transform'
+import { CreateUserDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
+import { userRolesService } from '../user-roles/user-roles.service'
 import { ApiError } from '../exceptions/api-error'
+import { User } from './user.interface'
 
 class UsersService {
   async getAll() {
@@ -15,6 +19,30 @@ class UsersService {
       throw ApiError.NotFound('Пользователь не найден')
     }
     return await usersTransform.expandWithRole(user)
+  }
+
+  async create(dto: CreateUserDto) {
+    const { name, realName } = dto
+
+    const candidate = await usersRepository.getOne({ name })
+    if(candidate) {
+      throw ApiError.NotFound(`Пользователь с именем '${name}' уже существует`)
+    }
+
+    const role = await userRolesService.getById(dto.roleId)
+    if(!role) {
+      throw ApiError.NotFound('Роль не найдена')
+    }
+
+    const hash = await bcrypt.hash(dto.password, 5)
+    const user = await usersRepository.create({
+      name,
+      realName,
+      passHash: hash,
+      roleId: role.id
+    }, { exclude: ['passHash'] })
+
+    return { ...user, role } as User
   }
 
   async update(id: number, dto: UpdateUserDto) {

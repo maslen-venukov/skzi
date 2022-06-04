@@ -67,7 +67,7 @@ class AgreementsController {
 
       const dto = new CreateAgreementDto({ ...req.body, addUserId })
       const agreement = await agreementsService.create(dto)
-      return res.json({ message: 'Соглашение успешно создано', agreement })
+      return res.json({ message: 'Соглашение успешно добавлено', agreement })
     } catch(e) {
       next(e)
     }

@@ -27,7 +27,7 @@ class AgreementCommentsController {
 
       const dto = new CreateAgreementCommentDto({ ...req.body, addUserId })
       const agreementComment = await agreementCommentsService.create(dto)
-      return res.json({ message: 'Комментарий успешно создан', agreementComment })
+      return res.json({ message: 'Комментарий успешно добавлен', agreementComment })
     } catch(e) {
       next(e)
     }

@@ -1,7 +1,7 @@
 import { makeAutoObservable } from 'mobx'
-import { getUsers, updateUser } from './users.api'
+import { getUsers, createUser, updateUser } from './users.api'
 import catchApiError from '../../utils/catchApiError'
-import { UpdateUserData, User } from './users.types'
+import { CreateUserData, UpdateUserData, User } from './users.types'
 import { message } from 'antd'
 
 class UsersStore {
@@ -30,6 +30,23 @@ class UsersStore {
     } finally {
       this.setLoading(false)
     }
+  }
+
+  async createUser(data: CreateUserData) {
+    return new Promise<User>(async (resolve, reject) => {
+      this.setLoading(true)
+      try {
+        const res = await createUser(data)
+        this.setUsers([res.data.user, ...this.users])
+        message.success(res.data.message)
+        resolve(res.data.user)
+      } catch(e) {
+        catchApiError(e)
+        reject(e)
+      } finally {
+        this.setLoading(false)
+      }
+    })
   }
 
   async updateUser(id: number, data: UpdateUserData) {

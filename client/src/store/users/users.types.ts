@@ -8,6 +8,13 @@ export interface User {
   role: Role
 }
 
+export interface CreateUserData {
+  name: string
+  password: string
+  realName: string
+  roleId: number
+}
+
 export interface UpdateUserData extends Partial<Omit<User, 'id' | 'role'>> {
   roleId?: number
 }

@@ -18,8 +18,7 @@ const Orgs: React.FC = () => {
   const { openDialog, closeDialog } = dialogStore
 
   const onCreate = async (values: CreateOrgFormValues) => {
-    await createOrg(values)
-    closeDialog()
+    createOrg(values).then(closeDialog)
   }
 
   const onUpdate = (org: Org) => async (values: UpdateOrgFormValues) => {

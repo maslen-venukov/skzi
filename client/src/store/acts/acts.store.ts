@@ -126,7 +126,7 @@ class ActsStore {
   }
 
   async removeAct(id: number) {
-    return new Promise(async (resolve, reject) => {
+    return new Promise<number>(async (resolve, reject) => {
       this.setLoading(true)
         try {
           const res = await removeAct(id)

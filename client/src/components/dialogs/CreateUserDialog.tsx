@@ -1,38 +1,26 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { observer } from 'mobx-react-lite'
-import { Form, Input, Checkbox, Button, Select } from 'antd'
-import { useForm } from 'antd/lib/form/Form'
-import usersStore from '../../store/users/users.store'
+import { Button, Form, Input, Select } from 'antd'
 import rolesStore from '../../store/roles/roles.store'
-import { User } from '../../store/users/users.types'
+import usersStore from '../../store/users/users.store'
 
-export interface UpdateUserFormValues {
+export interface CreateUserFormValues {
   name: string
+  password: string
   realName: string
-  isActive: boolean
   roleId: number
 }
 
-interface UsersDialogProps {
-  user: User
-  onFinish: (values: UpdateUserFormValues) => Promise<void>
+interface CreateUserDialogProps {
+  onFinish: (values: CreateUserFormValues) => Promise<void>
 }
 
-const UpdateUserDialog: React.FC<UsersDialogProps> = ({ user, onFinish }) => {
-  const [form] = useForm<UpdateUserFormValues>()
+const CreateUserDialog: React.FC<CreateUserDialogProps> = ({ onFinish }) => {
   const { isLoading: isUsersLoading } = usersStore
   const { roles, isLoading: isRolesLoading } = rolesStore
 
-  useEffect(() => {
-    form.setFieldsValue({
-      ...user,
-      roleId: user.role.id
-    })
-  }, [form, user])
-
   return (
     <Form
-      form={form}
       layout="vertical"
       validateTrigger="onBlur"
       autoComplete="off"
@@ -47,6 +35,14 @@ const UpdateUserDialog: React.FC<UsersDialogProps> = ({ user, onFinish }) => {
       </Form.Item>
 
       <Form.Item
+        label="Пароль"
+        name="password"
+        rules={[{ required: true, message: 'Пожалуйста введите пароль' }]}
+      >
+        <Input />
+      </Form.Item>
+
+      <Form.Item
         label="Имя"
         name="realName"
         rules={[{ required: true, message: 'Пожалуйста введите имя' }]}
@@ -55,16 +51,9 @@ const UpdateUserDialog: React.FC<UsersDialogProps> = ({ user, onFinish }) => {
       </Form.Item>
 
       <Form.Item
-        name="isActive"
-        valuePropName="checked"
-      >
-        <Checkbox>Активен</Checkbox>
-      </Form.Item>
-
-      <Form.Item
         label="Роль"
         name="roleId"
-        rules={[{ required: true }]}
+        rules={[{ required: true, message: 'Пожалуйста выберите роль' }]}
       >
         <Select loading={isRolesLoading}>
           {roles.map(({ id, role }) => (
@@ -81,11 +70,11 @@ const UpdateUserDialog: React.FC<UsersDialogProps> = ({ user, onFinish }) => {
           type="primary"
           htmlType="submit"
         >
-          Сохранить
+          Добавить
         </Button>
       </Form.Item>
     </Form>
   )
 }
 
-export default observer(UpdateUserDialog)
+export default observer(CreateUserDialog)

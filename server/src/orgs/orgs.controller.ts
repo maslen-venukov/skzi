@@ -33,7 +33,7 @@ class OrgsController {
 
       const dto = new CreateOrgDto(req.body)
       const org = await orgsService.create(dto)
-      return res.json({ message: 'Контрагент успешно создан', org })
+      return res.json({ message: 'Контрагент успешно добавлен', org })
     } catch(e) {
       next(e)
     }

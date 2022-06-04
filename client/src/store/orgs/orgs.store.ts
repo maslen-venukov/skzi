@@ -33,16 +33,20 @@ class OrgsStore {
   }
 
   async createOrg(data: CreateOrgData) {
-    this.setLoading(true)
-    try {
-      const res = await createOrg(data)
-      this.setOrgs([res.data.org, ...this.orgs])
-      message.success(res.data.message)
-    } catch(e) {
-      catchApiError(e)
-    } finally {
-      this.setLoading(false)
-    }
+    return new Promise<Org>(async (resolve, reject) => {
+      this.setLoading(true)
+      try {
+        const res = await createOrg(data)
+        this.setOrgs([res.data.org, ...this.orgs])
+        message.success(res.data.message)
+        resolve(res.data.org)
+      } catch(e) {
+        catchApiError(e)
+        reject(e)
+      } finally {
+        this.setLoading(false)
+      }
+    })
   }
 
   async updateOrg(id: number, data: UpdateOrgData) {

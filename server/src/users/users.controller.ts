@@ -1,7 +1,9 @@
 import { Request, Response, NextFunction } from 'express'
 import { usersService } from './users.service'
+import { CreateUserDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
 import { UserRoles } from '../enums/user-roles.enum'
+import { ApiError } from '../exceptions/api-error'
 
 class UsersController {
   async getAll(req: Request, res: Response, next: NextFunction) {
@@ -19,6 +21,21 @@ class UsersController {
       const id = Number(req.params.id)
       const user = await usersService.getById(id)
       return res.json({ user })
+    } catch(e) {
+      next(e)
+    }
+  }
+
+  async create(req: Request<{}, {}, CreateUserDto>, res: Response, next: NextFunction) {
+    try {
+      const { name, realName, password, roleId } = req.body
+      if (!name || !realName || !password || !roleId) {
+        throw ApiError.BadRequest('Заполните все поля')
+      }
+
+      const dto = new CreateUserDto(req.body)
+      const user = await usersService.create(dto)
+      return res.json({ message: 'Пользователь успешно добавлен', user })
     } catch(e) {
       next(e)
     }

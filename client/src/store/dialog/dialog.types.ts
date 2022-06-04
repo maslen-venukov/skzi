@@ -1,6 +1,7 @@
 export type DialogType =
   'CreateAgreement'
   | 'UpdateAgreement'
+  | 'CreateUser'
   | 'UpdateUser'
   | 'CreateSkziUnit'
   | 'UpdateSkziUnit'

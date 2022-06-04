@@ -46,7 +46,7 @@ class ActsController {
 
       const dto = new CreateActDto({ ...req.body, addUserId })
       const act = await actsService.create(dto)
-      return res.json({ message: 'Акт успешно создан', act })
+      return res.json({ message: 'Акт успешно добавлен', act })
     } catch(e) {
       next(e)
     }

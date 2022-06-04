@@ -1,17 +1,17 @@
-import { LoginDto } from './login.dto'
+import { LoginDto } from '../../auth/dto/login.dto'
 
-interface RegistrationDtoParams {
+interface CreateUserDtoParams {
   name: string
   realName: string
   password: string
   roleId: number
 }
 
-export class RegistrationDto extends LoginDto {
+export class CreateUserDto extends LoginDto {
   realName: string
   roleId: number
 
-  constructor(params: RegistrationDtoParams) {
+  constructor(params: CreateUserDtoParams) {
     super(params)
     this.realName = params.realName
     this.roleId = params.roleId

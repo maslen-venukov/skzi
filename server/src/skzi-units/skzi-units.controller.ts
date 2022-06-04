@@ -51,7 +51,7 @@ class SkziUnitsController {
 
       const dto = new CreateSkziUnitDto({ ...req.body, addUserId })
       const skziUnit = await skziUnitsService.create(dto)
-      return res.json({ message: 'СКЗИ успешно создано', skziUnit })
+      return res.json({ message: 'СКЗИ успешно добавлено', skziUnit })
     } catch(e) {
       next(e)
     }
