@@ -56,7 +56,7 @@ const Orgs: React.FC = () => {
     return () => {
       setOrgs([])
     }
-  }, [getOrgs, setOrgs])
+  }, [])
 
   return (
     <Table

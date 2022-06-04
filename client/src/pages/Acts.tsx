@@ -98,7 +98,7 @@ const Acts: React.FC = () => {
       setActs([])
       setTotal(0)
     }
-  }, [isOperator, getSignTypes, setSignTypes, setActs, setTotal])
+  }, [isOperator])
 
   return (
     <>

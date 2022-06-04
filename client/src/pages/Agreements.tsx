@@ -106,11 +106,7 @@ const Agreements: React.FC = () => {
       setOrgs([])
       setTotal(0)
     }
-  }, [
-    isOperator,
-    getAgreementTypes, getOrgs,
-    setAgreements, setAgreementTypes, setOrgs, setTotal
-  ])
+  }, [isOperator])
 
   return (
     <>

@@ -12,7 +12,7 @@ const AgreementTypes: React.FC = () => {
     return () => {
       setAgreementTypes([])
     }
-  }, [getAgreementTypes, setAgreementTypes])
+  }, [])
 
   return (
     <TypesTable

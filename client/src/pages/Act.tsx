@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { observer } from 'mobx-react-lite'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Empty } from 'antd'
@@ -15,6 +15,7 @@ import signTypesStore from '../store/sign-types/sign-types.store'
 
 const Act: React.FC = () => {
   const { id } = useParams()
+  const [isFirstLoading, setFirstLoading] = useState(false)
   const { act, isLoading, getAct, updateAct, removeAct, setAct } = actsStore
   const { getSignTypes, setSignTypes } = signTypesStore
   const { isAdmin } = authStore
@@ -60,18 +61,20 @@ const Act: React.FC = () => {
   }
 
   useEffect(() => {
+    setFirstLoading(true)
+
     Promise.all([
       getAct(Number(id)),
       ...isAdmin ? [getSignTypes()] : []
-    ])
+    ]).then(() => setFirstLoading(false))
 
     return () => {
       setAct(null)
       setSignTypes([])
     }
-  }, [isAdmin, getAct, getSignTypes, setAct, setSignTypes])
+  }, [isAdmin])
 
-  if(isLoading) {
+  if(isFirstLoading) {
     return <Loader />
   }
 
@@ -83,6 +86,7 @@ const Act: React.FC = () => {
     <div className="vertical-space">
       <ActInfo
         act={act}
+        isLoading={isLoading}
         isAdmin={isAdmin}
         onUpdateClick={openUpdateDialog}
         onRemove={onRemove}

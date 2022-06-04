@@ -14,7 +14,7 @@ const App: React.FC = () => {
   useEffect(() => {
     const token = storage.get<string>('token')
     token ? auth() : setReady(true)
-  }, [auth, setReady])
+  }, [])
 
   if(!isReady) {
     return <Loader />

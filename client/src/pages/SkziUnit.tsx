@@ -93,11 +93,7 @@ const SkziUnit: React.FC = () => {
       setPlatformTypes([])
       setOrgs([])
     }
-  }, [
-    id, isAdmin,
-    getSkziUnit, getSkziUnitActs, getVipnetLans, getSkziTypes, getPlatformTypes, getOrgs,
-    setSkziUnit, setActs, setVipnetLans, setSkziTypes, setPlatformTypes, setOrgs
-  ])
+  }, [id, isAdmin])
 
   if(isFirstLoading) {
     return <Loader />

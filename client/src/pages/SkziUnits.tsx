@@ -107,11 +107,7 @@ const SkziUnits: React.FC = () => {
       setOrgs([])
       setTotal(0)
     }
-  }, [
-    isOperator,
-    getVipnetLans, getSkziTypes, getPlatformTypes, getOrgs,
-    setSkziUnits, setVipnetLans, setSkziTypes, setPlatformTypes, setOrgs, setTotal
-  ])
+  }, [isOperator])
 
   return (
     <>

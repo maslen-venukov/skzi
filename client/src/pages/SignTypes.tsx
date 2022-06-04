@@ -12,7 +12,7 @@ const SignTypes: React.FC = () => {
     return () => {
       setSignTypes([])
     }
-  }, [getSignTypes, setSignTypes])
+  }, [])
 
   return (
     <TypesTable

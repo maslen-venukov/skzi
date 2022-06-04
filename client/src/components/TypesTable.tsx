@@ -2,6 +2,7 @@ import React from 'react'
 import { Space, Table, Typography } from 'antd'
 import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons'
 import Hint from './Hint'
+import Confirm from './Confirm'
 import authStore from '../store/auth/auth.store'
 import { Type } from '../interfaces/type.interface'
 
@@ -19,6 +20,8 @@ const TypesTable: React.FC<TypesTableProps> = ({ title, types, isLoading }) => {
       dataSource={types}
       loading={isLoading}
       pagination={false}
+      rowKey="id"
+      bordered
       title={() => (
         <Space>
           {isAdmin && (
@@ -35,8 +38,6 @@ const TypesTable: React.FC<TypesTableProps> = ({ title, types, isLoading }) => {
           <Typography.Text>{title}</Typography.Text>
         </Space>
       )}
-      rowKey="id"
-      bordered
     >
       <Table.Column title="ID" dataIndex="id" key="id" width="0" />
       <Table.Column title="Название" dataIndex="type" key="type" />
@@ -57,14 +58,18 @@ const TypesTable: React.FC<TypesTableProps> = ({ title, types, isLoading }) => {
                 }}
               />
 
-              <Hint
+              <Confirm
+                popconfirmProps={{
+                  title: 'Вы действительно хотите удалить тип?',
+                  placement: 'topRight'
+                }}
                 tooltipProps={{ title: 'Удалить' }}
                 buttonProps={{
                   type: 'primary',
-                  danger: true,
                   icon: <DeleteOutlined />,
-                  onClick: () => console.log(record.id)
+                  danger: true
                 }}
+                onConfirm={() => console.log(record.id)}
               />
             </Space>
           )}

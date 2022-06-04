@@ -3,6 +3,7 @@ import { observer } from 'mobx-react-lite'
 import { Space, Table, Typography } from 'antd'
 import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons'
 import Hint from '../components/Hint'
+import Confirm from '../components/Confirm'
 import authStore from '../store/auth/auth.store'
 import vipnetLansStore from '../store/vipnet-lans/vipnet-lans.store'
 import { Type } from '../interfaces/type.interface'
@@ -17,7 +18,7 @@ const VipnetLans: React.FC = () => {
     return () => {
       setVipnetLans([])
     }
-  }, [getVipnetLans, setVipnetLans])
+  }, [])
 
   return (
     <Table
@@ -63,14 +64,18 @@ const VipnetLans: React.FC = () => {
                 }}
               />
 
-              <Hint
+              <Confirm
+                popconfirmProps={{
+                  title: 'Вы действительно хотите удалить сеть?',
+                  placement: 'topRight'
+                }}
                 tooltipProps={{ title: 'Удалить' }}
                 buttonProps={{
                   type: 'primary',
-                  danger: true,
                   icon: <DeleteOutlined />,
-                  onClick: () => console.log(record.id)
+                  danger: true
                 }}
+                onConfirm={() => console.log(record.id)}
               />
             </Space>
           )}

@@ -63,7 +63,7 @@ const Users: React.FC = () => {
       setUsers([])
       setRoles([])
     }
-  }, [getUsers, getRoles, setUsers, setRoles])
+  }, [])
 
   return (
     <Table

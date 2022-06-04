@@ -12,7 +12,7 @@ const SkziTypes: React.FC = () => {
     return () => {
       setSkziTypes([])
     }
-  }, [getSkziTypes, setSkziTypes])
+  }, [])
 
   return (
     <TypesTable

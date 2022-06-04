@@ -12,7 +12,7 @@ const PlatformTypes: React.FC = () => {
     return () => {
       setPlatformTypes([])
     }
-  }, [getPlatformTypes, setPlatformTypes])
+  }, [])
 
   return (
     <TypesTable

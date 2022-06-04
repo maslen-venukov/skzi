@@ -9,6 +9,7 @@ import { Link } from 'react-router-dom'
 
 interface ActInfoProps {
   act: Act
+  isLoading: boolean
   isAdmin: boolean
   onUpdateClick: () => void
   onRemove: (id: number) => Promise<void>
@@ -16,12 +17,14 @@ interface ActInfoProps {
 
 const ActInfo: React.FC<ActInfoProps> = ({
   act,
+  isLoading,
   isAdmin,
   onUpdateClick,
   onRemove
 }) => (
   <Card
     title={act.number}
+    loading={isLoading}
     extra={isAdmin && (
       <Space>
         <Hint
