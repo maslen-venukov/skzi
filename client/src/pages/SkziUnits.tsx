@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react'
 import { observer } from 'mobx-react-lite'
 import { Link, useNavigate } from 'react-router-dom'
-import { Pagination, Space, Table } from 'antd'
-import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons'
+import { Button, Checkbox, Pagination, Popover, Row, Space, Table } from 'antd'
+import { PlusOutlined, EditOutlined, DeleteOutlined, UnorderedListOutlined } from '@ant-design/icons'
 import Hint from '../components/Hint'
 import StatusTag from '../components/StatusTag'
 import Confirm from '../components/Confirm'
@@ -14,6 +14,7 @@ import platformTypesStore from '../store/platform-types/platform-types.store'
 import orgsStore from '../store/orgs/orgs.store'
 import dialogStore from '../store/dialog/dialog.store'
 import usePagination from '../hooks/usePagination'
+import useColumns from '../hooks/useColumns'
 import getDelta from '../utils/getDelta'
 import nullify from '../utils/nullify'
 import { Type } from '../interfaces/type.interface'
@@ -38,6 +39,108 @@ const SkziUnits: React.FC = () => {
   const { openDialog, closeDialog } = dialogStore
   const navigate = useNavigate()
   const pagination = usePagination({ fetch: getSkziUnits })
+
+  const { columns, viewColumns, getCheckboxProps } = useColumns<SkziUnit>([
+    {
+      title: 'Серийный номер',
+      dataIndex: 'serialNum',
+      key: 'serialNum'
+    },
+    {
+      title: 'Активно',
+      dataIndex: 'isActive',
+      key: 'isActive',
+      render: isActive => <StatusTag value={isActive} />
+    },
+    {
+      title: 'Инвентарный номер',
+      dataIndex: 'invNum',
+      key: 'invNum'
+    },
+    {
+      title: 'Лицензионный номер',
+      dataIndex: 'licSkziNum',
+      key: 'licSkziNum'
+    },
+    {
+      title: 'Номер СКЗИ',
+      dataIndex: 'serialSkziNum',
+      key: 'serialSkziNum'
+    },
+    {
+      title: 'Повреждено',
+      dataIndex: 'isBroken',
+      key: 'isBroken',
+      render: isBroken => <StatusTag value={isBroken} />
+    },
+    {
+      title: 'Местоположение',
+      dataIndex: 'location',
+      key: 'location'
+    },
+    {
+      title: 'ViPNet',
+      dataIndex: 'vipnetLan',
+      key: 'vipnetLan',
+      render: ({ lanNum }: VipnetLan) => lanNum
+    },
+    {
+      title: 'Соглашение',
+      dataIndex: 'agreement',
+      key: 'agreement',
+      render: (agreement: Agreement) => agreement && <Link to={`/agreements/${agreement.id}`}>{agreement.number}</Link>
+    },
+    {
+      title: 'Тип',
+      dataIndex: 'skziType',
+      key: 'skziType',
+      render: ({ type }: Type) => type
+    },
+    {
+      title: 'Платформа',
+      dataIndex: 'platformType',
+      key: 'platformType',
+      render: (type: Type) => type?.type
+    },
+    {
+      title: 'Владелец',
+      dataIndex: 'skziOwner',
+      key: 'skziOwner',
+      render: (org: Org) => org?.name
+    },
+    ...isAdmin ? [{
+      title: 'Действия',
+      key: 'actions',
+      width: '0',
+      render: (_: unknown, record: SkziUnit) => (
+        <Space>
+          <Hint
+            tooltipProps={{ title: 'Редактировать' }}
+            buttonProps={{
+              type: 'primary',
+              shape: 'circle',
+              icon: <EditOutlined />,
+              onClick: () => openUpdateDialog(record)
+            }}
+          />
+
+          <Confirm
+            popconfirmProps={{
+              title: 'Вы действительно хотите удалить соглашение?',
+              placement: 'topRight'
+            }}
+            tooltipProps={{ title: 'Удалить' }}
+            buttonProps={{
+              type: 'primary',
+              icon: <DeleteOutlined />,
+              danger: true
+            }}
+            onConfirm={() => onRemove(record.id)}
+          />
+        </Space>
+      )
+    }] : []
+  ])
 
   const onCreate = async (values: CreateSkziUnitFormValues) => {
     createSkziUnit({
@@ -112,6 +215,7 @@ const SkziUnits: React.FC = () => {
   return (
     <>
       <Table
+        columns={viewColumns}
         dataSource={skziUnits}
         loading={isLoading}
         pagination={false}
@@ -120,70 +224,40 @@ const SkziUnits: React.FC = () => {
         onRow={record => ({
           onDoubleClick: () => navigate(`/skzi-units/${record.id}`)
         })}
-        title={isOperator ? () => (
-          <Hint
-            tooltipProps={{ title: 'Добавить' }}
-            buttonProps={{
-              type: 'primary',
-              shape: 'circle',
-              icon: <PlusOutlined />,
-              onClick: openCreateDialog
-            }}
-          />
-        ) : undefined}
-      >
-        <Table.Column title="Серийный номер" dataIndex="serialNum" key="serialNum" />
-        <Table.Column title="Активно" dataIndex="isActive" key="isActive" render={isActive => <StatusTag value={isActive} />} />
-        <Table.Column title="Инвентарный номер" dataIndex="invNum" key="invNum" />
-        <Table.Column title="Лицензионный номер" dataIndex="licSkziNum" key="licSkziNum" />
-        <Table.Column title="Номер СКЗИ" dataIndex="serialSkziNum" key="serialSkziNum" />
-        <Table.Column title="Повреждено" dataIndex="isBroken" key="isBroken" render={isBroken => <StatusTag value={isBroken} />} />
-        <Table.Column title="Местоположение" dataIndex="location" key="location" />
-        <Table.Column title="ViPNet" dataIndex="vipnetLan" key="vipnetLan" render={({ lanNum }: VipnetLan) => lanNum} />
-        <Table.Column
-          title="Соглашение"
-          dataIndex="agreement"
-          key="agreement"
-          render={(agreement: Agreement) => agreement && <Link to={`/agreements/${agreement.id}`}>{agreement.number}</Link>}
-        />
-        <Table.Column title="Тип" dataIndex="skziType" key="skziType" render={({ type }: Type) => type} />
-        <Table.Column title="Платформа" dataIndex="platformType" key="platformType" render={(type: Type) => type?.type} />
-        <Table.Column title="Владелец" dataIndex="skziOwner" key="skziOwner" render={(org: Org) => org?.name} />
-        {isAdmin && (
-          <Table.Column
-            title="Действия"
-            key="actions"
-            width="0"
-            render={(_, record: SkziUnit) => (
-              <Space>
-                <Hint
-                  tooltipProps={{ title: 'Редактировать' }}
-                  buttonProps={{
-                    type: 'primary',
-                    shape: 'circle',
-                    icon: <EditOutlined />,
-                    onClick: () => openUpdateDialog(record)
-                  }}
-                />
+        title={() => (
+          <Space>
+            <Popover
+              placement="bottomLeft"
+              content={
+                <>
+                  {columns.map(column => (
+                    <Row key={column.key}>
+                      <Checkbox {...getCheckboxProps(column.key as keyof SkziUnit)}>
+                        {column.title as string}
+                      </Checkbox>
+                    </Row>
+                  ))}
+                </>
+              }
+            >
+              <Button icon={<UnorderedListOutlined />} />
+            </Popover>
 
-                <Confirm
-                  popconfirmProps={{
-                    title: 'Вы действительно хотите удалить соглашение?',
-                    placement: 'topRight'
-                  }}
-                  tooltipProps={{ title: 'Удалить' }}
-                  buttonProps={{
-                    type: 'primary',
-                    icon: <DeleteOutlined />,
-                    danger: true
-                  }}
-                  onConfirm={() => onRemove(record.id)}
-                />
-              </Space>
+            {isOperator && (
+              <Hint
+                tooltipProps={{ title: 'Добавить' }}
+                buttonProps={{
+                  type: 'primary',
+                  shape: 'circle',
+                  icon: <PlusOutlined />,
+                  onClick: openCreateDialog
+                }}
+              />
             )}
-          />
+          </Space>
         )}
-      </Table>
+      />
+
 
       <Pagination
         {...pagination}

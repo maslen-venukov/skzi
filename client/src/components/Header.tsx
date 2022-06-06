@@ -5,7 +5,8 @@ import {
   MenuUnfoldOutlined,
   MenuFoldOutlined,
   UserOutlined,
-  LogoutOutlined
+  LogoutOutlined,
+  LockOutlined
 } from '@ant-design/icons'
 import TypedDropdown from './TypedDropdown'
 import Hint from './Hint'
@@ -56,6 +57,7 @@ const Header: React.FC<HeaderProps> = ({ collapsed, onToggle }) => {
               <Menu.Item
                 key="1"
                 onClick={openChangePasswordDialog}
+                icon={<LockOutlined />}
               >
                 Изменить пароль
               </Menu.Item>

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { observer } from 'mobx-react-lite'
-import { Table, Pagination, Space } from 'antd'
-import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons'
+import { Table, Pagination, Space, Popover, Row, Checkbox, Button } from 'antd'
+import { PlusOutlined, EditOutlined, DeleteOutlined, UnorderedListOutlined } from '@ant-design/icons'
 import { Link, useNavigate } from 'react-router-dom'
 import Hint from '../components/Hint'
 import Confirm from '../components/Confirm'
@@ -10,6 +10,7 @@ import signTypesStore from '../store/sign-types/sign-types.store'
 import authStore from '../store/auth/auth.store'
 import dialogStore from '../store/dialog/dialog.store'
 import usePagination from '../hooks/usePagination'
+import useColumns from '../hooks/useColumns'
 import nullify from '../utils/nullify'
 import getDelta from '../utils/getDelta'
 import { formatDate } from '../utils/format'
@@ -31,6 +32,75 @@ const Acts: React.FC = () => {
   const { openDialog, closeDialog } = dialogStore
   const navigate = useNavigate()
   const pagination = usePagination({ fetch: getActs })
+
+  const { columns, viewColumns, getCheckboxProps } = useColumns<Act>([
+    {
+      title: 'Номер',
+      dataIndex: 'number',
+      key: 'number'
+    },
+    {
+      title: 'Дата',
+      dataIndex: 'date',
+      key: 'date',
+      render: formatDate
+    },
+    {
+      title: 'Соглашение',
+      dataIndex: 'agreement',
+      key: 'agreement',
+      render: ({ id, number }: Agreement) => <Link to={`/agreements/${id}`}>{number}</Link>
+    },
+    {
+      title: 'СКЗИ',
+      dataIndex: 'skziUnit',
+      key: 'skziUnit',
+      render: ({ id, serialNum }: SkziUnit) => <Link to={`/skzi-units/${id}`}>{serialNum || id}</Link>
+    },
+    {
+      title: 'Тип подписи',
+      dataIndex: 'signType',
+      key: 'signType',
+      render: ({ type }: Type) => type
+    },
+    {
+      title: 'Инвентарный номер',
+      dataIndex: 'eqInventoryNum',
+      key: 'eqInventoryNum'
+    },
+    ...isAdmin ? [{
+      title: 'Действия',
+      key: 'actions',
+      width: '0',
+      render: (_: unknown, record: Act) => (
+        <Space>
+          <Hint
+            tooltipProps={{ title: 'Редактировать' }}
+            buttonProps={{
+              type: 'primary',
+              shape: 'circle',
+              icon: <EditOutlined />,
+              onClick: () => openUpdateDialog(record)
+            }}
+          />
+
+          <Confirm
+            popconfirmProps={{
+              title: 'Вы действительно хотите удалить акт?',
+              placement: 'topRight'
+            }}
+            tooltipProps={{ title: 'Удалить' }}
+            buttonProps={{
+              type: 'primary',
+              icon: <DeleteOutlined />,
+              danger: true
+            }}
+            onConfirm={() => onRemove(record.id)}
+          />
+        </Space>
+      )
+    }] : []
+  ])
 
   const onCreate = async (values: CreateActFormValues) => {
     createAct({
@@ -103,6 +173,7 @@ const Acts: React.FC = () => {
   return (
     <>
       <Table
+        columns={viewColumns}
         dataSource={acts}
         loading={isLoading}
         pagination={false}
@@ -111,70 +182,39 @@ const Acts: React.FC = () => {
         onRow={record => ({
           onDoubleClick: () => navigate(`/acts/${record.id}`)
         })}
-        title={isOperator ? () => (
-          <Hint
-            tooltipProps={{ title: 'Добавить' }}
-            buttonProps={{
-              type: 'primary',
-              shape: 'circle',
-              icon: <PlusOutlined />,
-              onClick: openCreateDialog
-            }}
-          />
-        ) : undefined}
-      >
-        <Table.Column title="Номер" dataIndex="number" key="number" />
-        <Table.Column title="Дата" dataIndex="date" key="date" render={formatDate} />
-        <Table.Column
-          title="Соглашение"
-          dataIndex="agreement"
-          key="agreement"
-          render={({ id, number }: Agreement) => <Link to={`/agreements/${id}`}>{number}</Link>}
-        />
-        <Table.Column
-          title="СКЗИ"
-          dataIndex="skziUnit"
-          key="skziUnit"
-          render={({ id, serialNum }: SkziUnit) => <Link to={`/skzi-units/${id}`}>{serialNum || id}</Link>}
-        />
-        <Table.Column title="Тип подписи" dataIndex="signType" key="signType" render={({ type }: Type) => type} />
-        <Table.Column title="Инвентарный номер" dataIndex="eqInventoryNum" key="eqInventoryNum" />
+        title={() => (
+          <Space>
+            <Popover
+              placement="bottomLeft"
+              content={
+                <>
+                  {columns.map(column => (
+                    <Row key={column.key}>
+                      <Checkbox {...getCheckboxProps(column.key as keyof Act)}>
+                        {column.title as string}
+                      </Checkbox>
+                    </Row>
+                  ))}
+                </>
+              }
+            >
+              <Button icon={<UnorderedListOutlined />} />
+            </Popover>
 
-        {isAdmin && (
-          <Table.Column
-            title="Действия"
-            key="actions"
-            width="0"
-            render={(_, record: Act) => (
-              <Space>
-                <Hint
-                  tooltipProps={{ title: 'Редактировать' }}
-                  buttonProps={{
-                    type: 'primary',
-                    shape: 'circle',
-                    icon: <EditOutlined />,
-                    onClick: () => openUpdateDialog(record)
-                  }}
-                />
-
-                <Confirm
-                  popconfirmProps={{
-                    title: 'Вы действительно хотите удалить акт?',
-                    placement: 'topRight'
-                  }}
-                  tooltipProps={{ title: 'Удалить' }}
-                  buttonProps={{
-                    type: 'primary',
-                    icon: <DeleteOutlined />,
-                    danger: true
-                  }}
-                  onConfirm={() => onRemove(record.id)}
-                />
-              </Space>
+            {isOperator && (
+              <Hint
+                tooltipProps={{ title: 'Добавить' }}
+                buttonProps={{
+                  type: 'primary',
+                  shape: 'circle',
+                  icon: <PlusOutlined />,
+                  onClick: openCreateDialog
+                }}
+              />
             )}
-          />
+          </Space>
         )}
-      </Table>
+      />
 
       <Pagination
         {...pagination}

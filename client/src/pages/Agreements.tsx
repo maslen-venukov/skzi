@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react'
 import { observer } from 'mobx-react-lite'
 import { useNavigate } from 'react-router-dom'
-import { Pagination, Space, Table } from 'antd'
-import { PlusOutlined, FileDoneOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons'
+import { Button, Checkbox, Pagination, Popover, Row, Space, Table } from 'antd'
+import { PlusOutlined, FileDoneOutlined, EditOutlined, DeleteOutlined, UnorderedListOutlined } from '@ant-design/icons'
 import StatusTag from '../components/StatusTag'
 import Hint from '../components/Hint'
 import Confirm from '../components/Confirm'
@@ -12,6 +12,7 @@ import agreementTypesStore from '../store/agreement-types/agreement-types.store'
 import orgsStore from '../store/orgs/orgs.store'
 import dialogStore from '../store/dialog/dialog.store'
 import usePagination from '../hooks/usePagination'
+import useColumns from '../hooks/useColumns'
 import getDelta from '../utils/getDelta'
 import nullify from '../utils/nullify'
 import { formatDate } from '../utils/format'
@@ -32,6 +33,104 @@ const Agreements: React.FC = () => {
   const { openDialog, closeDialog } = dialogStore
   const navigate = useNavigate()
   const pagination = usePagination({ fetch: getAgreements })
+
+  const { columns, viewColumns, getCheckboxProps } = useColumns<Agreement>([
+    {
+      title: 'Номер',
+      dataIndex: 'number',
+      key: 'number'
+    },
+    {
+      title: 'Активно',
+      dataIndex: 'isActive',
+      key: 'isActive',
+      render: isActive => <StatusTag value={isActive} />
+    },
+    {
+      title: 'Тип',
+      dataIndex: 'type',
+      key: 'type',
+      render: ({ type }: Type) => type
+    },
+    {
+      title: 'Дата начала',
+      dataIndex: 'beginDate',
+      key: 'beginDate',
+      render: formatDate
+    },
+    {
+      title: 'Дата окончания',
+      dataIndex: 'endDate',
+      key: 'endDate',
+      render: formatDate
+    },
+    {
+      title: 'Дата расторжения',
+      dataIndex: 'terminationDate',
+      key: 'terminationDate',
+      render: formatDate
+    },
+    {
+      title: 'Узел',
+      dataIndex: 'contractorNode',
+      key: 'contractorNode',
+      render: org => org.name
+    },
+    {
+      title: 'Сегмент',
+      dataIndex: 'contractorSegment',
+      key: 'contractorSegment',
+      render: org => org?.name
+    },
+    {
+      title: 'Действия',
+      key: 'actions',
+      width: '0',
+      render: (_, record: Agreement) => (
+        <Space>
+          {record.parentId && (
+            <Hint
+              tooltipProps={{ title: 'Родительское соглашение' }}
+              buttonProps={{
+                type: 'primary',
+                shape: 'circle',
+                icon: <FileDoneOutlined />,
+                onClick: () => navigate(`/agreements/${record.parentId}`)
+              }}
+            />
+          )}
+
+          {isAdmin && (
+            <>
+              <Hint
+                tooltipProps={{ title: 'Редактировать' }}
+                buttonProps={{
+                  type: 'primary',
+                  shape: 'circle',
+                  icon: <EditOutlined />,
+                  onClick: () => openUpdateDialog(record)
+                }}
+              />
+
+              <Confirm
+                popconfirmProps={{
+                  title: 'Вы действительно хотите удалить соглашение?',
+                  placement: 'topRight'
+                }}
+                tooltipProps={{ title: 'Удалить' }}
+                buttonProps={{
+                  type: 'primary',
+                  icon: <DeleteOutlined />,
+                  danger: true
+                }}
+                onConfirm={() => onRemove(record.id)}
+              />
+            </>
+          )}
+        </Space>
+      )
+    }
+  ])
 
   const onCreate = async (values: CreateAgreementFormValues) => {
     createAgreement({
@@ -111,6 +210,7 @@ const Agreements: React.FC = () => {
   return (
     <>
       <Table
+        columns={viewColumns}
         dataSource={agreements}
         loading={isLoading}
         pagination={false}
@@ -119,75 +219,39 @@ const Agreements: React.FC = () => {
         onRow={record => ({
           onDoubleClick: () => navigate(`/agreements/${record.id}`)
         })}
-        title={isOperator ? () => (
-          <Hint
-            tooltipProps={{ title: 'Добавить' }}
-            buttonProps={{
-              type: 'primary',
-              shape: 'circle',
-              icon: <PlusOutlined />,
-              onClick: openCreateDialog
-            }}
-          />
-        ) : undefined}
-      >
-        <Table.Column title="Номер" dataIndex="number" key="number" />
-        <Table.Column title="Активно" dataIndex="isActive" key="isActive" render={isActive => <StatusTag value={isActive} />} />
-        <Table.Column title="Тип" dataIndex="type" key="type" render={({ type }: Type) => type} />
-        <Table.Column title="Дата начала" dataIndex="beginDate" key="beginDate" render={formatDate} />
-        <Table.Column title="Дата окончания" dataIndex="endDate" key="endDate" render={formatDate} />
-        <Table.Column title="Дата расторжения" dataIndex="terminationDate" key="terminationDate" render={formatDate} />
-        <Table.Column title="Узел" dataIndex="contractorNode" key="contractorNode" render={org => org.name} />
-        <Table.Column title="Сегмент" dataIndex="contractorSegment" key="contractorSegment" render={org => org?.name} />
-        <Table.Column
-          title="Действия"
-          key="actions"
-          width="0"
-          render={(_, record: Agreement) => (
-            <Space>
-              {record.parentId && (
-                <Hint
-                  tooltipProps={{ title: 'Родительское соглашение' }}
-                  buttonProps={{
-                    type: 'primary',
-                    shape: 'circle',
-                    icon: <FileDoneOutlined />,
-                    onClick: () => navigate(`/agreements/${record.parentId}`)
-                  }}
-                />
-              )}
-
-              {isAdmin && (
+        title={() => (
+          <Space>
+            <Popover
+              placement="bottomLeft"
+              content={
                 <>
-                  <Hint
-                    tooltipProps={{ title: 'Редактировать' }}
-                    buttonProps={{
-                      type: 'primary',
-                      shape: 'circle',
-                      icon: <EditOutlined />,
-                      onClick: () => openUpdateDialog(record)
-                    }}
-                  />
-
-                  <Confirm
-                    popconfirmProps={{
-                      title: 'Вы действительно хотите удалить соглашение?',
-                      placement: 'topRight'
-                    }}
-                    tooltipProps={{ title: 'Удалить' }}
-                    buttonProps={{
-                      type: 'primary',
-                      icon: <DeleteOutlined />,
-                      danger: true
-                    }}
-                    onConfirm={() => onRemove(record.id)}
-                  />
+                  {columns.map(column => (
+                    <Row key={column.key}>
+                      <Checkbox {...getCheckboxProps(column.key as keyof Agreement)}>
+                        {column.title as string}
+                      </Checkbox>
+                    </Row>
+                  ))}
                 </>
-              )}
-            </Space>
-          )}
-        />
-      </Table>
+              }
+            >
+              <Button icon={<UnorderedListOutlined />} />
+            </Popover>
+
+            {isOperator && (
+              <Hint
+                tooltipProps={{ title: 'Добавить' }}
+                buttonProps={{
+                  type: 'primary',
+                  shape: 'circle',
+                  icon: <PlusOutlined />,
+                  onClick: openCreateDialog
+                }}
+              />
+            )}
+          </Space>
+        )}
+      />
 
       <Pagination
         {...pagination}
