@@ -20,6 +20,7 @@ const TypesTable: React.FC<TypesTableProps> = ({ title, types, isLoading }) => {
       dataSource={types}
       loading={isLoading}
       pagination={false}
+      scroll={{ x: 600 }}
       rowKey="id"
       bordered
       title={() => (

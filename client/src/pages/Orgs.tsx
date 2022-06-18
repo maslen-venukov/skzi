@@ -62,6 +62,7 @@ const Orgs: React.FC = () => {
     <Table
       dataSource={orgs}
       loading={isLoading}
+      scroll={{ x: 600 }}
       rowKey="id"
       bordered
       title={isOperator ? () => (

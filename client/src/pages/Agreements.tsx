@@ -214,6 +214,7 @@ const Agreements: React.FC = () => {
         dataSource={agreements}
         loading={isLoading}
         pagination={false}
+        scroll={{ x: 600 }}
         rowKey="id"
         bordered
         onRow={record => ({

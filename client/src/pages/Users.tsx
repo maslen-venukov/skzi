@@ -69,6 +69,7 @@ const Users: React.FC = () => {
     <Table
       dataSource={users}
       loading={isLoading}
+      scroll={{ x: 600 }}
       rowKey="id"
       bordered
       title={() => (

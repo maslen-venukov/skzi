@@ -144,7 +144,7 @@ INSERT INTO s_platform_type(type) VALUES
 ('X2'),
 ('X3');
 
-INSERT INTO s_vipnet_lan(lan_num) VALUES
+INSERT INTO s_vipnet_lan(lan_num, lan_name) VALUES
 (1471, 'first lan'),
 (1483, 'second lan'),
 (3126, 'third lan');

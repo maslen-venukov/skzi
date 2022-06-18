@@ -25,6 +25,7 @@ const VipnetLans: React.FC = () => {
       dataSource={vipnetLans}
       loading={isLoading}
       pagination={false}
+      scroll={{ x: 600 }}
       title={() => (
         <Space>
           {isAdmin && (

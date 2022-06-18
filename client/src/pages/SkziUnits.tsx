@@ -219,6 +219,7 @@ const SkziUnits: React.FC = () => {
         dataSource={skziUnits}
         loading={isLoading}
         pagination={false}
+        scroll={{ x: 600 }}
         rowKey="id"
         bordered
         onRow={record => ({
