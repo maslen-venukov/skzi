@@ -15,6 +15,7 @@ import orgsStore from '../store/orgs/orgs.store'
 import dialogStore from '../store/dialog/dialog.store'
 import usePagination from '../hooks/usePagination'
 import useColumns from '../hooks/useColumns'
+import useSearchColumn from '../hooks/useSearchColumn'
 import getDelta from '../utils/getDelta'
 import nullify from '../utils/nullify'
 import { Type } from '../interfaces/type.interface'
@@ -39,12 +40,14 @@ const SkziUnits: React.FC = () => {
   const { openDialog, closeDialog } = dialogStore
   const navigate = useNavigate()
   const pagination = usePagination({ fetch: getSkziUnits })
+  const { getColumnSearchProps } = useSearchColumn<SkziUnit>()
 
   const { columns, viewColumns, getCheckboxProps } = useColumns<SkziUnit>([
     {
       title: 'Серийный номер',
       dataIndex: 'serialNum',
-      key: 'serialNum'
+      key: 'serialNum',
+      ...getColumnSearchProps('serialNum')
     },
     {
       title: 'Активно',
@@ -55,12 +58,14 @@ const SkziUnits: React.FC = () => {
     {
       title: 'Инвентарный номер',
       dataIndex: 'invNum',
-      key: 'invNum'
+      key: 'invNum',
+      ...getColumnSearchProps('invNum')
     },
     {
       title: 'Лицензионный номер',
       dataIndex: 'licSkziNum',
-      key: 'licSkziNum'
+      key: 'licSkziNum',
+      ...getColumnSearchProps('licSkziNum')
     },
     {
       title: 'Номер СКЗИ',
@@ -76,7 +81,8 @@ const SkziUnits: React.FC = () => {
     {
       title: 'Местоположение',
       dataIndex: 'location',
-      key: 'location'
+      key: 'location',
+      ...getColumnSearchProps('location')
     },
     {
       title: 'ViPNet',

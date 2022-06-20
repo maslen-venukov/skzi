@@ -7,15 +7,17 @@ import StatusTag from '../components/StatusTag'
 import orgsStore from '../store/orgs/orgs.store'
 import authStore from '../store/auth/auth.store'
 import dialogStore from '../store/dialog/dialog.store'
+import useSearchColumn from '../hooks/useSearchColumn'
+import getDelta from '../utils/getDelta'
 import { Org } from '../store/orgs/orgs.types'
 import { CreateOrgFormValues } from '../components/dialogs/CreateOrgDialog'
 import { UpdateOrgFormValues } from '../components/dialogs/UpdateOrgDialog'
-import getDelta from '../utils/getDelta'
 
 const Orgs: React.FC = () => {
   const { orgs, isLoading, getOrgs, createOrg, updateOrg, setOrgs } = orgsStore
   const { isOperator } = authStore
   const { openDialog, closeDialog } = dialogStore
+  const { getColumnSearchProps } = useSearchColumn<Org>()
 
   const onCreate = async (values: CreateOrgFormValues) => {
     createOrg(values).then(closeDialog)
@@ -77,7 +79,7 @@ const Orgs: React.FC = () => {
         />
       ) : undefined}
     >
-      <Table.Column title="Наименование" dataIndex="name" key="name" />
+      <Table.Column title="Наименование" dataIndex="name" key="name" {...getColumnSearchProps('name')} />
       <Table.Column title="ИНН" dataIndex="inn" key="inn" />
       <Table.Column title="Работает" dataIndex="isWorks" key="isWorks" render={isWorks => <StatusTag value={isWorks} />} />
       {isOperator && (

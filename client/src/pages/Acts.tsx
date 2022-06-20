@@ -11,6 +11,7 @@ import authStore from '../store/auth/auth.store'
 import dialogStore from '../store/dialog/dialog.store'
 import usePagination from '../hooks/usePagination'
 import useColumns from '../hooks/useColumns'
+import useSearchColumn from '../hooks/useSearchColumn'
 import nullify from '../utils/nullify'
 import getDelta from '../utils/getDelta'
 import { formatDate } from '../utils/format'
@@ -32,12 +33,14 @@ const Acts: React.FC = () => {
   const { openDialog, closeDialog } = dialogStore
   const navigate = useNavigate()
   const pagination = usePagination({ fetch: getActs })
+  const { getColumnSearchProps } = useSearchColumn<Act>()
 
   const { columns, viewColumns, getCheckboxProps } = useColumns<Act>([
     {
       title: 'Номер',
       dataIndex: 'number',
-      key: 'number'
+      key: 'number',
+      ...getColumnSearchProps('number')
     },
     {
       title: 'Дата',
@@ -66,7 +69,8 @@ const Acts: React.FC = () => {
     {
       title: 'Инвентарный номер',
       dataIndex: 'eqInventoryNum',
-      key: 'eqInventoryNum'
+      key: 'eqInventoryNum',
+      ...getColumnSearchProps('eqInventoryNum')
     },
     ...isAdmin ? [{
       title: 'Действия',

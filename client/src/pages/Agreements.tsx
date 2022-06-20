@@ -13,6 +13,7 @@ import orgsStore from '../store/orgs/orgs.store'
 import dialogStore from '../store/dialog/dialog.store'
 import usePagination from '../hooks/usePagination'
 import useColumns from '../hooks/useColumns'
+import useSearchColumn from '../hooks/useSearchColumn'
 import getDelta from '../utils/getDelta'
 import nullify from '../utils/nullify'
 import { formatDate } from '../utils/format'
@@ -28,17 +29,19 @@ const Agreements: React.FC = () => {
     getAgreements, createAgreement, updateAgreement, removeAgreement,
     setAgreements, setTotal
   } = agreementsStore
-  const { getAgreementTypes, setAgreementTypes } = agreementTypesStore
+  const { types, getAgreementTypes, setAgreementTypes } = agreementTypesStore
   const { getOrgs, setOrgs } = orgsStore
   const { openDialog, closeDialog } = dialogStore
   const navigate = useNavigate()
   const pagination = usePagination({ fetch: getAgreements })
+  const { getColumnSearchProps } = useSearchColumn<Agreement>()
 
   const { columns, viewColumns, getCheckboxProps } = useColumns<Agreement>([
     {
       title: 'Номер',
       dataIndex: 'number',
-      key: 'number'
+      key: 'number',
+      ...getColumnSearchProps('number')
     },
     {
       title: 'Активно',
@@ -206,6 +209,8 @@ const Agreements: React.FC = () => {
       setTotal(0)
     }
   }, [isOperator])
+
+  console.log(types[0])
 
   return (
     <>
